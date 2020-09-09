@@ -1,0 +1,245 @@
+package com.megasolution.app.sistemaintegral.servicios.controllers;
+
+import java.util.Date;
+import java.util.List;
+
+import javax.validation.Valid;
+
+import com.megasolution.app.sistemaintegral.clientes.models.entities.Cliente;
+import com.megasolution.app.sistemaintegral.clientes.services.IClienteService;
+import com.megasolution.app.sistemaintegral.servicios.models.entities.Estado;
+import com.megasolution.app.sistemaintegral.servicios.models.entities.Servicio;
+import com.megasolution.app.sistemaintegral.servicios.services.IEstadoService;
+import com.megasolution.app.sistemaintegral.servicios.services.IServicioService;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.support.SessionStatus;
+
+
+@Controller
+@RequestMapping("/servicios")
+@SessionAttributes("servicio")
+public class ServicioController {
+
+    @Autowired
+    private IServicioService servicioService;
+
+    @Autowired
+    private IClienteService clienteService;
+
+    @Autowired
+    private IEstadoService estadoService;
+
+    @GetMapping("")
+    public String listarServicios(Model model){
+        List<Servicio> servicios = servicioService.buscarTodos(); 
+        
+        model.addAttribute("titulo", "Servicios");
+        model.addAttribute("servicios", servicios);
+        model.addAttribute("active", "servicios");
+        model.addAttribute("pill_activo", "todos");
+        return "/servicios/lista";
+    }
+
+    @GetMapping("/pendiente")
+    public String listarPendientes(Model model){
+        List<Servicio> serviciosPendientes = servicioService.buscarPorEstadoServicio(1);
+        
+        model.addAttribute("titulo", "Servicios");
+        model.addAttribute("servicios", serviciosPendientes);
+        model.addAttribute("active", "servicios");
+        model.addAttribute("pill_activo", "pendiente");
+
+        return "/servicios/lista";
+    }
+    @GetMapping("/en-proceso")
+    public String listarEnProceso(Model model){
+        List<Servicio> serviciosEnProceso = servicioService.buscarPorEstadoServicio(2);
+        model.addAttribute("titulo", "Servicios");
+        model.addAttribute("servicios", serviciosEnProceso);
+
+        model.addAttribute("active", "servicios");
+        model.addAttribute("pill_activo", "en_proceso");
+
+        return "/servicios/lista";
+    }
+    @GetMapping("/terminado")
+    public String listarTerminado(Model model){
+        List<Servicio> serviciosTerminados = servicioService.buscarPorEstadoServicio(3);
+        model.addAttribute("titulo", "Servicios");
+        model.addAttribute("servicios", serviciosTerminados);
+
+        model.addAttribute("active", "servicios");
+        model.addAttribute("pill_activo", "terminado");
+
+        return "/servicios/lista";
+    }
+    @GetMapping("/cliente/{id}")
+    public String serviciosPorCliente(@PathVariable Integer id,Model model) {
+        Cliente cliente = clienteService.buscarPorId(id);
+        List<Servicio> servicios = servicioService.buscarPorServicioConClienteId(cliente.getId());
+        
+
+        model.addAttribute("servicios", servicios);
+        model.addAttribute("titulo", "Servicios del cliente " + cliente.getRazonSocial());
+        model.addAttribute("active", "servicios");
+        model.addAttribute("cliente", cliente);
+        model.addAttribute("pill_activo", "todos");
+
+        return "/clientes/lista-servicios";
+    }
+
+    @GetMapping("/pendiente/cliente/{id}")
+    public String listarPendientesCliente(@PathVariable Integer id,Model model){
+        Cliente cliente = clienteService.buscarPorId(id);
+        
+        List<Servicio> servicios = servicioService.buscarPorEstadoPorCliente(1, cliente.getId());
+        
+        model.addAttribute("titulo", "Servicios");
+        model.addAttribute("servicios", servicios);
+        model.addAttribute("active", "servicios");
+
+        
+        model.addAttribute("cliente", cliente);
+        model.addAttribute("pill_activo", "pendiente");
+
+        return "/clientes/lista-servicios";
+    }
+    @GetMapping("/en-proceso/cliente/{id}")
+    public String listarEnProcesoCliente(@PathVariable Integer id,Model model){
+        Cliente cliente = clienteService.buscarPorId(id);
+        List<Servicio> servicios = servicioService.buscarPorEstadoPorCliente(2, cliente.getId());
+    
+        model.addAttribute("titulo", "Servicios");
+        model.addAttribute("servicios", servicios);
+        model.addAttribute("active", "servicios");
+
+        model.addAttribute("cliente", cliente);
+        model.addAttribute("pill_activo", "en_proceso");
+
+        return "/clientes/lista-servicios";
+    }
+    @GetMapping("/terminado/cliente/{id}")
+    public String listarTerminadoCliente(@PathVariable Integer id, Model model){
+        Cliente cliente = clienteService.buscarPorId(id);
+        List<Servicio> servicios = servicioService.buscarPorEstadoPorCliente(3, cliente.getId());
+        
+        model.addAttribute("titulo", "Servicios");
+        model.addAttribute("servicios", servicios);
+        model.addAttribute("active", "servicios");
+
+    
+        model.addAttribute("cliente", cliente);
+        model.addAttribute("pill_activo", "terminado");
+
+        return "/clientes/lista-servicios";
+    }
+
+    @GetMapping("/editar/{id}")
+    public String editarServicio(@PathVariable Integer id, Model model){
+        Servicio servicio = null;
+        Cliente cliente = null;
+        List<Estado> estados = estadoService.buscarTodos();
+        List<Cliente> clientes = clienteService.buscarTodos();
+        if(id > 0){
+            servicio = servicioService.buscarPorId(id);
+            cliente = clienteService.buscarPorId(servicio.getCliente().getId());
+        }
+        model.addAttribute("clientes", clientes);
+        model.addAttribute("cliente_id", cliente.getId());
+        model.addAttribute("servicio", servicio);
+
+        model.addAttribute("estados", estados);
+        model.addAttribute("active", "servicios");
+        model.addAttribute("titulo", "Editar Servicio");
+        return "/servicios/form-servicio";
+    }
+
+    @GetMapping("/nuevo")
+    public String nuevoServicio(Model model){
+        Servicio servicio = new Servicio();
+        List<Estado> estados = estadoService.buscarTodos();
+        List<Cliente> clientes = clienteService.buscarTodos();
+
+        servicio.setFechaIngreso(new Date());
+        model.addAttribute("titulo", "Agregar Servicio");
+        model.addAttribute("active", "servicios");
+        model.addAttribute("servicio", servicio);
+        model.addAttribute("clientes", clientes);
+
+        model.addAttribute("estados", estados);
+       
+        return "/servicios/form-servicio";
+    }
+
+    @PostMapping("/guardar")
+    public String guardarServicio(@Valid Servicio servicio, BindingResult result, Model model, SessionStatus status){
+        List<Estado> estados = estadoService.buscarTodos();
+        List<Cliente> clientes = clienteService.buscarTodos();
+        
+        if(servicio.getCliente().getId() == null){
+            model.addAttribute("errorCliente", "Debe seleccionar un cliente antes de guardar!");
+            model.addAttribute("alertDangerCliente", " form-control alert-danger");
+            model.addAttribute("titulo", "Agregar Servicio");
+            model.addAttribute("active", "servicio");
+            model.addAttribute("clientes", clientes);
+            model.addAttribute("estados", estados);
+            servicioService.recuperarEstadoTerminado(servicio);
+            if(servicio.getEstado().getId() == 3 && servicio.getSolucion().isEmpty()){
+                model.addAttribute("errorSolucion", "Debe ingresar una solución antes de guardar el servicio terminado!");
+                model.addAttribute("alertDangerSolucion", " form-control alert-danger");
+            }
+            return "/servicios/form-servicio";
+        }
+
+        Cliente cliente = clienteService.buscarPorId(servicio.getCliente().getId());
+
+        if(servicio.getEstado().getId() == 3 && servicio.getSolucion().isEmpty()){
+            model.addAttribute("errorSolucion", "Debe ingresar una solución antes de guardar el servicio terminado!");
+            model.addAttribute("alertDangerSolucion", " form-control alert-danger");
+            model.addAttribute("titulo", "Agregar Servicio");
+            model.addAttribute("active", "servicio");
+            model.addAttribute("clientes", clientes);
+            model.addAttribute("estados", estados);
+            model.addAttribute("cliente", cliente.getDniCuit() + " - " + cliente.getRazonSocial());
+
+            servicioService.recuperarEstadoTerminado(servicio);      
+            return "/servicios/form-servicio"; 
+        }
+
+        if(result.hasErrors()){
+            model.addAttribute("titulo", "Agregar Servicio");
+            model.addAttribute("active", "servicio");
+            model.addAttribute("clientes", clientes);
+            model.addAttribute("estados", estados);
+            model.addAttribute("cliente", cliente.getDniCuit() + " - " + cliente.getRazonSocial());
+           
+            
+            servicioService.recuperarEstadoTerminado(servicio); 
+            
+            return "/servicios/form-servicio";
+        }
+        
+        model.addAttribute("titulo", "Agregar Servicio");
+        model.addAttribute("active", "servicio");
+        servicioService.guardar(servicio);
+        status.setComplete();
+        return "redirect:/servicios";
+    }
+
+    @GetMapping("/eliminar/{id}")
+    public String eliminarServicio(@PathVariable Integer id, Model model){
+        servicioService.eliminar(id);
+        return "redirect:/servicios";
+
+    }  
+
+}
