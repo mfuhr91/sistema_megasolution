@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es" xmlns="http://www.thymeleaf.org">
+
+<head th:replace="/plantillas/principal :: head">
+</head>
+
+<body>
+  <header th:replace="/plantillas/principal :: header"></header>
+  <div class="container my-2">
+    <div class="card">
+      <div class="card-header" th:text="${titulo}"></div>
+      <div class="card-body">
+        <input type="text" class="form-control col-sm-2 my-3 float-left buscador" focus placeholder="Buscar">
+        <a th:href="@{/sectores/nuevo}" class="btn btn-primary my-3 float-right"><i class="fas fa-plus"></i></a>
+        <table class="table table-sm table-striped table-hover table-bordered text-center">
+          <thead class="thead-dark text-light">
+            <tr>
+              <th>SECTOR</th>
+              <th>DISPONIBLE</th>
+              <th>OPCIONES</th>
+            </tr>
+          </thead>
+          <tbody class="tabla">
+            <tr th:each="sector : ${sectores}">
+              <td th:text="${sector.nombre}"></td>
+              <td th:text="${#strings.equals(sector.disponible, 'true')} ? 'SI' : 'NO'"></td>
+              <td class="opciones">
+                  <input type="hidden" id="input_" th:attrappend="id=${sector.id}" th:value="${sector.id}">
+                  <a th:href="@{/sectores/editar/} + ${sector.id}" class="btn btn-warning mx-1"><i class="far fa-edit"></i></a>
+                  <a id="borrar_" th:attrappend="id=${sector.id}" 
+                  th:data_nombre="${sector.nombre}"
+                  th:onclick="|borrarSector('${sector.id}', this.getAttribute('data_nombre'))|" 
+                  class="btn btn-danger mx-1"><i class="far fa-trash-alt"></i></a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+  
+      </div>
+    </div>
+  </div>
+
+
+
+
+
+
+    <!-- Modal -->
+  <div class="modal fade" id="borrarModal" tabindex="-1" aria-labelledby="borrarModal" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Atención</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          ¿Está seguro que quiere eliminar el sector <span class="nombre"></span>?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+          <a id="borrarBoton" class="btn btn-danger mx-1">Eliminar</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+   <!-- <footer th:replace="/plantillas/principal :: footer"></footer> -->
+</body>
+</html>

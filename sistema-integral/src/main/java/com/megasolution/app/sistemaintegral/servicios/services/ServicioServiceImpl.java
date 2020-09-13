@@ -3,7 +3,6 @@ package com.megasolution.app.sistemaintegral.servicios.services;
 import java.util.Date;
 import java.util.List;
 
-import com.megasolution.app.sistemaintegral.clientes.models.entities.Cliente;
 import com.megasolution.app.sistemaintegral.servicios.models.entities.Servicio;
 import com.megasolution.app.sistemaintegral.servicios.models.repositories.IServicioRepository;
 
@@ -27,12 +26,6 @@ public class ServicioServiceImpl implements IServicioService {
     @Transactional(readOnly = true)
     public Servicio buscarPorId(Integer id) {
         return servicioRepo.findById(id).orElse(null);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public Servicio buscarPorCliente(Cliente cliente) {
-        return servicioRepo.findByCliente(cliente);
     }
 
     @Override
@@ -61,12 +54,14 @@ public class ServicioServiceImpl implements IServicioService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Servicio> buscarPorServicioConClienteId(Integer id) {
       return servicioRepo.findByServicioWithClienteId(id);
       //return null;
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Servicio> buscarPorEstadoPorCliente(Integer estado_id, Integer cliente_id) {
         return servicioRepo.findByServicioWithEstadoIdWithClienteId(estado_id, cliente_id);
     }
@@ -77,6 +72,11 @@ public class ServicioServiceImpl implements IServicioService {
          }else{
              servicio.setFechaTerminado(null);
          }
+    }
+
+    @Override
+    public Servicio buscarServicioPorSector(Integer id) {
+        return servicioRepo.buscarServicioPorSector(id);
     }
 
 

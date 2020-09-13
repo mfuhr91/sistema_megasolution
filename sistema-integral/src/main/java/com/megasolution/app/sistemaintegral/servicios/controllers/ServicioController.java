@@ -5,8 +5,14 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import com.megasolution.app.sistemaintegral.avisos.models.entities.Aviso;
+import com.megasolution.app.sistemaintegral.avisos.models.entities.Mensaje;
+import com.megasolution.app.sistemaintegral.avisos.services.IAvisoService;
+import com.megasolution.app.sistemaintegral.avisos.services.IMensajeService;
 import com.megasolution.app.sistemaintegral.clientes.models.entities.Cliente;
 import com.megasolution.app.sistemaintegral.clientes.services.IClienteService;
+import com.megasolution.app.sistemaintegral.sectores.models.entities.Sector;
+import com.megasolution.app.sistemaintegral.sectores.services.ISectorService;
 import com.megasolution.app.sistemaintegral.servicios.models.entities.Estado;
 import com.megasolution.app.sistemaintegral.servicios.models.entities.Servicio;
 import com.megasolution.app.sistemaintegral.servicios.services.IEstadoService;
@@ -37,6 +43,15 @@ public class ServicioController {
 
     @Autowired
     private IEstadoService estadoService;
+
+    @Autowired
+    private IAvisoService avisoService;
+
+    @Autowired
+    private IMensajeService mensajeService;
+
+    @Autowired
+    private ISectorService sectorService;
 
     @GetMapping("")
     public String listarServicios(Model model){
@@ -147,16 +162,23 @@ public class ServicioController {
     public String editarServicio(@PathVariable Integer id, Model model){
         Servicio servicio = null;
         Cliente cliente = null;
+        Sector sector = null;
         List<Estado> estados = estadoService.buscarTodos();
         List<Cliente> clientes = clienteService.buscarTodos();
+        List<Sector> sectores = sectorService.buscarDisponibles();
         if(id > 0){
             servicio = servicioService.buscarPorId(id);
             cliente = clienteService.buscarPorId(servicio.getCliente().getId());
         }
+        if(servicio.getSector() != null){
+            sector = servicio.getSector();
+        }
         model.addAttribute("clientes", clientes);
         model.addAttribute("cliente_id", cliente.getId());
         model.addAttribute("servicio", servicio);
-
+        model.addAttribute("sectores", sectores);
+        model.addAttribute("cliente", cliente.getDniCuit() + " - " + cliente.getRazonSocial());
+        model.addAttribute("sector", sector.getNombre());
         model.addAttribute("estados", estados);
         model.addAttribute("active", "servicios");
         model.addAttribute("titulo", "Editar Servicio");
@@ -168,12 +190,14 @@ public class ServicioController {
         Servicio servicio = new Servicio();
         List<Estado> estados = estadoService.buscarTodos();
         List<Cliente> clientes = clienteService.buscarTodos();
+        List<Sector> sectores = sectorService.buscarDisponibles();
 
         servicio.setFechaIngreso(new Date());
         model.addAttribute("titulo", "Agregar Servicio");
         model.addAttribute("active", "servicios");
         model.addAttribute("servicio", servicio);
         model.addAttribute("clientes", clientes);
+        model.addAttribute("sectores", sectores);
 
         model.addAttribute("estados", estados);
        
@@ -184,7 +208,7 @@ public class ServicioController {
     public String guardarServicio(@Valid Servicio servicio, BindingResult result, Model model, SessionStatus status){
         List<Estado> estados = estadoService.buscarTodos();
         List<Cliente> clientes = clienteService.buscarTodos();
-        
+        List<Sector> sectores = sectorService.buscarDisponibles();
         if(servicio.getCliente().getId() == null){
             model.addAttribute("errorCliente", "Debe seleccionar un cliente antes de guardar!");
             model.addAttribute("alertDangerCliente", " form-control alert-danger");
@@ -192,15 +216,41 @@ public class ServicioController {
             model.addAttribute("active", "servicio");
             model.addAttribute("clientes", clientes);
             model.addAttribute("estados", estados);
+            model.addAttribute("sectores", sectores);
             servicioService.recuperarEstadoTerminado(servicio);
+            if(servicio.getEstado().getId() == 3 && servicio.getSolucion().isEmpty()){
+                model.addAttribute("errorSolucion", "Debe ingresar una solución antes de guardar el servicio terminado!");
+                model.addAttribute("alertDangerSolucion", " form-control alert-danger");
+            }
+            if(servicio.getSector().getId() == null){
+                model.addAttribute("errorSector", "Debe seleccionar un sector antes de guardar!");
+                model.addAttribute("alertDangerSector", " form-control alert-danger");
+            }else{
+                Sector sector = sectorService.buscarPorId(servicio.getSector().getId());
+                model.addAttribute("sector", sector.getNombre());
+            }
+            
+            return "/servicios/form-servicio";
+        }
+        Cliente cliente = clienteService.buscarPorId(servicio.getCliente().getId());
+        
+        if(servicio.getSector().getId() == null){
+            model.addAttribute("errorSector", "Debe seleccionar un sector antes de guardar!");
+            model.addAttribute("alertDangerSector", " form-control alert-danger");
+            model.addAttribute("titulo", "Agregar Servicio");
+            model.addAttribute("active", "servicio");
+            model.addAttribute("clientes", clientes);
+            model.addAttribute("estados", estados);
+            model.addAttribute("sectores", sectores);
+            servicioService.recuperarEstadoTerminado(servicio);
+            model.addAttribute("cliente", cliente.getDniCuit() + " - " + cliente.getRazonSocial());
             if(servicio.getEstado().getId() == 3 && servicio.getSolucion().isEmpty()){
                 model.addAttribute("errorSolucion", "Debe ingresar una solución antes de guardar el servicio terminado!");
                 model.addAttribute("alertDangerSolucion", " form-control alert-danger");
             }
             return "/servicios/form-servicio";
         }
-
-        Cliente cliente = clienteService.buscarPorId(servicio.getCliente().getId());
+        Sector sector = sectorService.buscarPorId(servicio.getSector().getId());
 
         if(servicio.getEstado().getId() == 3 && servicio.getSolucion().isEmpty()){
             model.addAttribute("errorSolucion", "Debe ingresar una solución antes de guardar el servicio terminado!");
@@ -209,8 +259,10 @@ public class ServicioController {
             model.addAttribute("active", "servicio");
             model.addAttribute("clientes", clientes);
             model.addAttribute("estados", estados);
+            model.addAttribute("sectores", sectores);
             model.addAttribute("cliente", cliente.getDniCuit() + " - " + cliente.getRazonSocial());
-
+            model.addAttribute("sector", sector.getNombre());
+            
             servicioService.recuperarEstadoTerminado(servicio);      
             return "/servicios/form-servicio"; 
         }
@@ -220,16 +272,29 @@ public class ServicioController {
             model.addAttribute("active", "servicio");
             model.addAttribute("clientes", clientes);
             model.addAttribute("estados", estados);
+            model.addAttribute("sectores", sectores);
             model.addAttribute("cliente", cliente.getDniCuit() + " - " + cliente.getRazonSocial());
-           
+            model.addAttribute("sector", sector.getNombre());
             
             servicioService.recuperarEstadoTerminado(servicio); 
             
             return "/servicios/form-servicio";
         }
+        if(servicio.getEstado().getId() == 3){
+            Mensaje mensaje = mensajeService.buscarPorId(1);
+            Aviso aviso = new Aviso(mensaje.getTipoMensaje(), mensaje, servicio);
+    
+            
+            
+            avisoService.guardar(aviso);
+        }else{
+            sector.setDisponible(false);
+        }
         
         model.addAttribute("titulo", "Agregar Servicio");
         model.addAttribute("active", "servicio");
+
+        
         servicioService.guardar(servicio);
         status.setComplete();
         return "redirect:/servicios";
@@ -241,5 +306,16 @@ public class ServicioController {
         return "redirect:/servicios";
 
     }  
+
+    @GetMapping("/monitor")
+    public String monitor(Model model){
+        List<Servicio> serviciosPendientes = servicioService.buscarPorEstadoServicio(1);
+        List<Servicio> serviciosEnProceso = servicioService.buscarPorEstadoServicio(2);
+        
+        model.addAttribute("serviciosPendientes", serviciosPendientes);
+        model.addAttribute("serviciosEnProceso", serviciosEnProceso);
+        model.addAttribute("titulo", "Visualizador de Servicios");
+        return "/servicios/monitor";
+    }
 
 }

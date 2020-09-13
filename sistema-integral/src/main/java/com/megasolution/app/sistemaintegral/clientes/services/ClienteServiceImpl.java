@@ -26,25 +26,6 @@ public class ClienteServiceImpl implements IClienteService {
     public Cliente buscarPorId(Integer id) {
         return clienteRepo.findById(id).orElse(null);
     }
-/* 
-    @Override
-    @Transactional(readOnly = true)
-    public Cliente buscarPorRazonSocial(String razonSocial) {
-        return clienteRepo.findByRazonSocial(razonSocial);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public Cliente buscarPorContacto(String contacto) {
-        return clienteRepo.findByContacto(contacto);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public Cliente buscarPorTelefono(Long telefono) {
-        return clienteRepo.findByTelefono(telefono);
-    }
- */
     @Override
     @Transactional
     public void guardar(Cliente cliente) {
@@ -63,10 +44,5 @@ public class ClienteServiceImpl implements IClienteService {
     public Integer contarClientes() {
         return clienteRepo.contarClientes();
     }
-/* 
-    @Override
-    @Transactional(readOnly = true)
-    public Cliente buscarPorDniCuit(String dniCuit) {
-        return clienteRepo.findByDniCuit(dniCuit);
-    } */
+
 }

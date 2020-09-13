@@ -3,6 +3,7 @@ package com.megasolution.app.sistemaintegral.servicios.models.entities;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -11,13 +12,16 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+import com.megasolution.app.sistemaintegral.avisos.models.entities.Aviso;
 import com.megasolution.app.sistemaintegral.clientes.models.entities.Cliente;
+import com.megasolution.app.sistemaintegral.sectores.models.entities.Sector;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -47,7 +51,9 @@ public class Servicio implements Serializable{
     private Estado estado;
 
     @NotNull
-    private Integer sector;
+    @ManyToOne
+    @JoinColumn(name = "sector_id")
+    private Sector sector;
 
     @NotBlank
     @Column(name = "problema_reportado")
@@ -69,8 +75,11 @@ public class Servicio implements Serializable{
     @Column(name = "fecha_terminado")
     private Date fechaTerminado;
 
+    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
-    //@JoinColumn(name= "cliente_id")
     private Cliente cliente;
+
+    /* @OneToOne(mappedBy= "servicio",cascade = CascadeType.ALL)
+    private Aviso aviso; */
 
 }

@@ -59,7 +59,6 @@ public class ClienteController {
     public String nuevo(Model model){
         Cliente cliente = new Cliente();
         
-
         cliente.setFechaAlta(new Date());
 
         List<Localidad> localidades = localidadService.buscarTodos();
@@ -81,6 +80,7 @@ public class ClienteController {
         
         if(result.hasErrors()){
             model.addAttribute("titulo", "Agregar Cliente");
+            model.addAttribute("active", "clientes");
             return "/clientes/form-cliente";
         }
         clienteService.guardar(cliente);
@@ -112,10 +112,16 @@ public class ClienteController {
         if(id > 0 ){
             cliente = clienteService.buscarPorId(id);
         }
+        List<Localidad> localidades = localidadService.buscarTodos();
+        List<Provincia> provincias = provinciaService.buscarTodos();
+        List<Pais> paises = paisService.buscarTodos();
         // clienteService.buscarPorId(id);
         model.addAttribute("cliente", cliente);
         model.addAttribute("active", "clientes");
         model.addAttribute("titulo", "Ver Cliente");
+        model.addAttribute("localidades", localidades);
+        model.addAttribute("provincias", provincias);
+        model.addAttribute("paises", paises);
         return "/clientes/form-cliente";
     }
 
