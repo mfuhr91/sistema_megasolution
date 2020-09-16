@@ -4,10 +4,8 @@ import java.util.Date;
 import java.util.List;
 
 import com.megasolution.app.sistemaintegral.avisos.models.entities.Aviso;
-import com.megasolution.app.sistemaintegral.avisos.models.entities.Llamado;
 import com.megasolution.app.sistemaintegral.avisos.services.IAvisoService;
 import com.megasolution.app.sistemaintegral.avisos.services.ILlamadoService;
-import com.megasolution.app.sistemaintegral.avisos.services.LlamadoServiceImpl;
 import com.megasolution.app.sistemaintegral.clientes.services.IClienteService;
 import com.megasolution.app.sistemaintegral.servicios.services.IServicioService;
 
@@ -54,7 +52,6 @@ public class HomeController {
     @PostMapping("/aviso-leido")
     public @ResponseBody void avisoLeido(@RequestParam Integer id, Model model){ 
         Aviso aviso = avisoService.buscarPorId(id);
-        Llamado llamado = llamadoService.buscarPorId(aviso.getLlamado().getId());
         
         if(aviso.getLlamado().getId() == 1){
             aviso.setLlamado(llamadoService.buscarPorId(2));
