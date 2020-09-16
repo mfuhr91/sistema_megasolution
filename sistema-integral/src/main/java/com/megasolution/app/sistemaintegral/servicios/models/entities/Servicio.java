@@ -50,7 +50,6 @@ public class Servicio implements Serializable{
     @JoinColumn(name = "estado_id")
     private Estado estado;
 
-    @NotNull
     @ManyToOne
     @JoinColumn(name = "sector_id")
     private Sector sector;
@@ -79,7 +78,7 @@ public class Servicio implements Serializable{
     @ManyToOne(fetch = FetchType.LAZY)
     private Cliente cliente;
 
-    /* @OneToOne(mappedBy= "servicio",cascade = CascadeType.ALL)
-    private Aviso aviso; */
+    @OneToOne(mappedBy= "servicio",cascade = CascadeType.ALL)
+    private Aviso aviso;
 
 }

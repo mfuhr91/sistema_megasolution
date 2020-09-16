@@ -36,7 +36,7 @@ public class MensajeController{
 
         model.addAttribute("titulo", "Mensajes");
         model.addAttribute("mensajes", mensajes);
-        model.addAttribute("active", "mensajes");
+        model.addAttribute("active", "avisos");
 
         return "/mensajes/lista";
     }
@@ -48,7 +48,7 @@ public class MensajeController{
             mensaje = mensajeService.buscarPorId(id);
         }
         model.addAttribute("mensaje", mensaje);
-        model.addAttribute("active", "mensajes");
+        model.addAttribute("active", "avisos");
         model.addAttribute("titulo", "Editar mensaje");
 
         return "/mensajes/form-mensaje";
@@ -57,6 +57,7 @@ public class MensajeController{
     public String actualizarMensaje(@Valid Mensaje mensaje, BindingResult result, 
                             RedirectAttributes flash, Model model, SessionStatus status){
         
+        
         if(result.hasErrors()){
             model.addAttribute("titulo", "Editar mensaje");
             return "/mensaje/form-mensaje";
@@ -64,6 +65,13 @@ public class MensajeController{
         mensajeService.actualizar(mensaje);
         status.setComplete();
 
+        Mensaje mensajeBuscado = mensajeService.buscarPorId(mensaje.getId());
+        if(mensajeBuscado != null){
+            flash.addFlashAttribute("success","Mensaje actualizado con éxito!");
+            return "redirect:/mensajes";
+        }
+        
+        flash.addFlashAttribute("success","Mensaje actualizado con éxito!");
         return "redirect:/mensajes";
     }
     

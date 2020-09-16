@@ -18,4 +18,8 @@ public interface IAvisoService {
 
     public Integer contarAvisos();
 
+    public Aviso buscarAvisoPorServicioId(Integer id);
+
+    public void cambiarANoLeido(); 
+
 }

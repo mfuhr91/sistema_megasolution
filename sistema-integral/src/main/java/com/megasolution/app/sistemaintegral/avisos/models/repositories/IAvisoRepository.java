@@ -16,5 +16,12 @@ public interface IAvisoRepository extends JpaRepository<Aviso, Integer>{
 
     @Query(value = "SELECT * FROM avisos WHERE avisos.leido = false;", nativeQuery = true)
     public List<Aviso> buscarAvisosNoLeidos();
+    
+    @Query(value = "SELECT * FROM avisos WHERE avisos.servicio_id = ?1", nativeQuery = true)
+    public Aviso buscarAvisoPorServicioId(Integer id);
+
+    @Query(value = "SELECT * FROM avisos WHERE avisos.leido = true;", nativeQuery = true)
+    public List<Aviso> buscarAvisosLeidos();
+
 
 }

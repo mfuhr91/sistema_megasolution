@@ -62,3 +62,7 @@ td{
 .card-body span{
   font-size: 25px;
 }
+
+.dropdown-menu {
+  top: 112%;
+}

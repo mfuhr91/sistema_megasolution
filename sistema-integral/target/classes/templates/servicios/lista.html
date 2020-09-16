@@ -25,6 +25,10 @@
         <a class="nav-link" th:class="${#strings.equals(pill_activo, 'terminado')} ? 'nav-link active' : 'nav-link'" 
         th:href="@{/servicios/terminado}">TERMINADO</a>
       </li>
+      <li class="nav-item">
+        <a class="nav-link" th:class="${#strings.equals(pill_activo, 'entregado')} ? 'nav-link active' : 'nav-link'" 
+        th:href="@{/servicios/entregado}">ENTREGADO</a>
+      </li>
     </ul>
 
 
@@ -53,7 +57,8 @@
           <td th:text="${servicio.equipo}"></td>
           <td th:text="${#strings.equals(servicio.cargador, 'true')} ? 'SI' : 'NO'"></td>
           <td th:text="${#strings.equals(servicio.bateria, 'true')} ? 'SI' : 'NO'"></td>
-          <td th:text="${servicio.sector.nombre}"></td>
+          <td th:if="${servicio.sector != null}" th:text="${servicio.sector.nombre}"></td>
+          <td th:if="${servicio.sector == null}" th:text="${''}"></td>
           <td th:text="${servicio.problemaReportado}"></td>
           <td th:text="${servicio.observaciones}"></td>
           <td th:text="${servicio.solucion}"></td>
@@ -68,6 +73,7 @@
               th:data_estado="${servicio.estado.nombre}"
               th:onclick="|borrarServicio('${servicio.id}', this.getAttribute('data_razonSocial'), this.getAttribute('data_estado'))|" 
               class="btn btn-danger mx-1"><i class="far fa-trash-alt"></i></a>
+              <a class="btn btn-secondary" th:href="@{'/servicios/imprimir/' + ${servicio.id}(format=pdf)}" target="_blank" ><i class="fas fa-print"></i></a>
           </td>
         </tr>
       </tbody>

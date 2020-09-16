@@ -27,13 +27,38 @@
 
       <aside class="float-right">
         <div>
-          <div class="alert alert-success alert-dismissible" role="alert" th:each="aviso : ${avisosNoLeidos}" id="alerta_" th:attrappend="id=${aviso.id}">
-            <h4><strong th:text="${aviso.mensaje.textoMensaje}"></strong></h4>
-            <h5 th:text="${aviso.servicio.cliente.razonSocial} + ' - ' + ${aviso.servicio.cliente.telefono}"></h5>
-            <h5 th:text="${aviso.servicio.equipo}"></h5>
-            <button type="button" class="close" aria-label="Close" th:onclick="|cerrarAviso('${aviso.id}')|">
-              <span aria-hidden="true">&times;</span>
-            </button>
+          <div 
+                th:each="aviso : ${avisosNoLeidos}"
+                
+                role="alert"  id="alerta_" th:attrappend="id=${aviso.id}">
+                <div th:if="${aviso.llamado.id} == 1" class="alert alert-dismissible"  th:classappend="${aviso.llamado.id} == 1 ? 'alert-success'">
+                  <h4><strong th:text="${aviso.mensaje.textoMensaje}"></strong></h4>
+                  <h5 th:text="${aviso.servicio.cliente.razonSocial} + ' - ' + ${aviso.servicio.cliente.telefono}"></h5>
+                  <h5 th:text="${aviso.servicio.equipo}"></h5>
+                  <p>1er llamado</p>
+                  <button type="button" class="close" aria-label="Close" th:onclick="|cerrarAviso('${aviso.id}')|">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div th:if="${aviso.llamado.id} == 2" class="alert alert-dismissible"  th:classappend="${aviso.llamado.id} == 2 ? 'alert-warning'">
+                  <h4><strong th:text="${aviso.mensaje.textoMensaje}"></strong></h4>
+                  <h5 th:text="${aviso.servicio.cliente.razonSocial} + ' - ' + ${aviso.servicio.cliente.telefono}"></h5>
+                  <h5 th:text="${aviso.servicio.equipo}"></h5>
+                  <p>2do llamado</p>
+                  <button type="button" class="close" aria-label="Close" th:onclick="|cerrarAviso('${aviso.id}')|">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div th:if="${aviso.llamado.id} == 3" class="alert alert-dismissible"  th:classappend="${aviso.llamado.id} == 3 ? 'alert-danger'">
+                  <h4><strong th:text="${aviso.mensaje.textoMensaje}"></strong></h4>
+                  <h5 th:text="${aviso.servicio.cliente.razonSocial} + ' - ' + ${aviso.servicio.cliente.telefono}"></h5>
+                  <h5 th:text="${aviso.servicio.equipo}"></h5>
+                  <p>3er llamado</p>
+                  <button type="button" class="close" aria-label="Close" th:onclick="|cerrarAviso('${aviso.id}')|">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+            
           </div>
         </div>
       </aside>

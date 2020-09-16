@@ -83,14 +83,27 @@ public class ClienteController {
             model.addAttribute("active", "clientes");
             return "/clientes/form-cliente";
         }
-        clienteService.guardar(cliente);
-        status.setComplete();
-
+        if(cliente.getId() == null){
+            clienteService.guardar(cliente);
+            status.setComplete();
+            flash.addFlashAttribute("success", "Cliente guardado con éxito!");  
+        }else{
+            clienteService.guardar(cliente);
+            status.setComplete();
+            flash.addFlashAttribute("success", "Cliente actualizado con éxito!");  
+        }
+        System.out.println(cliente.getId());
+        
+        
         return "redirect:/clientes";
     }
 
     @GetMapping("/editar/{id}")
-    public String editar(@PathVariable Integer id, Model model){
+    public String editar(@PathVariable Integer id, Model model, RedirectAttributes flash){
+        if(clienteService.buscarPorId(id) == null){
+            flash.addFlashAttribute("error", "El cliente no existe!"); 
+            return "redirect:/clientes";
+        }
         Cliente cliente = null;
         if(id > 0 ){
             cliente = clienteService.buscarPorId(id);
@@ -107,7 +120,11 @@ public class ClienteController {
         return "/clientes/form-cliente";
     }
     @GetMapping("/ver/{id}")
-    public String ver(@PathVariable Integer id, Model model){
+    public String ver(@PathVariable Integer id, Model model, RedirectAttributes flash){
+        if(clienteService.buscarPorId(id) == null){
+            flash.addFlashAttribute("error", "El cliente no existe!"); 
+            return "redirect:/clientes";
+        }
         Cliente cliente = null;
         if(id > 0 ){
             cliente = clienteService.buscarPorId(id);
@@ -126,8 +143,13 @@ public class ClienteController {
     }
 
     @GetMapping("/eliminar/{id}")
-    public String eliminar(@PathVariable Integer id){
+    public String eliminar(@PathVariable Integer id, RedirectAttributes flash){
+        if(clienteService.buscarPorId(id) == null){
+            flash.addFlashAttribute("error", "El cliente no existe!"); 
+            return "redirect:/clientes";
+        }
         clienteService.eliminar(id);
+        flash.addFlashAttribute("success", "Cliente eliminado con éxito!"); 
         return "redirect:/clientes";
     }
 

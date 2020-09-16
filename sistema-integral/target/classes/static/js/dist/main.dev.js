@@ -64,6 +64,14 @@ $(document).ready(function () {
 
     if (estadoSeleccionado == 3) {
       $('#fechaTerminado').val(moment().format('HH:mm DD/MM/YYYY'));
+    } else if (estadoSeleccionado == 4) {
+      if (!$('#fechaTerminado').val()) {
+        $('#fechaTerminado').val(moment().format('HH:mm DD/MM/YYYY'));
+      } else {
+        $('#fechaTerminado').val();
+      }
+
+      $('#sector_ver').val('');
     } else {
       $('#fechaTerminado').val('');
     }
@@ -93,4 +101,11 @@ function cerrarAviso(id) {
   }).done(function () {
     $('#alerta_' + id).fadeOut();
   });
-}
+} // DESHABILITA EL BOTON GUARDAR LUEGO DEL SUBMIT DEL FORM - EVITA GUARDAR DOS REGISTROS
+
+
+$(document).ready(function () {
+  $('form').submit(function () {
+    $('input[type="submit"]').prop("disabled", true);
+  });
+});

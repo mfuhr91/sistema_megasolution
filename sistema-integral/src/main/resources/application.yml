@@ -10,6 +10,15 @@ spring:
         database-platform: org.hibernate.dialect.MySQL8Dialect
         hibernate:
             ddl-auto: create-drop
+    servlet:
+        multipart:
+            max-file-size: 15MB
+            max-request-size: 15MB
+    mvc:
+        contentnegotiation:
+            favor-parameter: true
+            media-types.pdf: application/pdf
+        
 logging:
     level:
         org:

@@ -10,7 +10,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -19,7 +20,6 @@ import javax.persistence.TemporalType;
 
 import com.megasolution.app.sistemaintegral.servicios.models.entities.Servicio;
 
-import org.springframework.format.annotation.DateTimeFormat;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -48,16 +48,24 @@ public class Aviso implements Serializable{
     private Boolean leido;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @DateTimeFormat(pattern = "dd/MM/yyyy")
     @Column(name = "fecha_alta")
     private Date fechaAlta;
 
-    public Aviso(String nombre, Mensaje mensaje, Servicio servicio) {
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "fecha_leido")
+    private Date fechaLeido;
+
+    @ManyToOne // NO PUEDE SER UN LAZY FETCH POR QUE NO LEE LOS LLAMADOS LEIDOS
+    @JoinColumn(name = "llamado_id")
+    private Llamado llamado;
+
+    public Aviso(String nombre, Mensaje mensaje, Servicio servicio, Llamado llamado) {
         this.nombre = nombre;
         this.mensaje = mensaje;
         this.servicio = servicio;
         this.leido = false;
         this.fechaAlta = new Date();
+        this.llamado = llamado;
     }
 
     

@@ -21,6 +21,7 @@ INSERT INTO clientes (dni_cuit, razon_social, telefono, fecha_alta, condicion_iv
 INSERT INTO estados (nombre) VALUES ('Pendiente');
 INSERT INTO estados (nombre) VALUES ('En Proceso');
 INSERT INTO estados (nombre) VALUES ('Terminado');
+INSERT INTO estados (nombre) VALUES ('Entregado');
 
 INSERT INTO sectores (nombre, disponible) VALUES ('1A', false);
 INSERT INTO sectores (nombre, disponible) VALUES ('1B', false);
@@ -36,9 +37,14 @@ INSERT INTO servicios (equipo, cargador, bateria, estado_id, sector_id, problema
 INSERT INTO servicios (equipo, cargador, bateria, estado_id, sector_id, problema_reportado, observaciones, solucion, fecha_ingreso, cliente_id) VALUES ('Notebook HP', true, false, 2, 3, 'No funciona pantalla', 'tapa rota', '', '2020-08-19 19:01', 1);
 INSERT INTO servicios (equipo, cargador, bateria, estado_id, sector_id, problema_reportado, observaciones, solucion, fecha_ingreso, cliente_id) VALUES ('Notebook HP', true, false, 2, 4, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus rhoncus auctor sem, non sollicitudin ex suscipit nec.', 'tapa rota', '', '2020-08-19 16:56', 1);
 INSERT INTO servicios (equipo, cargador, bateria, estado_id, sector_id, problema_reportado, observaciones, solucion, fecha_ingreso, cliente_id) VALUES ('Notebook Lenovo', false, true, 3, 5, 'No funciona pantalla', 'tapa rota', ' Pellentesque in purus luctus, lobortis ex id, volutpat lectus.', '2020-08-19 17:04', 1);
-INSERT INTO servicios (equipo, cargador, bateria, estado_id, sector_id, problema_reportado, observaciones, solucion, fecha_ingreso, cliente_id) VALUES ('Notebook Lenovo', false, true, 2, 6, 'No funciona pantalla', 'tapa rota', '', '2020-08-19 20:01', 3);
+INSERT INTO servicios (equipo, cargador, bateria, estado_id, sector_id, problema_reportado, observaciones, solucion, fecha_ingreso, cliente_id) VALUES ('Notebook Lenovo', false, true, 3, 6, 'No funciona pantalla', 'tapa rota', 'OK', '2020-08-19 20:01', 3);
 
+
+/*INSERT INTO llamados (nombre_llamado, horas) VALUES ('1er llamado',0);*/
+INSERT INTO llamados (nombre_llamado, horas) VALUES ('2do llamado',1);
+INSERT INTO llamados (nombre_llamado, horas) VALUES ('3er llamado',3);
 
 INSERT INTO mensajes (tipo_mensaje, texto_mensaje , fecha_alta) VALUES ('servicio_terminado','Servicio terminado', '2020-08-19')
 
-INSERT INTO avisos (nombre, mensaje_id, servicio_id, leido, fecha_alta ) VALUES ('servicio_terminado', 1, 5, false, '2020-08-19 14:00'); 
+INSERT INTO avisos (nombre, mensaje_id, servicio_id, llamado_id, leido, fecha_alta ) VALUES ('servicio_terminado', 1, 5, 1, false, '2020-08-19 14:00'); 
+INSERT INTO avisos (nombre, mensaje_id, servicio_id, llamado_id, leido, fecha_alta ) VALUES ('servicio_terminado', 1, 6, 1,  false, '2020-08-19 14:00'); 

@@ -41,7 +41,13 @@
 
     </div>
   </div>
-
+  <script type="text/javascript">
+    function actualizar(){
+      location.reload(true);
+      }
+  //Función para actualizar cada 1 minuto el monitor de servicios(60000 milisegundos)
+    setInterval("actualizar()",60000);
+  </script>
    <!-- <footer th:replace="/plantillas/principal :: footer"></footer> -->
 </body>
 </html>

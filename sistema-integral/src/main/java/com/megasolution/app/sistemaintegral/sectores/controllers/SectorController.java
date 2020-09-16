@@ -47,9 +47,12 @@ public class SectorController {
     }
 
     @GetMapping("/editar/{id}")
-    public String editarSector(@PathVariable Integer id, Model model){
+    public String editarSector(@PathVariable Integer id, Model model, RedirectAttributes flash){
         Sector sector = null;
-
+        if(sectorService.buscarPorId(id) == null){
+            flash.addFlashAttribute("warning", "El sector no existe!");
+            return "redirect:/sectores";
+        }
         if(id>0){
             sector = sectorService.buscarPorId(id);
         }
@@ -81,30 +84,46 @@ public class SectorController {
             return "/sectores/form-sector";
         }
         if(sectorBuscado != null){
+            flash.addFlashAttribute("warning", "El sector ya existe!");
             return "redirect:/sectores";
         }
 
         if(servicio != null){
+            flash.addFlashAttribute("error", "El sector tiene un servicio asignado, liberelo para editarlo!");
             return "redirect:/sectores";
         }
         
 
-        sectorService.guardar(sector);
-        status.setComplete();
+        
+        if(sector.getId() != null){
+            sectorService.guardar(sector);
+            status.setComplete();
+            flash.addFlashAttribute("success", "Sector actualizado con éxito!");
+        }else{
+            sectorService.guardar(sector);
+            status.setComplete();
+            flash.addFlashAttribute("success", "Sector guardado con éxito!");
+        }
+        
         return "redirect:/sectores";
     }
 
     @GetMapping("/eliminar/{id}")
-    public String eliminarSector(@PathVariable Integer id) {
+    public String eliminarSector(@PathVariable Integer id, RedirectAttributes flash){
+        if(sectorService.buscarPorId(id) == null){
+            flash.addFlashAttribute("error", "El sector no existe!");
+            return "redirect:/sectores";
+        }
         Sector sector = sectorService.buscarPorId(id);
 
         if(!sector.getDisponible()){
 
-
+            flash.addFlashAttribute("error", "No puede eliminar un sector en uso!");
             return "redirect:/sectores";
         }
         
         sectorService.eliminar(id);
+        flash.addFlashAttribute("success", "Sector eliminado con éxito!");
         return "redirect:/sectores";
     }
     
