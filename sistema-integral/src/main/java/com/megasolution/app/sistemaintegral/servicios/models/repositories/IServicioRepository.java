@@ -29,5 +29,8 @@ public interface IServicioRepository extends JpaRepository<Servicio, Integer>{
     @Query(value = "SELECT * FROM servicios WHERE sector_id = ?1", nativeQuery = true)
     public Servicio buscarServicioPorSector(Integer id);
 
+    @Query(value = "SELECT COUNT(*) FROM servicios WHERE fecha_ingreso LIKE ?1", nativeQuery = true)
+    public Integer buscarServiciosDeHoy(String fechaHoy);
+
 
 }

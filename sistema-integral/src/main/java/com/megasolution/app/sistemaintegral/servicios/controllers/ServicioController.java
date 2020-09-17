@@ -1,5 +1,6 @@
 package com.megasolution.app.sistemaintegral.servicios.controllers;
 
+import java.net.SocketImpl;
 import java.util.Date;
 import java.util.List;
 
@@ -394,8 +395,13 @@ public class ServicioController {
         if(servicio.getEstado().getId() == 3){
             Llamado llamado = llamadoService.buscarPorId(1);
             Mensaje mensaje = mensajeService.buscarPorId(1);
-            Aviso aviso = new Aviso(mensaje.getTipoMensaje(), mensaje, servicio, llamado);        
-            avisoService.guardar(aviso);
+            Aviso aviso = new Aviso(mensaje.getTipoMensaje(), mensaje, servicio, llamado);
+            Aviso avisoBuscado = avisoService.buscarAvisoPorServicioId(servicio.getId());
+            
+            if(avisoBuscado == null){
+                avisoService.guardar(aviso);
+            }     
+            
         }else{
             sector.setDisponible(false);
         }

@@ -1,5 +1,6 @@
 package com.megasolution.app.sistemaintegral.servicios.services;
 
+import java.text.DecimalFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -77,6 +78,57 @@ public class ServicioServiceImpl implements IServicioService {
     @Override
     public Servicio buscarServicioPorSector(Integer id) {
         return servicioRepo.buscarServicioPorSector(id);
+    }
+
+    @Override
+    public Integer buscarServiciosDeHoy(String fechaHoy) {
+        return servicioRepo.buscarServiciosDeHoy(fechaHoy);
+    }
+
+    // TODO: LIMPIAR COMENTS
+    public long promedioServicios(){
+        List<Servicio> servicios = servicioRepo.findByEstadoServicio(3);
+        Date fechaActual = new Date();
+        
+        
+        System.out.println("SERVICIOS: " + servicios.size());
+        long tiempoTotal = 0;
+        int nroServicios7Dias = 0;
+        for (Servicio servicio : servicios) {
+            
+            System.out.println("FECHA ACTUAL - FECHA SER: " + (fechaActual.getTime() - servicio.getFechaIngreso().getTime()));
+            System.out.println("7 dIAS: 604800000");
+            
+            if(fechaActual.getTime() - servicio.getFechaIngreso().getTime() <= 604800000){ // 7dias = 604800000 ms - 1dia = 86400000 - 1hr= 3600000
+                
+                nroServicios7Dias++;
+
+                System.out.println("SERVICIO: " + servicio.getId());
+                float tiempo = (servicio.getFechaTerminado().getTime() - servicio.getFechaIngreso().getTime());
+                
+                float tiempoEnHoras = (float) Math.ceil(tiempo / 3600000);
+                
+                tiempoTotal += tiempoEnHoras;
+                
+                System.out.println("TIEMPO: "+tiempo);
+                 System.out.println("Tiempo TERMINADO: " + servicio.getFechaTerminado().getTime());
+                 System.out.println("Tiempo INGRESO: " + servicio.getFechaIngreso().getTime());
+                 
+                 System.out.println("TIEMPO EN HORAS: "+tiempoEnHoras);
+            
+            } 
+            
+            
+            
+            
+        }
+            System.out.println("TIEMPO TOTAL: "+tiempoTotal); 
+        if(tiempoTotal != 0){
+            return tiempoTotal / nroServicios7Dias;
+        }else{
+            return tiempoTotal;
+        }
+
     }
 
 

@@ -25,6 +25,7 @@ footer{
   color: #fff !important;
   background-color: #083a93 !important;
 }
+
 .btn-primary{
   background-color: #083a93 !important;
   border-color: #083a93 !important;
@@ -65,4 +66,43 @@ td{
 
 .dropdown-menu {
   top: 112%;
+}
+
+#tarjetas .card {
+  border-radius: 10px;
+  margin: 10px;
+  box-shadow: 0px 0px 10px 0px lightgray;
+  padding: 15px;
+}
+#tarjetas .card .card-header{
+  background-color: rgba(0, 0, 0, 0.0);
+}
+aside .card{
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px 0px lightgray;
+  position: absolute;
+  
+  top: 80px;
+  right: 60px;
+  margin-top: 5px;
+}
+aside .card .card-header{
+  background-color: rgba(0, 0, 0, 0.0);
+  border-bottom: none;
+}
+
+#listaAvisos{
+  max-height: 618px;
+  overflow-y: auto; 
+}
+#listaAvisos ul li{
+ 
+  background-color: #eee;
+}
+#listaAvisos ul:last-child{
+  border-radius: 0px 0px 10px 10px;
+}
+#listaAvisos ul li .alert{
+  border-radius: 10px;
+  
 }

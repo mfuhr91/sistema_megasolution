@@ -28,5 +28,9 @@ public interface IServicioService {
     public void recuperarEstadoTerminado(Servicio servicio);
 
     public Servicio buscarServicioPorSector(Integer id);
+
+    public Integer buscarServiciosDeHoy(String fechaHoy);
+
+    public long promedioServicios();
     
 }

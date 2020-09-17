@@ -108,4 +108,21 @@ $(document).ready(function () {
   $('form').submit(function () {
     $('input[type="submit"]').prop("disabled", true);
   });
+}); // ANIMACION CONTADOR DEL DASHBOARD
+
+$(document).ready(function () {
+  $('.contar').each(function () {
+    var $this = $(this);
+    jQuery({
+      Counter: 0
+    }).animate({
+      Counter: $this.text()
+    }, {
+      duration: 1000,
+      easing: 'swing',
+      step: function step() {
+        $this.text(Math.ceil(this.Counter));
+      }
+    });
+  });
 });

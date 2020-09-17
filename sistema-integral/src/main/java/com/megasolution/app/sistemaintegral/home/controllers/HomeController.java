@@ -1,5 +1,7 @@
 package com.megasolution.app.sistemaintegral.home.controllers;
 
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -7,6 +9,7 @@ import com.megasolution.app.sistemaintegral.avisos.models.entities.Aviso;
 import com.megasolution.app.sistemaintegral.avisos.services.IAvisoService;
 import com.megasolution.app.sistemaintegral.avisos.services.ILlamadoService;
 import com.megasolution.app.sistemaintegral.clientes.services.IClienteService;
+import com.megasolution.app.sistemaintegral.servicios.models.entities.Servicio;
 import com.megasolution.app.sistemaintegral.servicios.services.IServicioService;
 
 
@@ -37,15 +40,26 @@ public class HomeController {
 
     @GetMapping({"","/","/home","/index","/inicio"})
     public String inicio(Model model){
-
         List<Aviso> avisos = avisoService.buscarAvisosNoLeidos();
         Integer totalServicios = servicioService.contarServicios();
         Integer totalClientes = clienteService.contarClientes();
+        Integer totalAvisos = avisoService.contarAvisos();
+        long tiempo = servicioService.promedioServicios();
+
+        Date fechaHoy = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String fechaHoyString = "%"+sdf.format(fechaHoy)+"%";
+        Integer serviciosDeHoy = servicioService.buscarServiciosDeHoy(fechaHoyString);
+        
         model.addAttribute("titulo", "Inicio");
         model.addAttribute("active", "inicio");
         model.addAttribute("avisosNoLeidos", avisos);
+        model.addAttribute("totalAvisos", totalAvisos);
         model.addAttribute("totalClientes", totalClientes);
         model.addAttribute("totalServicios", totalServicios);
+        model.addAttribute("serviciosDeHoy", serviciosDeHoy);
+        model.addAttribute("tiempoPromedio", tiempo);
+      
         return "/inicio";
     }
 
