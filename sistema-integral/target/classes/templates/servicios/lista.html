@@ -48,7 +48,7 @@
           <th>FECHA DE INGRESO</th>
           <th>FECHA DE FINALIZACIÓN</th>
           <th>ESTADO</th>
-          <th>OPCIONES</th>
+          <th class="opciones">OPCIONES</th>
         </tr>
       </thead>
       <tbody class="tabla">
@@ -65,7 +65,7 @@
           <td th:text="${#calendars.format(servicio.fechaIngreso,'HH:mm dd/MM/yyyy')}"></td>
           <td th:text="${#calendars.format(servicio.fechaTerminado,'HH:mm dd/MM/yyyy')}"></td>
           <td th:text="${servicio.estado.nombre}"></td>
-          <td class="opciones">
+          <td >
               <input type="hidden" id="input_" th:attrappend="id=${servicio.id}" th:value="${servicio.id}">
               <a th:href="@{/servicios/editar/} + ${servicio.id}" class="btn btn-warning mx-1"><i class="far fa-edit"></i></a>
               <a id="borrar_" th:attrappend="id=${servicio.id}" 

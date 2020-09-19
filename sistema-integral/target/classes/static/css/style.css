@@ -4,6 +4,15 @@
     font-display: auto;
   }
 
+#login img{
+  margin: auto;
+  width: 200px;
+  height: 200px;
+}
+#errorPage{
+  margin-top: 200px;
+}
+
 body {
     font-family: "titilium";
     font-weight: bolder;
@@ -38,7 +47,8 @@ td{
   max-width: 300px;
 }
 .opciones{
-  min-width: 280px;
+  min-width: 120px;
+  max-width: 120px;
 }
 
 #problemaReportado{
@@ -65,14 +75,17 @@ td{
 }
 
 .dropdown-menu {
-  top: 112%;
+  top: 115%;
+}
+#tarjetas{
+  margin: 0px !important;
 }
 
 #tarjetas .card {
   border-radius: 10px;
-  margin: 10px;
+  margin: 15px;
   box-shadow: 0px 0px 10px 0px lightgray;
-  padding: 15px;
+  padding: 10px;
 }
 #tarjetas .card .card-header{
   background-color: rgba(0, 0, 0, 0.0);
@@ -80,11 +93,8 @@ td{
 aside .card{
   border-radius: 10px;
   box-shadow: 0px 0px 10px 0px lightgray;
-  position: absolute;
   
-  top: 80px;
-  right: 60px;
-  margin-top: 5px;
+  margin-top: 14px;
 }
 aside .card .card-header{
   background-color: rgba(0, 0, 0, 0.0);

@@ -45,4 +45,10 @@ public class ClienteServiceImpl implements IClienteService {
         return clienteRepo.contarClientes();
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public Cliente buscarPorDniCuit(Long dniCuit) {
+        return clienteRepo.findByDniCuit(dniCuit);
+    }
+
 }

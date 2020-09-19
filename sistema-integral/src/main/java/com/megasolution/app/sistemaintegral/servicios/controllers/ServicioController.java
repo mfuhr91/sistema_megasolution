@@ -1,6 +1,5 @@
 package com.megasolution.app.sistemaintegral.servicios.controllers;
 
-import java.net.SocketImpl;
 import java.util.Date;
 import java.util.List;
 
@@ -306,7 +305,11 @@ public class ServicioController {
         if(servicio.getCliente().getId() == null){
             model.addAttribute("errorCliente", "Debe seleccionar un cliente antes de guardar!");
             model.addAttribute("alertDangerCliente", " form-control alert-danger");
-            model.addAttribute("titulo", "Agregar Servicio");
+            if(servicio.getId() == null){
+                model.addAttribute("titulo", "Agregar Servicio");
+            }else{
+                model.addAttribute("titulo", "Editar Servicio");
+            }
             model.addAttribute("active", "servicio");
             model.addAttribute("clientes", clientes);
             model.addAttribute("estados", estados);
@@ -335,7 +338,11 @@ public class ServicioController {
         if(servicio.getSector().getId() == null){
             model.addAttribute("errorSector", "Debe seleccionar un sector antes de guardar!");
             model.addAttribute("alertDangerSector", " form-control alert-danger");
-            model.addAttribute("titulo", "Agregar Servicio");
+            if(servicio.getId() == null){
+                model.addAttribute("titulo", "Agregar Servicio");
+            }else{
+                model.addAttribute("titulo", "Editar Servicio");
+            }
             model.addAttribute("active", "servicio");
             model.addAttribute("clientes", clientes);
             model.addAttribute("estados", estados);
@@ -353,7 +360,11 @@ public class ServicioController {
         if(servicio.getEstado().getId() == 3 && servicio.getSolucion().isEmpty()){
             model.addAttribute("errorSolucion", "Debe ingresar una solución antes de guardar el servicio terminado!");
             model.addAttribute("alertDangerSolucion", " form-control alert-danger");
-            model.addAttribute("titulo", "Agregar Servicio");
+            if(servicio.getId() == null){
+                model.addAttribute("titulo", "Agregar Servicio");
+            }else{
+                model.addAttribute("titulo", "Editar Servicio");
+            }
             model.addAttribute("active", "servicio");
             model.addAttribute("clientes", clientes);
             model.addAttribute("estados", estados);
@@ -367,7 +378,11 @@ public class ServicioController {
         if(servicio.getEstado().getId() == 4 && servicio.getSolucion().isEmpty()){
             model.addAttribute("errorSolucion", "Debe ingresar una solución antes de guardar el servicio como entregado!");
             model.addAttribute("alertDangerSolucion", " form-control alert-danger");
-            model.addAttribute("titulo", "Agregar Servicio");
+            if(servicio.getId() == null){
+                model.addAttribute("titulo", "Agregar Servicio");
+            }else{
+                model.addAttribute("titulo", "Editar Servicio");
+            }
             model.addAttribute("active", "servicio");
             model.addAttribute("clientes", clientes);
             model.addAttribute("estados", estados);
@@ -380,7 +395,11 @@ public class ServicioController {
         }
 
         if(result.hasErrors()){
-            model.addAttribute("titulo", "Agregar Servicio");
+            if(servicio.getId() == null){
+                model.addAttribute("titulo", "Agregar Servicio");
+            }else{
+                model.addAttribute("titulo", "Editar Servicio");
+            }
             model.addAttribute("active", "servicio");
             model.addAttribute("clientes", clientes);
             model.addAttribute("estados", estados);

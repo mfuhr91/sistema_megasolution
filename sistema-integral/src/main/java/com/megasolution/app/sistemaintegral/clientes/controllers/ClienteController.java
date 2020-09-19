@@ -77,10 +77,29 @@ public class ClienteController {
     @PostMapping("/guardar")
     public String guardar(@Valid Cliente cliente, BindingResult result, 
                             RedirectAttributes flash, Model model, SessionStatus status){
-        
+        List<Localidad> localidades = localidadService.buscarTodos();
+        List<Provincia> provincias = provinciaService.buscarTodos();
+        List<Pais> paises = paisService.buscarTodos();
+
+        if(clienteService.buscarPorDniCuit(cliente.getDniCuit()) != null){
+            model.addAttribute("alertDangerDniCuit", " alert-danger");
+            model.addAttribute("errorDniCuit", "Ya existe un cliente con este número de documento!");
+            model.addAttribute("localidades", localidades);
+            model.addAttribute("provincias", provincias);
+            model.addAttribute("paises", paises);
+            return "/clientes/form-cliente";
+        }
         if(result.hasErrors()){
-            model.addAttribute("titulo", "Agregar Cliente");
-            model.addAttribute("active", "clientes");
+            if(cliente.getId() == null){
+                model.addAttribute("titulo", "Agregar Cliente");
+                model.addAttribute("active", "clientes"); 
+            }else{
+                model.addAttribute("titulo", "Editar Cliente");
+                model.addAttribute("active", "clientes"); 
+            }
+            model.addAttribute("localidades", localidades);
+            model.addAttribute("provincias", provincias);
+            model.addAttribute("paises", paises);
             return "/clientes/form-cliente";
         }
         if(cliente.getId() == null){
@@ -92,7 +111,6 @@ public class ClienteController {
             status.setComplete();
             flash.addFlashAttribute("success", "Cliente actualizado con éxito!");  
         }
-        System.out.println(cliente.getId());
         
         
         return "redirect:/clientes";

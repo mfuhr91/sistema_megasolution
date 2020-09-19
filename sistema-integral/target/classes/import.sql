@@ -1,3 +1,9 @@
+INSERT INTO authorities (authority) VALUES ("admin");
+INSERT INTO authorities (authority) VALUES ("usuario");
+
+INSERT INTO usuarios (nombre_usuario, contraseña, nombre_completo, habilitado, rol_id) VALUES ('mfuhr','$2a$10$iQKr.UqUmC2weecsfsQ7/uoytGp0RdYcMl1MV0vn1oCLBrGpJuYZW','mariano',true,1);
+INSERT INTO usuarios (nombre_usuario, contraseña, nombre_completo, habilitado, rol_id) VALUES ('leo','$2a$10$.06PsRMGO/5G6xOOIb.lfONG69fzQAnikY5l2Fk1/xQczX4Ze1DjK','leo',true,2);
+
 INSERT INTO paises (nombre) VALUES ("Argentina");
 
 INSERT INTO provincias (nombre, pais_id) VALUES ("Tierra del fuego",1);

@@ -146,7 +146,7 @@
                         <th>EMAIL</th>
                         <th>DIRECCION</th>
                         <th>FECHA DE ALTA</th>
-                        <th>OPCIONES</th>
+                        <th class="opciones">OPCIONES</th>
                     </tr>
                 </thead>
                 <tbody class="tabla">
@@ -163,7 +163,7 @@
                         <td th:text="${cliente.email}"></td>
                         <td th:text="${cliente.direccion}"></td>
                         <td th:text="${#calendars.format(cliente.fechaAlta,'dd/MM/yyyy')}"></td>
-                        <td class="opciones">
+                        <td >
                             <a th:href="@{/clientes/editar/} + ${cliente.id}" class="btn btn-warning mx-1"><i class="far fa-edit"></i></a>
                         </td>
                     </tr>
@@ -197,7 +197,7 @@
                             <th>SELECCIONAR</th>
                             <th>SECTOR</th>
                             <th>DISPONIBLE</th>
-                            <th>OPCIONES</th>
+                            <th class="opciones">OPCIONES</th>
                         </tr>
                     </thead>
                     
@@ -216,7 +216,7 @@
                             </td>
                             <td th:text="${sector.nombre}"></td>
                             <td th:text="${#strings.equals(sector.disponible, 'true')} ? 'SI' : 'NO'"></td>
-                            <td class="opciones">
+                            <td>
                                 <a th:href="@{/sectores/editar/} + ${sector.id}" class="btn btn-warning mx-1"><i class="far fa-edit"></i></a>
                             </td>
                         </tr>

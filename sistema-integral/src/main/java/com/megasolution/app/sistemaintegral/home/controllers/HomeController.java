@@ -43,13 +43,13 @@ public class HomeController {
         List<Aviso> avisos = avisoService.buscarAvisosNoLeidos();
         Integer totalServicios = servicioService.contarServicios();
         Integer totalClientes = clienteService.contarClientes();
-        Integer totalAvisos = avisoService.contarAvisos();
+        Integer totalAvisos = avisos.size();
         long tiempo = servicioService.promedioServicios();
 
         Date fechaHoy = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        String fechaHoyString = "%"+sdf.format(fechaHoy)+"%";
-        Integer serviciosDeHoy = servicioService.buscarServiciosDeHoy(fechaHoyString);
+        
+        Integer serviciosDeHoy = servicioService.buscarServiciosDeHoy("%"+sdf.format(fechaHoy)+"%");
         
         model.addAttribute("titulo", "Inicio");
         model.addAttribute("active", "inicio");
@@ -61,6 +61,13 @@ public class HomeController {
         model.addAttribute("tiempoPromedio", tiempo);
       
         return "/inicio";
+    }
+
+    @GetMapping("/total-avisos")
+    public @ResponseBody Integer totalAvisos(Model model){
+        List<Aviso> avisos = avisoService.buscarAvisosNoLeidos();
+        Integer totalAvisos = avisos.size();
+        return totalAvisos;
     }
 
     @PostMapping("/aviso-leido")

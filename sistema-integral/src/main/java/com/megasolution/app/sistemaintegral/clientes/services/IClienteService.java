@@ -23,5 +23,7 @@ public interface IClienteService {
     public void eliminar(Integer id);
 
     public Integer contarClientes();
+
+    public Cliente buscarPorDniCuit(Long dniCuit);
     
 }

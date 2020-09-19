@@ -59,8 +59,8 @@ public class Cliente implements Serializable{
 
     private String web;
 
-    @Temporal(TemporalType.DATE)
-    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    @Temporal(TemporalType.TIMESTAMP)
+    @DateTimeFormat(pattern = "HH:mm dd/MM/yyyy")
     @Column(name = "fecha_alta")
     private Date fechaAlta;
 

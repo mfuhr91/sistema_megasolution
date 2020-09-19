@@ -26,6 +26,13 @@ function borrarSector(id, nombre) {
   $('#borrarModal').modal('show');
   $('#borrarBoton').attr("href", "/sectores/eliminar/" + id);
   $('.nombre').text(" '" + nombre + "'");
+} //BORRAR USUARIO SELECCIONADO
+
+
+function borrarUsuario(id, nombreUsuario) {
+  $('#borrarModal').modal('show');
+  $('#borrarBoton').attr("href", "/usuarios/eliminar/" + id);
+  $('.nombreUsuario').text(" '" + nombreUsuario + "'");
 } //ABRE MODAL PARA BUSCAR CLIENTE
 
 
@@ -92,14 +99,13 @@ $(document).ready(function () {
 }); // ELIMINA EL AVISO CAMBIANDO SU ESTADO A LEIDO
 
 function cerrarAviso(id) {
-  $.ajax({
-    data: {
-      id: id
-    },
-    url: "/aviso-leido",
-    type: 'post'
+  $.post("/aviso-leido", {
+    id: id
   }).done(function () {
     $('#alerta_' + id).fadeOut();
+    $.get("/total-avisos", function (totalAvisos) {
+      $('#totalAvisosNoLeidos span').text(totalAvisos);
+    });
   });
 } // DESHABILITA EL BOTON GUARDAR LUEGO DEL SUBMIT DEL FORM - EVITA GUARDAR DOS REGISTROS
 

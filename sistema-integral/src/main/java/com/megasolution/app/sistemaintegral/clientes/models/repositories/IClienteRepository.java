@@ -16,6 +16,8 @@ public interface IClienteRepository extends JpaRepository<Cliente, Integer>{
     @Query(value = "SELECT * FROM clientes ORDER BY razon_social ASC;", nativeQuery = true)
     public List<Cliente> findAll();
 
+    public Cliente findByDniCuit(Long dniCuit);
+    
     @Query(value = "SELECT COUNT(*) FROM clientes;", nativeQuery = true)
     public Integer contarClientes();
 }
