@@ -35,7 +35,7 @@ public class LlamadoController {
         model.addAttribute("titulo", "Llamados");
         model.addAttribute("active", "avisos");
 
-        return "/llamados/lista";
+        return "llamados/lista";
     }
     @GetMapping("/editar/{id}")
     public String editarLlamado(@PathVariable Integer id, Model model){
@@ -52,7 +52,7 @@ public class LlamadoController {
         model.addAttribute("active", "avisos");
         model.addAttribute("titulo", "Editar llamado");
 
-        return "/llamados/form-llamado";
+        return "llamados/form-llamado";
     }
     @PostMapping("/actualizar")
     public String actualizarLlamado(@Valid Llamado llamado, BindingResult result, 
@@ -60,11 +60,11 @@ public class LlamadoController {
         if(llamado.getId() == 1){
             model.addAttribute("titulo", "Editar llamado");
             flash.addFlashAttribute("error", "El llamado no existe!");
-            return "/llamados/form-llamado";
+            return "llamados/form-llamado";
         }
         if(result.hasErrors()){
             model.addAttribute("titulo", "Editar llamado");
-            return "/llamados/form-llamado";
+            return "llamados/form-llamado";
         }
         llamadoService.actualizar(llamado);
         status.setComplete();

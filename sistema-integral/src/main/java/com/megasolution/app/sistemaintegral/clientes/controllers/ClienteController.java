@@ -52,7 +52,7 @@ public class ClienteController {
         model.addAttribute("clientes", clientes);
         model.addAttribute("active", "clientes");
 
-        return "/clientes/lista";
+        return "clientes/lista";
     }
 
     @GetMapping("/nuevo")
@@ -72,7 +72,7 @@ public class ClienteController {
         model.addAttribute("localidades", localidades);
         model.addAttribute("provincias", provincias);
         model.addAttribute("paises", paises);
-        return "/clientes/form-cliente";
+        return "clientes/form-cliente";
     }
 
     @PostMapping("/guardar")
@@ -88,7 +88,7 @@ public class ClienteController {
             model.addAttribute("localidades", localidades);
             model.addAttribute("provincias", provincias);
             model.addAttribute("paises", paises);
-            return "/clientes/form-cliente";
+            return "clientes/form-cliente";
         }
         if(result.hasErrors()){
             if(cliente.getId() == null){
@@ -101,7 +101,7 @@ public class ClienteController {
             model.addAttribute("localidades", localidades);
             model.addAttribute("provincias", provincias);
             model.addAttribute("paises", paises);
-            return "/clientes/form-cliente";
+            return "clientes/form-cliente";
         }
         if(cliente.getId() == null){
             clienteService.guardar(cliente);
@@ -136,7 +136,7 @@ public class ClienteController {
         model.addAttribute("localidades", localidades);
         model.addAttribute("provincias", provincias);
         model.addAttribute("paises", paises);
-        return "/clientes/form-cliente";
+        return "clientes/form-cliente";
     }
     @GetMapping("/ver/{id}")
     public String ver(@PathVariable Integer id, Model model, RedirectAttributes flash){
@@ -158,7 +158,7 @@ public class ClienteController {
         model.addAttribute("localidades", localidades);
         model.addAttribute("provincias", provincias);
         model.addAttribute("paises", paises);
-        return "/clientes/form-cliente";
+        return "clientes/form-cliente";
     }
 
     @GetMapping("/eliminar/{id}")

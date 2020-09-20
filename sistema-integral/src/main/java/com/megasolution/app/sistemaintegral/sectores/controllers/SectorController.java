@@ -43,7 +43,7 @@ public class SectorController {
         model.addAttribute("active", "sectores");
         
 
-        return "/sectores/lista";    
+        return "sectores/lista";    
     }
 
     @GetMapping("/editar/{id}")
@@ -61,7 +61,7 @@ public class SectorController {
         model.addAttribute("active", "sectores");
 
 
-        return "/sectores/form-sector";
+        return "sectores/form-sector";
     }
     @GetMapping("/nuevo")
     public String nuevoSector(Model model){
@@ -71,7 +71,7 @@ public class SectorController {
         model.addAttribute("active", "sectores");
         model.addAttribute("sector", sector);
 
-        return "/sectores/form-sector";
+        return "sectores/form-sector";
     }
 
     @PostMapping("/guardar")
@@ -81,7 +81,7 @@ public class SectorController {
         if(result.hasErrors()){
             model.addAttribute("titulo", "Agregar Sector");
             model.addAttribute("active", "sectores");
-            return "/sectores/form-sector";
+            return "sectores/form-sector";
         }
         if(sectorBuscado != null){
             flash.addFlashAttribute("warning", "El sector ya existe!");

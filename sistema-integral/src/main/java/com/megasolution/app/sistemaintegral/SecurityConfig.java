@@ -18,9 +18,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private DataSource dataSource; 
-
-  /*   @Autowired
-    private JpaUserDetailsService userDetailsService; */
     
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -50,8 +47,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     
     @Autowired
     public void configurerGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        
-        //auth.userDetailsService(myUserDetailService);//.passwordEncoder(passwordEncoder());
 
        /*  auth.userDetailsService(userDetailsService)
         .passwordEncoder(passwordEncoder()); */

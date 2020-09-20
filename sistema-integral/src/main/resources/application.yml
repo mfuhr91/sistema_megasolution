@@ -2,7 +2,7 @@ spring:
     datasource:
         url: jdbc:mysql://localhost/megasolution_db?serverTimezone=America/Argentina/Ushuaia
         username: admin
-        password: admin
+        password: 2744mfuhR
         driver-class-name: com.mysql.cj.jdbc.Driver
 
 
@@ -19,11 +19,11 @@ spring:
             favor-parameter: true
             media-types.pdf: application/pdf
         
-logging:
-    level:
-        org:
-            hibernate:
-                SQL: debug 
+#logging:
+#    level:
+#        org:
+#            hibernate:
+#                SQL: debug 
 
         #messages:
         #    encoding: UTF-8

@@ -47,7 +47,7 @@ public class UsuarioController {
         model.addAttribute("titulo", "Usuarios");
         model.addAttribute("active", "usuarios");
 
-        return "/usuarios/lista";
+        return "usuarios/lista";
     }
 
     @GetMapping("/editar/{id}")
@@ -74,7 +74,7 @@ public class UsuarioController {
         model.addAttribute("usuario", usuario);
         model.addAttribute("active", "usuarios");
 
-        return "/usuarios/form-usuario";
+        return "usuarios/form-usuario";
     }
     
     @GetMapping("/nuevo")
@@ -89,7 +89,7 @@ public class UsuarioController {
         model.addAttribute("usuario", usuario);
         model.addAttribute("roles", roles);
 
-        return "/usuarios/form-usuario";
+        return "usuarios/form-usuario";
     }
 
     @PostMapping("/guardar")
@@ -99,7 +99,7 @@ public class UsuarioController {
             model.addAttribute("alertDangerNombreUsuario", " alert-danger");
             model.addAttribute("errorNombreUsuario", "Este usuario ya existe!");
             model.addAttribute("roles", roles);
-            return "/usuarios/form-usuario";
+            return "usuarios/form-usuario";
         }
         if(result.hasErrors()){
             if(usuario.getId() == null){
@@ -110,7 +110,7 @@ public class UsuarioController {
                 model.addAttribute("active", "usuarios");
             }
             model.addAttribute("roles", roles);
-            return "/usuarios/form-usuario";
+            return "usuarios/form-usuario";
         }
 
         usuario.setContraseña(this.passwordEncoder.encode(usuario.getContraseña()));

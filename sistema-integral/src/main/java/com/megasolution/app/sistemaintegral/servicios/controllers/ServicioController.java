@@ -67,7 +67,7 @@ public class ServicioController {
         model.addAttribute("servicios", servicios);
         model.addAttribute("active", "servicios");
         model.addAttribute("pill_activo", "todos");
-        return "/servicios/lista";
+        return "servicios/lista";
     }
 
     @GetMapping("/pendiente")
@@ -79,7 +79,7 @@ public class ServicioController {
         model.addAttribute("active", "servicios");
         model.addAttribute("pill_activo", "pendiente");
 
-        return "/servicios/lista";
+        return "servicios/lista";
     }
     @GetMapping("/en-proceso")
     public String listarEnProceso(Model model){
@@ -90,7 +90,7 @@ public class ServicioController {
         model.addAttribute("active", "servicios");
         model.addAttribute("pill_activo", "en_proceso");
 
-        return "/servicios/lista";
+        return "servicios/lista";
     }
     @GetMapping("/terminado")
     public String listarTerminado(Model model){
@@ -101,7 +101,7 @@ public class ServicioController {
         model.addAttribute("active", "servicios");
         model.addAttribute("pill_activo", "terminado");
 
-        return "/servicios/lista";
+        return "servicios/lista";
     }
     @GetMapping("/entregado")
     public String listarEntregado(Model model){
@@ -112,7 +112,7 @@ public class ServicioController {
         model.addAttribute("active", "servicios");
         model.addAttribute("pill_activo", "entregado");
 
-        return "/servicios/lista";
+        return "servicios/lista";
     }
     @GetMapping("/cliente/{id}")
     public String serviciosPorCliente(@PathVariable Integer id,Model model,RedirectAttributes flash) {
@@ -130,7 +130,7 @@ public class ServicioController {
         model.addAttribute("cliente", cliente);
         model.addAttribute("pill_activo", "todos");
 
-        return "/clientes/lista-servicios";
+        return "clientes/lista-servicios";
     }
 
     @GetMapping("/pendiente/cliente/{id}")
@@ -151,7 +151,7 @@ public class ServicioController {
         model.addAttribute("cliente", cliente);
         model.addAttribute("pill_activo", "pendiente");
 
-        return "/clientes/lista-servicios";
+        return "clientes/lista-servicios";
     }
     @GetMapping("/en-proceso/cliente/{id}")
     public String listarEnProcesoCliente(@PathVariable Integer id,Model model, RedirectAttributes flash){
@@ -169,7 +169,7 @@ public class ServicioController {
         model.addAttribute("cliente", cliente);
         model.addAttribute("pill_activo", "en_proceso");
 
-        return "/clientes/lista-servicios";
+        return "clientes/lista-servicios";
     }
     @GetMapping("/terminado/cliente/{id}")
     public String listarTerminadoCliente(@PathVariable Integer id, Model model, RedirectAttributes flash){
@@ -188,7 +188,7 @@ public class ServicioController {
         model.addAttribute("cliente", cliente);
         model.addAttribute("pill_activo", "terminado");
 
-        return "/clientes/lista-servicios";
+        return "clientes/lista-servicios";
     }
     
     @GetMapping("/entregado/cliente/{id}")
@@ -208,7 +208,7 @@ public class ServicioController {
         model.addAttribute("cliente", cliente);
         model.addAttribute("pill_activo", "entregado");
 
-        return "/clientes/lista-servicios";
+        return "clientes/lista-servicios";
     }
 
     @GetMapping("/editar/{id}")
@@ -241,7 +241,7 @@ public class ServicioController {
         model.addAttribute("estados", estados);
         model.addAttribute("active", "servicios");
         model.addAttribute("titulo", "Editar Servicio");
-        return "/servicios/form-servicio";
+        return "servicios/form-servicio";
     }
     
     @GetMapping("/imprimir/{id}")
@@ -274,7 +274,7 @@ public class ServicioController {
         model.addAttribute("estados", estados);
         model.addAttribute("active", "servicios");
         model.addAttribute("titulo", "Editar Servicio");
-        return "/servicios/form-servicio";
+        return "servicios/form-servicio";
     }
 
     @GetMapping("/nuevo")
@@ -293,7 +293,7 @@ public class ServicioController {
 
         model.addAttribute("estados", estados);
        
-        return "/servicios/form-servicio";
+        return "servicios/form-servicio";
     }
 
     @PostMapping("/guardar")
@@ -331,7 +331,7 @@ public class ServicioController {
                 model.addAttribute("sector", sector.getNombre());
             }
             
-            return "/servicios/form-servicio";
+            return "servicios/form-servicio";
         }
         Cliente cliente = clienteService.buscarPorId(servicio.getCliente().getId());
         
@@ -353,7 +353,7 @@ public class ServicioController {
                 model.addAttribute("errorSolucion", "Debe ingresar una solución antes de guardar el servicio terminado!");
                 model.addAttribute("alertDangerSolucion", " form-control alert-danger");
             }
-            return "/servicios/form-servicio";
+            return "servicios/form-servicio";
         }
         Sector sector = sectorService.buscarPorId(servicio.getSector().getId());
 
@@ -373,7 +373,7 @@ public class ServicioController {
             model.addAttribute("sector", sector.getNombre());
             
             servicioService.recuperarEstadoTerminado(servicio);      
-            return "/servicios/form-servicio"; 
+            return "servicios/form-servicio"; 
         }
         if(servicio.getEstado().getId() == 4 && servicio.getSolucion().isEmpty()){
             model.addAttribute("errorSolucion", "Debe ingresar una solución antes de guardar el servicio como entregado!");
@@ -391,7 +391,7 @@ public class ServicioController {
             model.addAttribute("sector", sector.getNombre());
             
             servicioService.recuperarEstadoTerminado(servicio);      
-            return "/servicios/form-servicio"; 
+            return "servicios/form-servicio"; 
         }
 
         if(result.hasErrors()){
@@ -409,7 +409,7 @@ public class ServicioController {
             
             servicioService.recuperarEstadoTerminado(servicio); 
             
-            return "/servicios/form-servicio";
+            return "servicios/form-servicio";
         }
         if(servicio.getEstado().getId() == 3){
             Llamado llamado = llamadoService.buscarPorId(1);
@@ -484,7 +484,7 @@ public class ServicioController {
         model.addAttribute("serviciosPendientes", serviciosPendientes);
         model.addAttribute("serviciosEnProceso", serviciosEnProceso);
         model.addAttribute("titulo", "Visualizador de Servicios");
-        return "/servicios/monitor";
+        return "servicios/monitor";
     }
 
 }

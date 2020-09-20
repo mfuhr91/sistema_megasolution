@@ -58,7 +58,7 @@ public class HomeController {
         model.addAttribute("serviciosDeHoy", serviciosDeHoy);
         model.addAttribute("tiempoPromedio", tiempo);
       
-        return "/inicio";
+        return "inicio";
     }
 
     @GetMapping("/total-avisos")

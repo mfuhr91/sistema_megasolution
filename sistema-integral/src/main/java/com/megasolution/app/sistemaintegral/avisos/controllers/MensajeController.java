@@ -38,7 +38,7 @@ public class MensajeController{
         model.addAttribute("mensajes", mensajes);
         model.addAttribute("active", "avisos");
 
-        return "/mensajes/lista";
+        return "mensajes/lista";
     }
 
     @GetMapping("/editar/{id}")
@@ -51,7 +51,7 @@ public class MensajeController{
         model.addAttribute("active", "avisos");
         model.addAttribute("titulo", "Editar mensaje");
 
-        return "/mensajes/form-mensaje";
+        return "mensajes/form-mensaje";
     }
     @PostMapping("/actualizar")
     public String actualizarMensaje(@Valid Mensaje mensaje, BindingResult result, 
@@ -60,7 +60,7 @@ public class MensajeController{
         
         if(result.hasErrors()){
             model.addAttribute("titulo", "Editar mensaje");
-            return "/mensajes/form-mensaje";
+            return "mensajes/form-mensaje";
         }
         mensajeService.actualizar(mensaje);
         status.setComplete();
