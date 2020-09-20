@@ -40,8 +40,13 @@ public class LlamadoController {
     @GetMapping("/editar/{id}")
     public String editarLlamado(@PathVariable Integer id, Model model){
         Llamado llamado = null;
-        if(id > 0 ){
+        if(id > 1 ){
             llamado = llamadoService.buscarPorId(id);
+        }else{
+            model.addAttribute("llamado", llamado);
+            model.addAttribute("active", "avisos");
+            model.addAttribute("titulo", "Editar llamado");
+            return "redirect:/llamados";
         }
         model.addAttribute("llamado", llamado);
         model.addAttribute("active", "avisos");
@@ -52,7 +57,11 @@ public class LlamadoController {
     @PostMapping("/actualizar")
     public String actualizarLlamado(@Valid Llamado llamado, BindingResult result, 
                             RedirectAttributes flash, Model model, SessionStatus status){
-        
+        if(llamado.getId() == 1){
+            model.addAttribute("titulo", "Editar llamado");
+            flash.addFlashAttribute("error", "El llamado no existe!");
+            return "/llamados/form-llamado";
+        }
         if(result.hasErrors()){
             model.addAttribute("titulo", "Editar llamado");
             return "/llamados/form-llamado";
@@ -60,7 +69,6 @@ public class LlamadoController {
         llamadoService.actualizar(llamado);
         status.setComplete();
         flash.addFlashAttribute("success","Llamado actualizado con éxito!");
-
         return "redirect:/llamados";
     }
     

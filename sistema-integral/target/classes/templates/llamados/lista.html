@@ -21,7 +21,7 @@
                         </tr>
                     </thead>
                     <tbody class="tabla">
-                        <tr th:each="llamado : ${llamados}" >
+                        <tr th:each="llamado : ${llamados}" th:unless="${llamado.id == 1}">
                             <td th:text="${llamado.nombreLlamado}"></td>
                             <td th:text="${llamado.horas}"></td>
                             <td class="opciones">

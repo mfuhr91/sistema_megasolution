@@ -47,8 +47,15 @@ td{
   max-width: 300px;
 }
 .opciones{
-  min-width: 120px;
-  max-width: 120px;
+  width: 225px;
+  min-width: 225px;
+}
+.cargador,
+.bateria,
+.ingreso,
+.terminado,
+.estado{
+  width: 100px;
 }
 
 #problemaReportado{
@@ -115,4 +122,27 @@ aside .card .card-header{
 #listaAvisos ul li .alert{
   border-radius: 10px;
   
+}
+
+.ok{
+  border-radius: 5px;
+  padding: 4px;
+  margin: auto;
+  width: 30px;
+  height: 30px;
+}
+.no-tiene{
+  border-radius: 5px;
+  padding: 4px;
+  margin: auto;
+  width: 30px;
+  height: 30px;
+}
+.sector{
+  border-radius: 5px;
+  padding: 4px;
+  margin: auto;
+  width: 30px;
+  height: 30px;
+  line-height: 23px;
 }

@@ -3,7 +3,6 @@ package com.megasolution.app.sistemaintegral.usuarios.controllers;
 import java.util.Date;
 import java.util.List;
 
-import javax.naming.Binding;
 import javax.validation.Valid;
 
 import com.megasolution.app.sistemaintegral.usuarios.models.entities.Rol;
@@ -54,14 +53,21 @@ public class UsuarioController {
     @GetMapping("/editar/{id}")
     public String editarUsuario(@PathVariable Integer id, Model model, RedirectAttributes flash){
         List<Rol> roles = rolService.buscarTodos();
+        
         if(usuarioService.buscarPorId(id) == null){
             flash.addFlashAttribute("error", "El usuario no existe!");
             return "redirect:/usuarios";
         }
         Usuario usuario = null;
-        if(id > 0){
+        if(id > 1){
             usuario = usuarioService.buscarPorId(id);
             
+        }else{
+            model.addAttribute("titulo", "Editar Usuario");
+            model.addAttribute("roles", roles);
+            model.addAttribute("usuario", usuario);
+            model.addAttribute("active", "usuarios");
+            return "redirect:/usuarios";
         }
         model.addAttribute("titulo", "Editar Usuario");
         model.addAttribute("roles", roles);
@@ -125,7 +131,8 @@ public class UsuarioController {
 
     @GetMapping("/eliminar/{id}")
     public String eliminarUsuario(@PathVariable Integer id, RedirectAttributes flash){
-        if(usuarioService.buscarPorId(id) == null){
+        Usuario usuario = usuarioService.buscarPorId(id);
+        if(usuarioService.buscarPorId(id) == null ||  usuario.getId() == 1){            
             flash.addFlashAttribute("error", "El usuario no existe!");
             return "redirect:/usuarios";
         }

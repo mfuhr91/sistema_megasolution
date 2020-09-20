@@ -32,6 +32,7 @@ public class ImprimirServicio extends AbstractPdfView {
             HttpServletResponse response) throws Exception {
         Servicio servicio = (Servicio) model.get("servicio");
         
+        // LE COLOCO NOMBRE AL ARCHIVO
         response.setHeader("Content-Disposition", "filename=\"Orden de Servicio de " 
                                                     + servicio.getCliente().getDniCuit() 
                                                     + "_" 
@@ -77,7 +78,7 @@ public class ImprimirServicio extends AbstractPdfView {
         PdfPTable tabla1 = new PdfPTable(5); // 5 columnas
         
         tabla1.setSpacingBefore(7);
-        
+        // FIN ENCABEZADO
         
         
 
@@ -199,6 +200,8 @@ public class ImprimirServicio extends AbstractPdfView {
         cel.setHorizontalAlignment(Element.ALIGN_LEFT);
         tabla6.addCell(cel);
     
+
+        // ASIGNO POR DUPLICADO LAS TABLAS AL DOCUMENTO
         doc.add(tabla);
         doc.add(tabla1);
         doc.add(tabla2);

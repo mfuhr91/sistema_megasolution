@@ -18,6 +18,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.Email;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 
 import javax.validation.constraints.NotNull;
@@ -40,9 +42,10 @@ public class Cliente implements Serializable{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    //@Column(unique = true)
     @NotNull
     @Column(name = "dni_cuit")
+    @Min(1000000L)
+    @Max(99999999999L)
     private Long dniCuit;
 
     @NotBlank
@@ -55,6 +58,7 @@ public class Cliente implements Serializable{
     private Long telefono;
 
     @Email
+    @NotBlank
     private String email;
 
     private String web;
@@ -62,6 +66,7 @@ public class Cliente implements Serializable{
     @Temporal(TemporalType.TIMESTAMP)
     @DateTimeFormat(pattern = "HH:mm dd/MM/yyyy")
     @Column(name = "fecha_alta")
+    @NotNull
     private Date fechaAlta;
 
     private String direccion;

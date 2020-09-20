@@ -478,6 +478,9 @@ public class ServicioController {
         List<Servicio> serviciosPendientes = servicioService.buscarPorEstadoServicio(1);
         List<Servicio> serviciosEnProceso = servicioService.buscarPorEstadoServicio(2);
         
+        model.addAttribute("totalPendientes", serviciosPendientes.size());
+        model.addAttribute("totalEnProceso", serviciosEnProceso.size());
+        
         model.addAttribute("serviciosPendientes", serviciosPendientes);
         model.addAttribute("serviciosEnProceso", serviciosEnProceso);
         model.addAttribute("titulo", "Visualizador de Servicios");

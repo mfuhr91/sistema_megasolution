@@ -60,7 +60,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .dataSource(dataSource)
             .passwordEncoder(passwordEncoder())
             .usersByUsernameQuery("select nombre_usuario, contraseña, habilitado from usuarios where nombre_usuario = ?")
-            .authoritiesByUsernameQuery("select u.nombre_usuario, a.authority from authorities a inner join usuarios u on (u.rol_id = a.id) where u.nombre_usuario = ?"); 
+            .authoritiesByUsernameQuery("select u.nombre_usuario, a.authority from authorities a inner join usuarios u on (u.authority_id = a.id) where u.nombre_usuario = ?"); 
        /* 
         PasswordEncoder encoder = passwordEncoder();
         

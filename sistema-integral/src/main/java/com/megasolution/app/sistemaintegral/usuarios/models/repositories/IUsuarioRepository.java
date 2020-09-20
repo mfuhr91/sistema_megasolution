@@ -1,7 +1,5 @@
 package com.megasolution.app.sistemaintegral.usuarios.models.repositories;
 
-import java.util.List;
-
 import com.megasolution.app.sistemaintegral.usuarios.models.entities.Usuario;
 
 import org.springframework.data.jpa.repository.JpaRepository;

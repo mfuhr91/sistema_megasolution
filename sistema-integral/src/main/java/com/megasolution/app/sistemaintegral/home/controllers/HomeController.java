@@ -1,6 +1,5 @@
 package com.megasolution.app.sistemaintegral.home.controllers;
 
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -9,7 +8,6 @@ import com.megasolution.app.sistemaintegral.avisos.models.entities.Aviso;
 import com.megasolution.app.sistemaintegral.avisos.services.IAvisoService;
 import com.megasolution.app.sistemaintegral.avisos.services.ILlamadoService;
 import com.megasolution.app.sistemaintegral.clientes.services.IClienteService;
-import com.megasolution.app.sistemaintegral.servicios.models.entities.Servicio;
 import com.megasolution.app.sistemaintegral.servicios.services.IServicioService;
 
 
@@ -73,16 +71,16 @@ public class HomeController {
     @PostMapping("/aviso-leido")
     public @ResponseBody void avisoLeido(@RequestParam Integer id, Model model){ 
         Aviso aviso = avisoService.buscarPorId(id);
-        
         if(aviso.getLlamado().getId() == 1){
             aviso.setLlamado(llamadoService.buscarPorId(2));
         }else if(aviso.getLlamado().getId() == 2){
             aviso.setLlamado(llamadoService.buscarPorId(3));
-        }
-        
+        }else{
+            aviso.setLlamado(null);
+        }     
         aviso.setLeido(true);
         aviso.setFechaLeido(new Date());
-        
+    
         avisoService.guardar(aviso);
     }
 }

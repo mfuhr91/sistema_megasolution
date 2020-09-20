@@ -79,7 +79,7 @@
                 <h5 th:text="${aviso.servicio.cliente.razonSocial} + ' - ' + ${aviso.servicio.cliente.telefono}"></h5>
                 <h5 th:text="${aviso.servicio.equipo}"></h5>
                 <p>2do llamado</p>
-                <button type="button" class="close" aria-label="Close" th:onclick="|cerrarAviso('${aviso.id}','${_csrf.parameterName}','${_csrf.token}')|">
+                <button type="button" class="close" aria-label="Close" th:onclick="|cerrarAviso('${aviso.id}')|">
                   <span aria-hidden="true">&times;</span>
                 </button>
               </div>
@@ -91,7 +91,7 @@
                 <h5 th:text="${aviso.servicio.cliente.razonSocial} + ' - ' + ${aviso.servicio.cliente.telefono}"></h5>
                 <h5 th:text="${aviso.servicio.equipo}"></h5>
                 <p>3er llamado</p>
-                <button type="button" class="close" aria-label="Close" th:onclick="|cerrarAviso('${aviso.id}','${_csrf.parameterName}','${_csrf.token}')|">
+                <button type="button" class="close" aria-label="Close" th:onclick="|cerrarAviso('${aviso.id}')|">
                   <span aria-hidden="true">&times;</span>
                 </button>
               </div>

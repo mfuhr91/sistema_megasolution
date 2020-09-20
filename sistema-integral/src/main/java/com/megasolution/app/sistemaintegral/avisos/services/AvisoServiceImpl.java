@@ -66,40 +66,28 @@ public class AvisoServiceImpl implements IAvisoService {
     }
 
     @Override
-    // TODO: LIMPIAR COD COMENTADO
-    //@Scheduled(fixedDelay = 1000)
+    @Scheduled(fixedDelay = 1800000)
     public void cambiarANoLeido() {
        List<Aviso> avisos = avisoRepo.buscarAvisosLeidos();
        Date fechaActual = new Date();
-       System.out.println("CONTROLANDO.....");
        for (Aviso aviso : avisos) {
-            System.out.println("AVISO ID: "+aviso.getId());
-            
-            System.out.println("AVISO LLAMADO: "+aviso.getLlamado().getHoras());
-            System.out.println("AVISO FECHA LEIDO: "+aviso.getFechaLeido());
             if(aviso.getLlamado() != null){
-                System.out.println("AVISO FECHA ACTUAL - FECHA LEIDO: "+ (fechaActual.getTime() - aviso.getFechaLeido().getTime()));
-                System.out.println("AVISO LLAMADO * 3000: "+aviso.getLlamado().getHoras() * 3000);
+                if(aviso.getLlamado().getId() != 1){      
+                        if(aviso.getLeido()  
+                            && (fechaActual.getTime() - aviso.getFechaLeido().getTime()) >= aviso.getLlamado().getHoras() * 3600000 // 1hr = 3600000 miliseg
+                            && aviso.getLlamado().getId() == 2){ // 1 dia = 86400000 miliseg       
+                            aviso.setLeido(false);
+                            aviso.setFechaLeido(null);
+                            avisoRepo.save(aviso);
+                        } else if(aviso.getLeido()  
+                                    && (fechaActual.getTime() - aviso.getFechaLeido().getTime()) >= aviso.getLlamado().getHoras() * 3600000
+                                    && aviso.getLlamado().getId() == 3){                 
+                            aviso.setLeido(false);
+                            aviso.setFechaLeido(null);
+                            avisoRepo.save(aviso);
+                        }
+                }
             }
-            
-
-            if(aviso.getLeido()  
-            && (fechaActual.getTime() - aviso.getFechaLeido().getTime()) >= aviso.getLlamado().getHoras() * 3000 // 1hr = 3600000 miliseg
-            && aviso.getLlamado().getId() == 2){ // 1 dia = 86400000 miliseg
-                System.out.println("SEGUNDO AVISO MOSTRADO");
-                
-               aviso.setLeido(false);
-               aviso.setFechaLeido(null);
-               avisoRepo.save(aviso);
-           } else if(aviso.getLeido()  
-           && (fechaActual.getTime() - aviso.getFechaLeido().getTime()) >= aviso.getLlamado().getHoras() * 3000
-           && aviso.getLlamado().getId() == 3){
-            System.out.println("TERCER AVISO MOSTRADO");
-                
-            aviso.setLeido(false);
-            aviso.setFechaLeido(null);
-            avisoRepo.save(aviso);
-           }
        }  
     }
 }

@@ -64,6 +64,7 @@ public class ClienteController {
         List<Localidad> localidades = localidadService.buscarTodos();
         List<Provincia> provincias = provinciaService.buscarTodos();
         List<Pais> paises = paisService.buscarTodos();
+        
 
         model.addAttribute("titulo", "Agregar cliente");
         model.addAttribute("cliente", cliente);

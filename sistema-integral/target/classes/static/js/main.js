@@ -35,8 +35,7 @@ function borrarUsuario(id, nombreUsuario){
     $('#borrarModal').modal('show');
     $('#borrarBoton').attr("href","/usuarios/eliminar/" + id);
     $('.nombreUsuario').text(" '" +nombreUsuario+ "'");
-    
-    
+
 }
 
 //ABRE MODAL PARA BUSCAR CLIENTE
@@ -145,4 +144,25 @@ $(document).ready(() => {
         }
       });
     });
+  })
+
+  $(document).ready(()=>{
+      $('#bateria').attr('checked',true); 
+      $('#cargador').attr('checked',true); 
+      $('#habilitado').attr('checked',true); 
+      $('#bateria').click(function(){
+        if($('#bateria').attr('checked',true)){
+            $('#bateria').attr('checked',false);
+        }
+      });
+      $('#bateria').click(function(){
+        if($('#bateria').attr('checked',true)){
+            $('#bateria').attr('checked',false);
+        }
+      });
+      $('#habilitado').click(function(){
+        if($('#habilitado').attr('checked',true)){
+            $('#habilitado').attr('checked',false);
+        }
+      });
   })

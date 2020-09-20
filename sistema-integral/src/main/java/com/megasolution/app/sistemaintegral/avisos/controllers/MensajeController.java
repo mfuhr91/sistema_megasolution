@@ -60,7 +60,7 @@ public class MensajeController{
         
         if(result.hasErrors()){
             model.addAttribute("titulo", "Editar mensaje");
-            return "/mensaje/form-mensaje";
+            return "/mensajes/form-mensaje";
         }
         mensajeService.actualizar(mensaje);
         status.setComplete();

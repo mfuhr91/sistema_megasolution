@@ -1,10 +1,12 @@
 <!DOCTYPE html>
-<html lang="es" xmlns="http://www.thymeleaf.org" >
+<html lang="es" xmlns="http://www.thymeleaf.org">
+
 <head th:replace="/plantillas/principal :: head">
 </head>
+
 <body>
     <header th:replace="/plantillas/principal :: header"></header>
-    
+
     <div class="container my-2">
         <div class="card">
             <div class="card-header" th:text="${titulo}"></div>
@@ -13,14 +15,14 @@
 
                 <form th:action="@{/clientes/guardar}" th:object="${cliente}" method="POST">
                     <div class="row">
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            <label for="dni" class="col-sm col-form-label">DNI - CUIT</label>
-                            <div class="col-sm  mb-3">
-                                <input id="dniCuit" type="number" th:field="*{dniCuit}" class="form-control"
-                                th:attrappend="class=${alertDangerDniCuit}" placeholder="Ingrese un dni o cuit" 
-                                th:errorclass="'form-control alert-danger'">
-                                <small class="form-text text-danger" th:if="${#fields.hasErrors('dniCuit')}" th:errors="*{dniCuit}"></small> 
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="dni" class="col-sm col-form-label">DNI - CUIT</label>
+                                <div class="col-sm  mb-3">
+                                    <input id="dniCuit" type="number" th:field="*{dniCuit}" class="form-control"
+                                        th:attrappend="class=${alertDangerDniCuit}" placeholder="Ingrese un dni o cuit"
+                                        th:errorclass="'form-control alert-danger'">
+                                    <small class="form-text text-danger" th:if="${#fields.hasErrors('dniCuit')}" th:errors="*{dniCuit}"></small> 
                                 <small class="form-text text-danger" th:if="${errorDniCuit}" th:text="${errorDniCuit}"></small>
                             </div>
                         </div>
@@ -97,7 +99,7 @@
                         <div class="form-group">
                             <label for="fechaAlta" class="col-sm col-form-label">FECHA DE ALTA</label>
                             <div class="col-sm  mb-3">
-                                <input id="fechaAlta" type="text" th:field="*{fechaAlta}" class="form-control"  placeholder="Ingrese una fecha" th:errorclass="'form-control alert-danger'">
+                                <input id="fechaAlta" type="text" th:field="*{fechaAlta}" class="form-control"  placeholder="HH:MM DD/MM/AAAA" th:errorclass="'form-control alert-danger'">
                                 <small class="form-text text-danger" th:if="${#fields.hasErrors('fechaAlta')}" th:errors="*{fechaAlta}"></small>
                             </div>
                         </div>

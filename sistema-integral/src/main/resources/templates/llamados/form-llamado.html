@@ -17,7 +17,7 @@
                         <div class="form-group">
                             <label for="horas" class="col-sm col-form-label">CANTIDAD DE HORAS PARA EL LLAMADO</label>
                             <div class="col-sm  mb-3">
-                                <input id="horas" type="text" th:field="*{horas}" class="form-control"  placeholder="Ingrese cantidad de horas" 
+                                <input id="horas" type="number" th:field="*{horas}" class="form-control"  placeholder="Ingrese cantidad de horas" 
                                 th:errorclass="'form-control alert-danger'"></input>
                                 <small class="form-text text-danger" th:if="${#fields.hasErrors('horas')}" th:errors="*{horas}"></small>
                             </div>

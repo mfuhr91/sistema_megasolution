@@ -14,6 +14,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotBlank;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -35,6 +36,7 @@ public class Mensaje implements Serializable{
     private String tipoMensaje;
 
     @Column(name = "texto_mensaje")
+    @NotBlank
     private String textoMensaje;
 
     @OneToMany(mappedBy = "mensaje",fetch = FetchType.LAZY)

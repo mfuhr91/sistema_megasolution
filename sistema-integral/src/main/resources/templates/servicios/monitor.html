@@ -8,7 +8,7 @@
   <div class="container-fluid my-4 pb-3 monitor">
     <div class="row">
       <div class="col-sm monitor-pendiente">
-        <h2 class="text-center my-2 h2-monitor">SERVICIOS PENDIENTES</h2>
+        <h2 class="text-center my-2 h2-monitor">SERVICIOS PENDIENTES <span th:text="${'(' + totalPendientes + ')'}"></span></h2>
         <div class="card my-3 card-pendiente" th:each="servicioPendiente : ${serviciosPendientes}">
           <div class="card-header alert-danger" >
             <span th:text="${servicioPendiente.equipo} + ' - ' + ${#calendars.format(servicioPendiente.fechaIngreso,'HH:mm dd/MM/yyyy')}">
@@ -24,7 +24,7 @@
         </div>
       </div>
       <div class="col-sm monitor-en-proceso">
-        <h2 class="text-center my-2 h2-monitor">SERVICIOS EN PROCESO</h2>
+        <h2 class="text-center my-2 h2-monitor">SERVICIOS EN PROCESO <span th:text="${'(' + totalEnProceso + ')'}"></span></h2>
         <div class="card my-3" th:each="servicioEnProceso : ${serviciosEnProceso}">
           <div class="card-header alert-warning" >
             <span th:text="${servicioEnProceso.equipo}  + ' - ' + ${#calendars.format(servicioEnProceso.fechaIngreso,'HH:mm dd/MM/yyyy')}"></span>

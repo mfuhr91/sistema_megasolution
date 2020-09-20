@@ -67,6 +67,7 @@ public class Servicio implements Serializable{
     @Temporal(TemporalType.TIMESTAMP)
     @DateTimeFormat(pattern = "HH:mm dd/MM/yyyy")
     @Column(name = "fecha_ingreso")
+    @NotNull
     private Date fechaIngreso;
 
     @Temporal(TemporalType.TIMESTAMP)
@@ -74,7 +75,6 @@ public class Servicio implements Serializable{
     @Column(name = "fecha_terminado")
     private Date fechaTerminado;
 
-    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     private Cliente cliente;
 

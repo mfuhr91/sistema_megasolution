@@ -39,15 +39,15 @@
         <tr>
           <th>CLIENTE</th>
           <th>EQUIPO</th>
-          <th>CARGADOR</th>
-          <th>BATERIA</th>
-          <th>SECTOR</th>
+          <th class="cargador">CARGADOR</th>
+          <th class="bateria">BATERIA</th>
+          <th >SECTOR</th>
           <th>PROBLEMA REPORTADO</th>
           <th>OBSERVACIONES</th>
           <th>SOLUCION</th>
-          <th>FECHA DE INGRESO</th>
-          <th>FECHA DE FINALIZACIÓN</th>
-          <th>ESTADO</th>
+          <th class="ingreso">FECHA DE INGRESO</th>
+          <th class="terminado">FECHA DE FINALIZACIÓN</th>
+          <th class="estado">ESTADO</th>
           <th class="opciones">OPCIONES</th>
         </tr>
       </thead>
@@ -55,9 +55,29 @@
         <tr th:each="servicio : ${servicios}">
           <td th:text="${servicio.cliente.razonSocial}"></td>
           <td th:text="${servicio.equipo}"></td>
-          <td th:text="${#strings.equals(servicio.cargador, 'true')} ? 'SI' : 'NO'"></td>
-          <td th:text="${#strings.equals(servicio.bateria, 'true')} ? 'SI' : 'NO'"></td>
-          <td th:if="${servicio.sector != null}" th:text="${servicio.sector.nombre}"></td>
+          <td th:if="${servicio.cargador}">
+            <div class="ok bg-success">
+              <i class="fas fa-check"></i>
+            </div>
+          </td>
+
+          <td th:if="${!servicio.cargador}">
+            <div class="no-tiene bg-danger">
+              <i class="fas fa-times-circle"></i>
+            </div>
+          </td>
+
+          <td th:if="${servicio.bateria}">
+            <div class="ok bg-success">
+              <i class="fas fa-check"></i>
+            </div>
+          </td>
+          <td th:if="${!servicio.bateria}">
+            <div class="no-tiene bg-danger">
+              <i class="fas fa-times-circle"></i>
+            </div>
+          </td>
+          <td th:if="${servicio.sector != null}"><div class="sector bg-info" th:text="${servicio.sector.nombre}"></div></td>
           <td th:if="${servicio.sector == null}" th:text="${''}"></td>
           <td th:text="${servicio.problemaReportado}"></td>
           <td th:text="${servicio.observaciones}"></td>
