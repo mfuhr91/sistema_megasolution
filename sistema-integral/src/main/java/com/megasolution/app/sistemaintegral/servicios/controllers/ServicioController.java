@@ -420,7 +420,7 @@ public class ServicioController {
             if(avisoBuscado == null){
                 avisoService.guardar(aviso);  
             }     
-            
+            sector.setDisponible(false);
         }else{
             Aviso aviso = avisoService.buscarAvisoPorServicioId(servicio.getId());
             if(aviso != null){
@@ -472,6 +472,10 @@ public class ServicioController {
             flash.addFlashAttribute("error", "El servicio no existe!");
             return "redirect:/servicios";
         }
+        Servicio servicio = servicioService.buscarPorId(id);
+        Sector sector = sectorService.buscarPorId(servicio.getSector().getId());
+
+        sector.setDisponible(true);
         servicioService.eliminar(id);
         flash.addFlashAttribute("success", "Servicio eliminado con exito!");
         return "redirect:/servicios";
