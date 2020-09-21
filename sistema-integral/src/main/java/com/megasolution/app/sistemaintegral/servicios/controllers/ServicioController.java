@@ -418,7 +418,7 @@ public class ServicioController {
             Aviso avisoBuscado = avisoService.buscarAvisoPorServicioId(servicio.getId());
             
             if(avisoBuscado == null){
-                avisoService.guardar(aviso);
+                avisoService.guardar(aviso);  
             }     
             
         }else{

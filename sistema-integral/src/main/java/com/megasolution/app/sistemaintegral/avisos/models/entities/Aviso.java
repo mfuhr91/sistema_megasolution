@@ -3,6 +3,7 @@ package com.megasolution.app.sistemaintegral.avisos.models.entities;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -40,7 +41,7 @@ public class Aviso implements Serializable{
     @JoinColumn(name = "mensaje_id")
     private Mensaje mensaje;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "servicio_id")
     private Servicio servicio;
     
