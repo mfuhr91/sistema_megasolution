@@ -422,6 +422,11 @@ public class ServicioController {
             }     
             
         }else{
+            Aviso aviso = avisoService.buscarAvisoPorServicioId(servicio.getId());
+            avisoService.eliminar(aviso.getId());
+            servicio.setAviso(null);
+            System.out.println(aviso.getId());
+        
             sector.setDisponible(false);
         }
         if(servicio.getEstado().getId() == 4){

@@ -27,7 +27,7 @@ public class AvisoServiceImpl implements IAvisoService {
 
     @Override
     @Transactional(readOnly = true)
-    public Aviso buscarPorId(Integer id) {
+    public Aviso buscarPorId(Long id) {
         return avisoRepo.findById(id).orElse(null);
     }
 
@@ -40,7 +40,7 @@ public class AvisoServiceImpl implements IAvisoService {
 
     @Override
     @Transactional
-    public void eliminar(Integer id) {
+    public void eliminar(Long id) {
         avisoRepo.deleteById(id);
 
     }

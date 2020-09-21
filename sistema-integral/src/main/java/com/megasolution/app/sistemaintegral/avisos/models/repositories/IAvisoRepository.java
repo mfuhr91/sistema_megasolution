@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface IAvisoRepository extends JpaRepository<Aviso, Integer>{
+public interface IAvisoRepository extends JpaRepository<Aviso, Long>{
     
     @Query(value = "SELECT COUNT(*) FROM avisos;", nativeQuery = true)
     public Integer contarAvisos();

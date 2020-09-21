@@ -8,11 +8,11 @@ public interface IAvisoService {
     
     public List<Aviso> buscarTodos();
 
-    public Aviso buscarPorId(Integer id);
+    public Aviso buscarPorId(Long id);
 
     public void guardar(Aviso aviso);
 
-    public void eliminar(Integer id);
+    public void eliminar(Long id);
 
     public List<Aviso> buscarAvisosNoLeidos();
 

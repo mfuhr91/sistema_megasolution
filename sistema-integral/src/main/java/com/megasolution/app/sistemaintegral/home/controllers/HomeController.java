@@ -69,7 +69,7 @@ public class HomeController {
     }
 
     @PostMapping("/aviso-leido")
-    public @ResponseBody void avisoLeido(@RequestParam Integer id, Model model){ 
+    public @ResponseBody void avisoLeido(@RequestParam Long id, Model model){ 
         Aviso aviso = avisoService.buscarPorId(id);
         if(aviso.getLlamado().getId() == 1){
             aviso.setLlamado(llamadoService.buscarPorId(2));
