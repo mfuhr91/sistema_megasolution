@@ -273,8 +273,8 @@ public class ServicioController {
         model.addAttribute("cliente", cliente.getDniCuit() + " - " + cliente.getRazonSocial());
         model.addAttribute("estados", estados);
         model.addAttribute("active", "servicios");
-        model.addAttribute("titulo", "Editar Servicio");
-        return "servicios/form-servicio";
+        model.addAttribute("titulo", "Imprimir Servicio");
+        return "/servicios/form-servicio"; // debe quedar con el "/servicios/form-servicios" ya que no es una vista html, sino la ruta de un componente clase
     }
 
     @GetMapping("/nuevo")
