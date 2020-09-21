@@ -20,7 +20,7 @@ spring:
             media-types.pdf: application/pdf
         
 #logging:
-#    level:
+#   level:
 #        org:
 #            hibernate:
 #                SQL: debug 
