@@ -24,6 +24,8 @@ import javax.validation.constraints.NotBlank;
 
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.megasolution.app.sistemaintegral.servicios.models.entities.Servicio;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -73,21 +75,26 @@ public class Cliente implements Serializable{
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "localidad_id")
+    @JsonIgnore
     private Localidad localidad;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "provincia_id")
+    @JsonIgnore
     private Provincia provincia;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "pais_id")
+    @JsonIgnore
     private Pais pais;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "condicion_iva_id")
+    @JsonIgnore
     private CondicionIva condicionIva;
     
     @OneToMany(mappedBy = "cliente", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<Servicio> servicios; 
 
 

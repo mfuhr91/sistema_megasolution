@@ -37,7 +37,21 @@ function borrarUsuario(id, nombreUsuario) {
 
 
 function buscarCliente() {
+  $.get("/servicios/mostrar-clientes", {}).done(function (clientes) {
+    console.log("ANDA");
+    clientes.forEach(function (cliente) {
+      console.log("ANDA");
+      var fila = "<tr>\n            <td>\n            <a id=\"seleccionar_" + cliente.id + "\" \n            onclick=\"seleccionarCliente('" + cliente.id + "','" + cliente.dniCuit + "','" + cliente.razonSocial + "')\" \n            class=\"btn btn-primary mx-1\"><i class=\"far fa-check-circle\"></i></a>\n            </td>\n            <td>" + cliente.dniCuit + "</td>\n            <td>" + cliente.razonSocial + "</td>\n            <td>" + cliente.contacto + "</td>\n            <td>" + cliente.telefono + "</td>\n            <td>" + cliente.email + "</td>\n            <td>" + cliente.direccion + "</td>\n            <td>" + moment(cliente.fechaAlta).format('HH:mm DD/MM/YYYY') + "</td>\n            <td>\n            <a href=\"/clientes/editar/" + cliente.id + "\" class=\"btn btn-warning mx-1\"><i class=\"far fa-edit\"></i></a>\n            </td>\n            </tr>";
+      $('#tabla-clientes').append(fila);
+    });
+  });
   $('#buscarClienteModal').modal('show');
+  $('#buscarClienteModal').on('shown.bs.modal', function () {
+    $('.buscador').focus();
+  });
+  $('#buscarClienteModal').on('hidden.bs.modal', function () {
+    $('.tabla').empty();
+  });
 } // SELECCIONA EL CLIENTE Y PASA LOS VALORES AL INPUT DEL FORM SERVICIO
 
 
@@ -45,12 +59,30 @@ function seleccionarCliente(cliente_id, cliente_dni_cuit, cliente_razonSocial) {
   $('#buscarClienteModal').modal('hide');
   $('#cliente').val(cliente_id);
   $('#cliente_ver').val(cliente_dni_cuit + ' - ' + cliente_razonSocial);
+  $('.tabla tr').show();
   $('#equipo').focus();
 } //ABRE MODAL PARA BUSCAR SECTOR
 
 
 function buscarSector() {
+  $.get("/servicios/mostrar-sectores", {}).done(function (sectores) {
+    sectores.forEach(function (sector) {
+      var fila = "<tr>\n            <td>\n            <a id=\"seleccionar_" + sector.id + "\"\n            onclick=\"seleccionarSector('" + sector.id + "', '" + sector.nombre + "')\" \n            class=\"btn btn-primary mx-1\"><i class=\"far fa-check-circle\"></i></a>\n            </td>\n            <td>" + sector.nombre + "</td>\n            <td>SI</td>\n            <td>\n            <a href=\"/sectores/editar/" + sector.id + "\" class=\"btn btn-warning mx-1\"><i class=\"far fa-edit\"></i></a>\n            </td>";
+      $('#tabla-sectores').append(fila);
+    });
+
+    if ($.isEmptyObject(sectores)) {
+      var fila = "<td colspan=\"4\" class=\"alert alert-warning\">\n                                        No hay sectores disponibles\n                </td>";
+      $('#tabla-sectores').append(fila);
+    }
+  });
   $('#buscarSectorModal').modal('show');
+  $('#buscarSectorModal').on('shown.bs.modal', function () {
+    $('.buscador').focus();
+  });
+  $('#buscarSectorModal').on('hidden.bs.modal', function () {
+    $('.tabla').empty();
+  });
 } // SELECCIONA EL SECTOR Y PASA LOS VALORES AL INPUT DEL FORM SERVICIO
 
 
@@ -58,6 +90,7 @@ function seleccionarSector(sector_id, sector_nombre) {
   $('#buscarSectorModal').modal('hide');
   $('#sector').val(sector_id);
   $('#sector_ver').val(sector_nombre);
+  $('.tabla tr').show();
   $('#problemaReportado').focus();
 } // ASIGNA AUTOMATICAMENTE LA HORA Y FECHA AL CAMBIAR EL ESTADO A TERMINADO
 
@@ -119,7 +152,7 @@ $(document).ready(function () {
 $(document).ready(function () {
   $('.contar').each(function () {
     var $this = $(this);
-    jQuery({
+    $({
       Counter: 0
     }).animate({
       Counter: $this.text()

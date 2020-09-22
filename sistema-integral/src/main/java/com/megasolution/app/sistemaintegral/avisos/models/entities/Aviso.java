@@ -41,7 +41,7 @@ public class Aviso implements Serializable{
     @JoinColumn(name = "mensaje_id")
     private Mensaje mensaje;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "servicio_id")
     private Servicio servicio;
     

@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -221,8 +222,6 @@ public class ServicioController {
         Cliente cliente = null;
         Sector sector = null;
         List<Estado> estados = estadoService.buscarTodos();
-        List<Cliente> clientes = clienteService.buscarTodos();
-        List<Sector> sectores = sectorService.buscarDisponibles();
         if(id > 0){
             servicio = servicioService.buscarPorId(id);
             cliente = clienteService.buscarPorId(servicio.getCliente().getId());
@@ -233,10 +232,8 @@ public class ServicioController {
         if(sector != null){
             model.addAttribute("sector", sector.getNombre());
         }
-        model.addAttribute("clientes", clientes);
         model.addAttribute("cliente_id", cliente.getId());
         model.addAttribute("servicio", servicio);
-        model.addAttribute("sectores", sectores);
         model.addAttribute("cliente", cliente.getDniCuit() + " - " + cliente.getRazonSocial());
         model.addAttribute("estados", estados);
         model.addAttribute("active", "servicios");
@@ -244,6 +241,7 @@ public class ServicioController {
         return "servicios/form-servicio";
     }
     
+    // MAPEA A LA CLASE ImprimirServicio.java PARA GENERAR EL PDF
     @GetMapping("/imprimir/{id}")
     public String imprimirServicio(@PathVariable Integer id, Model model, RedirectAttributes flash){
         if(servicioService.buscarPorId(id) == null){
@@ -251,29 +249,11 @@ public class ServicioController {
             return "redirect:/servicios";
         }
         Servicio servicio = null;
-        Cliente cliente = null;
-        Sector sector = null;
-        List<Estado> estados = estadoService.buscarTodos();
-        List<Cliente> clientes = clienteService.buscarTodos();
-        List<Sector> sectores = sectorService.buscarDisponibles();
         if(id > 0){
             servicio = servicioService.buscarPorId(id);
-            cliente = clienteService.buscarPorId(servicio.getCliente().getId());
+           
         }
-        if(servicio.getSector() != null){
-            sector = servicio.getSector();
-        }
-        if(sector != null){
-            model.addAttribute("sector", sector.getNombre());
-        }
-        model.addAttribute("clientes", clientes);
-        model.addAttribute("cliente_id", cliente.getId());
         model.addAttribute("servicio", servicio);
-        model.addAttribute("sectores", sectores);
-        model.addAttribute("cliente", cliente.getDniCuit() + " - " + cliente.getRazonSocial());
-        model.addAttribute("estados", estados);
-        model.addAttribute("active", "servicios");
-        model.addAttribute("titulo", "Imprimir Servicio");
         return "/servicios/form-servicio"; // debe quedar con el "/servicios/form-servicios" ya que no es una vista html, sino la ruta de un componente clase
     }
 
@@ -281,15 +261,11 @@ public class ServicioController {
     public String nuevoServicio(Model model){
         Servicio servicio = new Servicio();
         List<Estado> estados = estadoService.buscarTodos();
-        List<Cliente> clientes = clienteService.buscarTodos();
-        List<Sector> sectores = sectorService.buscarDisponibles();
 
         servicio.setFechaIngreso(new Date());
         model.addAttribute("titulo", "Agregar Servicio");
         model.addAttribute("active", "servicios");
         model.addAttribute("servicio", servicio);
-        model.addAttribute("clientes", clientes);
-        model.addAttribute("sectores", sectores);
 
         model.addAttribute("estados", estados);
        
@@ -302,6 +278,7 @@ public class ServicioController {
         List<Cliente> clientes = clienteService.buscarTodos();
         List<Sector> sectores = sectorService.buscarDisponibles();
        
+        // VALIDA QUE SE HAYA SELECIONADO UN CLIENTE SINO LANZA UN ERROR AL USUARIO
         if(servicio.getCliente().getId() == null){
             model.addAttribute("errorCliente", "Debe seleccionar un cliente antes de guardar!");
             model.addAttribute("alertDangerCliente", " form-control alert-danger");
@@ -335,6 +312,7 @@ public class ServicioController {
         }
         Cliente cliente = clienteService.buscarPorId(servicio.getCliente().getId());
         
+        // VALIDA QUE SE HAYA SELECCIONADO UN SECTOR SINO LANZA UN ERROR
         if(servicio.getSector().getId() == null){
             model.addAttribute("errorSector", "Debe seleccionar un sector antes de guardar!");
             model.addAttribute("alertDangerSector", " form-control alert-danger");
@@ -357,6 +335,7 @@ public class ServicioController {
         }
         Sector sector = sectorService.buscarPorId(servicio.getSector().getId());
 
+        // VALIDA SI EL ESTADO DEL SERVICIO ES TERMINADO PERO NO SE INDICÓ UNA SOLUCIÓN
         if(servicio.getEstado().getId() == 3 && servicio.getSolucion().isEmpty()){
             model.addAttribute("errorSolucion", "Debe ingresar una solución antes de guardar el servicio terminado!");
             model.addAttribute("alertDangerSolucion", " form-control alert-danger");
@@ -375,6 +354,8 @@ public class ServicioController {
             servicioService.recuperarEstadoTerminado(servicio);      
             return "servicios/form-servicio"; 
         }
+
+        // VALIDA SI EL ESTADO DEL SERVICIO ES ENTREGADO PERO NO SE INDICÓ UNA SOLUCIÓN
         if(servicio.getEstado().getId() == 4 && servicio.getSolucion().isEmpty()){
             model.addAttribute("errorSolucion", "Debe ingresar una solución antes de guardar el servicio como entregado!");
             model.addAttribute("alertDangerSolucion", " form-control alert-danger");
@@ -393,7 +374,7 @@ public class ServicioController {
             servicioService.recuperarEstadoTerminado(servicio);      
             return "servicios/form-servicio"; 
         }
-
+        // SI HAY ERRORES EN LA VALIDACION DE CAMPOS
         if(result.hasErrors()){
             if(servicio.getId() == null){
                 model.addAttribute("titulo", "Agregar Servicio");
@@ -411,18 +392,22 @@ public class ServicioController {
             
             return "servicios/form-servicio";
         }
+        // ESTADO DEL SERVICIO CAMBIA A TERMINADO = ID 3
+        Aviso aviso = new Aviso();
+        Aviso avisoBuscado = new Aviso();
         if(servicio.getEstado().getId() == 3){
             Llamado llamado = llamadoService.buscarPorId(1);
             Mensaje mensaje = mensajeService.buscarPorId(1);
-            Aviso aviso = new Aviso(mensaje.getTipoMensaje(), mensaje, servicio, llamado);
-            Aviso avisoBuscado = avisoService.buscarAvisoPorServicioId(servicio.getId());
+            aviso = new Aviso(mensaje.getTipoMensaje(), mensaje, servicio, llamado);
+            avisoBuscado = avisoService.buscarAvisoPorServicioId(servicio.getId());
             
-            if(avisoBuscado == null){
-                avisoService.guardar(aviso);  
-            }     
+                
             sector.setDisponible(false);
+    
+        
+        // EN CASO QUE ESTADO DE SERVICIO SEA 1 o 2
         }else{
-            Aviso aviso = avisoService.buscarAvisoPorServicioId(servicio.getId());
+            aviso = avisoService.buscarAvisoPorServicioId(servicio.getId());
             if(aviso != null){
                 avisoService.eliminar(aviso.getId());
                 servicio.setAviso(null);
@@ -430,8 +415,9 @@ public class ServicioController {
         
             sector.setDisponible(false);
         }
+        // ESTADO DEL SERVICIO CAMBIA A ENTREGADO = ID 4
         if(servicio.getEstado().getId() == 4){
-            Aviso aviso = avisoService.buscarAvisoPorServicioId(servicio.getId());
+            aviso = avisoService.buscarAvisoPorServicioId(servicio.getId());
 
             if(aviso == null){
                 servicio.setSector(null);
@@ -451,17 +437,24 @@ public class ServicioController {
         model.addAttribute("active", "servicio");
 
         
+        System.out.println("###### EL ID DEL SERVICIO ES: " + servicio.getId());
         
         if(servicio.getId() != null){
             servicioService.guardar(servicio);
             status.setComplete();
             flash.addFlashAttribute("success", "Servicio actualizado con éxito!");
+                        if(avisoBuscado == null){
+                            avisoService.guardar(aviso);  
+                        } 
             return "redirect:/servicios";
         }else{
             servicioService.guardar(servicio);
             status.setComplete();
             flash.addFlashAttribute("successNuevo", "Servicio guardado con éxito!");
             flash.addFlashAttribute("servicioId", servicio.getId());
+                            if(avisoBuscado == null){
+                                avisoService.guardar(aviso);  
+                            } 
             return "redirect:/servicios";
         }
     }
@@ -473,9 +466,11 @@ public class ServicioController {
             return "redirect:/servicios";
         }
         Servicio servicio = servicioService.buscarPorId(id);
-        Sector sector = sectorService.buscarPorId(servicio.getSector().getId());
+        if(servicio.getSector() != null){
+            Sector sector = sectorService.buscarPorId(servicio.getSector().getId());
+            sector.setDisponible(true);
+        }
 
-        sector.setDisponible(true);
         servicioService.eliminar(id);
         flash.addFlashAttribute("success", "Servicio eliminado con exito!");
         return "redirect:/servicios";
@@ -494,6 +489,18 @@ public class ServicioController {
         model.addAttribute("serviciosEnProceso", serviciosEnProceso);
         model.addAttribute("titulo", "Visualizador de Servicios");
         return "servicios/monitor";
+    }
+
+    @GetMapping("/mostrar-sectores")
+    public @ResponseBody List<Sector> listaSectores(){
+        List<Sector> sectores = sectorService.buscarDisponibles();
+        return  sectores;
+    }
+
+    @GetMapping("/mostrar-clientes")
+    public @ResponseBody List<Cliente> listaClientes(){
+        List<Cliente> clientes = clienteService.buscarTodos();
+        return  clientes;
     }
 
 }
