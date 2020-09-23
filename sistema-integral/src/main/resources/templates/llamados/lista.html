@@ -25,7 +25,8 @@
                             <td th:text="${llamado.nombreLlamado}"></td>
                             <td th:text="${llamado.horas}"></td>
                             <td class="opciones">
-                                <a th:href="@{/llamados/editar/} + ${llamado.id}" class="btn btn-warning mx-1"><i class="far fa-edit"></i></a>
+                                <a th:href="@{/llamados/editar/} + ${llamado.id}" class="btn btn-warning mx-1"
+                                data-toggle="tooltip" data-placement="bottom" title="Editar"><i class="far fa-edit"></i></a>
                             </td>
                         </tr>
                     </tbody>

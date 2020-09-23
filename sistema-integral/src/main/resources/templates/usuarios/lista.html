@@ -12,7 +12,7 @@
             <div class="card-header" th:text="${titulo}"></div>
             <div class="card-body">
                 <input type="text" class="form-control col-sm-2 my-3 float-left buscador" focus placeholder="Buscar">
-                <a th:href="@{/usuarios/nuevo}" class="btn btn-primary my-3 float-right"><i class="fas fa-user-plus"></i></a>
+                <a th:href="@{/usuarios/nuevo}" class="btn btn-primary my-3 float-right"><strong>Agregar</strong></a>
                 <table class="table table-sm table-striped table-hover table-bordered text-center">
                     <thead class="thead-dark text-light">
                         <tr>
@@ -32,11 +32,12 @@
                             <td th:text="${#strings.equals(usuario.habilitado, 'true')} ? 'SI' : 'NO'"></td>
                             <td th:text="${#calendars.format(usuario.fechaAlta,'dd/MM/yyyy')}"></td>
                             <td>
-                              
-                                <a th:href="@{/usuarios/editar/} + ${usuario.id}" class="btn btn-warning mx-1"><i class="far fa-edit"></i></a>
+                                <a th:href="@{/usuarios/editar/} + ${usuario.id}" class="btn btn-warning mx-1"
+                                data-toggle="tooltip" data-placement="bottom" title="Editar"><i class="far fa-edit"></i></a>
                                 <a th:data_nombreUsuario="${usuario.nombreUsuario}" id="borrar_" th:attrappend="id=${usuario.id}" 
                                 th:onclick="|borrarUsuario('${usuario.id}', this.getAttribute('data_nombreUsuario'))|" 
-                                class="btn btn-danger mx-1"><i class="far fa-trash-alt"></i></a>
+                                class="btn btn-danger mx-1"
+                                data-toggle="tooltip" data-placement="bottom" title="Eliminar"><i class="far fa-trash-alt"></i></a>
                             </td>
                         </tr>
                     </tbody>

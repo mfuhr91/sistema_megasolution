@@ -33,7 +33,7 @@
 
 
     <input type="text" class="form-control col-sm-2 my-3 float-left buscador" focus placeholder="Buscar">
-    <a th:href="@{/servicios/nuevo}" class="btn btn-primary my-3 float-right"><i class="fas fa-plus"></i></a>
+    <a th:href="@{/servicios/nuevo}" class="btn btn-primary my-3 float-right"><strong>Agregar</strong></a>
     <table class="table table-striped table-hover table-bordered text-center">
       <thead class="thead-dark text-light">
         <tr>
@@ -86,25 +86,21 @@
           <td th:text="${#calendars.format(servicio.fechaTerminado,'HH:mm dd/MM/yyyy')}"></td>
           <td th:text="${servicio.estado.nombre}"></td>
           <td >
-              <input type="hidden" id="input_" th:attrappend="id=${servicio.id}" th:value="${servicio.id}">
-              <a th:href="@{/servicios/editar/} + ${servicio.id}" class="btn btn-warning mx-1"><i class="far fa-edit"></i></a>
+              <a th:href="@{/servicios/editar/} + ${servicio.id}" class="btn btn-warning mx-1" 
+              data-toggle="tooltip" data-placement="bottom" title="Editar"><i class="far fa-edit"></i></a>
               <a id="borrar_" th:attrappend="id=${servicio.id}" 
               th:data_razonSocial="${servicio.cliente.razonSocial}"
               th:data_estado="${servicio.estado.nombre}"
               th:onclick="|borrarServicio('${servicio.id}', this.getAttribute('data_razonSocial'), this.getAttribute('data_estado'))|" 
-              class="btn btn-danger mx-1"><i class="far fa-trash-alt"></i></a>
-              <a class="btn btn-secondary" th:href="@{'/servicios/imprimir/' + ${servicio.id}(format=pdf)}" target="_blank" ><i class="fas fa-print"></i></a>
+              class="btn btn-danger mx-1"
+              data-toggle="tooltip" data-placement="bottom" title="Eliminar"><i class="far fa-trash-alt"></i></a>
+              <a class="btn btn-secondary" th:href="@{'/servicios/imprimir/' + ${servicio.id}(format=pdf)}" target="_blank" 
+              data-toggle="tooltip" data-placement="bottom" title="Imprimir Orden"><i class="fas fa-print"></i></a>
           </td>
         </tr>
       </tbody>
     </table>
   </div>
-
-
-
-
-
-
     <!-- Modal -->
   <div class="modal fade" id="borrarModal" tabindex="-1" aria-labelledby="borrarModal" aria-hidden="true">
     <div class="modal-dialog">

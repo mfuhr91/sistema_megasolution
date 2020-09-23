@@ -12,7 +12,7 @@
             <div class="card-header" th:text="${titulo}"></div>
             <div class="card-body">
                 <input type="text" class="form-control col-sm-2 my-3 float-left buscador" focus placeholder="Buscar">
-                <a th:href="@{/clientes/nuevo}" class="btn btn-primary my-3 float-right"><i class="fas fa-user-plus"></i></a>
+                <a th:href="@{/clientes/nuevo}" class="btn btn-primary my-3 float-right"><strong>Agregar</strong></a>
                 <table class="table table-sm table-striped table-hover table-bordered text-center">
                     <thead class="thead-dark text-light">
                         <tr>
@@ -36,12 +36,16 @@
                             <td th:text="${cliente.direccion}"></td>
                             <td th:text="${#calendars.format(cliente.fechaAlta,'dd/MM/yyyy')}"></td>
                             <td class="opciones">
-                                <a th:href="@{/clientes/ver/} + ${cliente.id}" class="btn btn-success mx-1"><i class="far fa-eye"></i></a>
-                                <a th:href="@{/clientes/editar/} + ${cliente.id}" class="btn btn-warning mx-1"><i class="far fa-edit"></i></a>
+                                <a th:href="@{/clientes/ver/} + ${cliente.id}" class="btn btn-success mx-1"
+                                data-toggle="tooltip" data-placement="bottom" title="Ver datos"><i class="far fa-eye"></i></a>
+                                <a th:href="@{/clientes/editar/} + ${cliente.id}" class="btn btn-warning mx-1"
+                                data-toggle="tooltip" data-placement="bottom" title="Editar"><i class="far fa-edit"></i></a>
                                 <a th:data_razonSocial="${cliente.razonSocial}" id="borrar_" th:attrappend="id=${cliente.id}" 
                                 th:onclick="|borrarCliente('${cliente.id}', this.getAttribute('data_razonSocial'))|" 
-                                class="btn btn-danger mx-1"><i class="far fa-trash-alt"></i></a>
-                                <a class="btn btn-secondary mx-1" th:href="@{/servicios/cliente/} + ${cliente.id}"><i class="far fa-list-alt"></i></a>
+                                class="btn btn-danger mx-1"
+                                data-toggle="tooltip" data-placement="bottom" title="Eliminar"><i class="far fa-trash-alt"></i></a>
+                                <a class="btn btn-secondary mx-1" th:href="@{/servicios/cliente/} + ${cliente.id}"
+                                data-toggle="tooltip" data-placement="bottom" title="Ver servicios"><i class="far fa-list-alt"></i></a>
                             </td>
                         </tr>
                     </tbody>
