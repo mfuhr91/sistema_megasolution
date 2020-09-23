@@ -123,7 +123,19 @@ public class ImprimirServicio extends AbstractPdfView {
         cel.addElement(tituloEquipo);
         cel.addElement(equipo);
                                                 
-        cel.setColspan(5);
+        cel.setColspan(3);
+        cel.setPadding(8f);
+        cel.setPaddingTop(2f);
+        cel.setLeading(5, 1);
+        tabla2.addCell(cel);
+
+        Phrase tituloTelefono = new Phrase("Teléfono:", FontFactory.getFont(FONT,12, Font.BOLD));
+        Phrase telefono = new Phrase("    " + servicio.getCliente().getTelefono(),FontFactory.getFont(FONT));
+        cel = new PdfPCell();
+        cel.addElement(tituloTelefono);
+        cel.addElement(telefono);
+                                                
+        cel.setColspan(2);
         cel.setPadding(8f);
         cel.setPaddingTop(2f);
         cel.setLeading(5, 1);
