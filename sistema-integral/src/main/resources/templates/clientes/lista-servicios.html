@@ -43,7 +43,7 @@
           <th>BATERIA</th>
           <th>SECTOR</th>
           <th>PROBLEMA REPORTADO</th>
-          <th>OBSERVACIONES</th>
+          <th class="observaciones">OBSERVACIONES</th>
           <th>SOLUCION</th>
           <th>FECHA DE INGRESO</th>
           <th>FECHA DE FINALIZACIÓN</th>
@@ -60,12 +60,36 @@
         <tr th:each="servicio : ${servicios}" th:if="${not #lists.isEmpty(servicios)}" th:switch="${servicio.estado.nombre}">
           <td th:text="${servicio.cliente.razonSocial}"></td>
           <td th:text="${servicio.equipo}"></td>
-          <td th:text="${#strings.equals(servicio.cargador, 'true')} ? 'SI' : 'NO'"></td>
+          <td th:if="${servicio.cargador}">
+            <div class="ok bg-success">
+              <i class="fas fa-check"></i>
+            </div>
+          </td>
+
+          <td th:if="${!servicio.cargador}">
+            <div class="no-tiene bg-danger">
+              <i class="fas fa-times-circle"></i>
+            </div>
+          </td>
+
+          <td th:if="${servicio.bateria}">
+            <div class="ok bg-success">
+              <i class="fas fa-check"></i>
+            </div>
+          </td>
+          <td th:if="${!servicio.bateria}">
+            <div class="no-tiene bg-danger">
+              <i class="fas fa-times-circle"></i>
+            </div>
+          </td>
+          <td th:if="${servicio.sector != null}"><div class="sector bg-info" th:text="${servicio.sector.nombre}"></div></td>
+          <td th:if="${servicio.sector == null}" th:text="${''}"></td>
+          <!-- <td th:text="${#strings.equals(servicio.cargador, 'true')} ? 'SI' : 'NO'"></td>
           <td th:text="${#strings.equals(servicio.bateria, 'true')} ? 'SI' : 'NO'"></td>
           <td th:if="${servicio.sector != null}" th:text="${servicio.sector.nombre}"></td>
-          <td th:if="${servicio.sector == null}" th:text="${''}"></td>
+          <td th:if="${servicio.sector == null}" th:text="${''}"></td> -->
           <td th:text="${servicio.problemaReportado}"></td>
-          <td th:text="${servicio.observaciones}"></td>
+          <td class="observaciones" th:text="${servicio.observaciones}"></td>
           <td th:text="${servicio.solucion}"></td>
           <td th:text="${#calendars.format(servicio.fechaIngreso,'HH:mm dd/MM/yyyy')}"></td>
           <td th:text="${#calendars.format(servicio.fechaTerminado,'HH:mm dd/MM/yyyy')}"></td>
@@ -76,7 +100,8 @@
               <a th:href="@{/servicios/editar/} + ${servicio.id}" class="btn btn-warning mx-1"><i class="far fa-edit"></i></a>
               <a id="borrar_" th:attrappend="id=${servicio.id}" 
               th:data_razonSocial="${servicio.cliente.razonSocial}"
-              th:onclick="|borrarServicio('${servicio.id}', this.getAttribute('data_razonSocial'))|" 
+              th:data_estado="${servicio.estado.nombre}"
+              th:onclick="|borrarServicio('${servicio.id}', this.getAttribute('data_razonSocial'), this.getAttribute('data_estado'))|" 
               class="btn btn-danger mx-1"><i class="far fa-trash-alt"></i></a>
           </td>
         </tr>
@@ -97,7 +122,7 @@
           ¿Está seguro que quiere eliminar el servicio del cliente <span class="razonSocial"></span> con estado <span class="servicio_estado"></span>?
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
           <a id="borrarBoton" class="btn btn-danger mx-1">Eliminar</a>
         </div>
       </div>

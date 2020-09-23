@@ -43,7 +43,7 @@
           <th class="bateria">BATERIA</th>
           <th >SECTOR</th>
           <th>PROBLEMA REPORTADO</th>
-          <th>OBSERVACIONES</th>
+          <th class="observaciones">OBSERVACIONES</th>
           <th>SOLUCION</th>
           <th class="ingreso">FECHA DE INGRESO</th>
           <th class="terminado">FECHA DE FINALIZACIÓN</th>
@@ -80,7 +80,7 @@
           <td th:if="${servicio.sector != null}"><div class="sector bg-info" th:text="${servicio.sector.nombre}"></div></td>
           <td th:if="${servicio.sector == null}" th:text="${''}"></td>
           <td th:text="${servicio.problemaReportado}"></td>
-          <td th:text="${servicio.observaciones}"></td>
+          <td class="observaciones" th:text="${servicio.observaciones}"></td>
           <td th:text="${servicio.solucion}"></td>
           <td th:text="${#calendars.format(servicio.fechaIngreso,'HH:mm dd/MM/yyyy')}"></td>
           <td th:text="${#calendars.format(servicio.fechaTerminado,'HH:mm dd/MM/yyyy')}"></td>
