@@ -16,6 +16,8 @@ public interface IServicioService {
     public Integer contarServicios();
 
     public List<Servicio> buscarPorEstadoServicio(Integer id);
+    
+    public List<Servicio> buscarPorEstadoServicioMonitor(Integer id);
 
     public Servicio guardar(Servicio servicio);
 

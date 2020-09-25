@@ -22,7 +22,7 @@ public class SistemaIntegralApplication implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 	
-	/* 	String password = "2744mfuhR";
+	/* 	String password = "admin";
 
 
 		for(int i = 0; i < 1; i++){

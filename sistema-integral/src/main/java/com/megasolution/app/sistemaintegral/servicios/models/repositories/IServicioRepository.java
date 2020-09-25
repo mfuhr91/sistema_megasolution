@@ -11,11 +11,15 @@ import org.springframework.stereotype.Repository;
 public interface IServicioRepository extends JpaRepository<Servicio, Integer>{
 
 
+ 
     @Query(value = "SELECT * FROM servicios ORDER BY fecha_ingreso ASC;", nativeQuery = true)
-    public List<Servicio> findAll();
+    public List<Servicio> findAll(); 
 
     @Query(value = "SELECT * FROM servicios WHERE estado_id = ?1 ORDER BY fecha_ingreso ASC;", nativeQuery = true)
     public List<Servicio> findByEstadoServicio(Integer id);
+
+    @Query(value = "SELECT * FROM servicios WHERE estado_id = ?1 ORDER BY observaciones LIKE '%URGENTE%' DESC, fecha_ingreso ASC;", nativeQuery = true)
+    public List<Servicio> findByEstadoServicioMonitor(Integer id);
 
     @Query(value = "SELECT COUNT(*) FROM servicios;", nativeQuery = true)
     public Integer contarServicios();

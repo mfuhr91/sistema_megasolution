@@ -106,6 +106,9 @@ public class ServicioServiceImpl implements IServicioService {
 
     }
 
-
-    
+    @Override
+    public List<Servicio> buscarPorEstadoServicioMonitor(Integer id) {
+        return servicioRepo.findByEstadoServicioMonitor(id);
+    }
+ 
 }

@@ -479,8 +479,8 @@ public class ServicioController {
 
     @GetMapping("/monitor")
     public String monitor(Model model){
-        List<Servicio> serviciosPendientes = servicioService.buscarPorEstadoServicio(1);
-        List<Servicio> serviciosEnProceso = servicioService.buscarPorEstadoServicio(2);
+        List<Servicio> serviciosPendientes = servicioService.buscarPorEstadoServicioMonitor(1);
+        List<Servicio> serviciosEnProceso = servicioService.buscarPorEstadoServicioMonitor(2);
         
         model.addAttribute("totalPendientes", serviciosPendientes.size());
         model.addAttribute("totalEnProceso", serviciosEnProceso.size());
