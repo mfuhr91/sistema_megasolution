@@ -35,14 +35,15 @@
                         <div class="form-group">
                             <div class="form-check ml-3">
                                 <label for="cargador" class="form-check-label">
-                                    <input id="cargador" th:field="*{cargador}" type="checkbox" class="form-check-input" th:value="true">CARGADOR
+                                    <input id="cargador" th:field="*{cargador}" type="checkbox" class="form-check-input">CARGADOR
                                 </label>
+                                
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="form-check ml-3">
                                 <label for="bateria" class="form-check-label">
-                                    <input id="bateria" checked th:field="*{bateria}" type="checkbox" class="form-check-input" th:value="true" >BATERIA
+                                    <input id="bateria" checked th:field="*{bateria}" type="checkbox" class="form-check-input" th:checked="${checked}">BATERIA
                                 </label>
                             </div>
                         </div>

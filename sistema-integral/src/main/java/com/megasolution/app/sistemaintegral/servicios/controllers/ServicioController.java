@@ -261,7 +261,8 @@ public class ServicioController {
     public String nuevoServicio(Model model){
         Servicio servicio = new Servicio();
         List<Estado> estados = estadoService.buscarTodos();
-
+        servicio.setCargador(true);
+        servicio.setBateria(true);
         servicio.setFechaIngreso(new Date());
         model.addAttribute("titulo", "Agregar Servicio");
         model.addAttribute("active", "servicios");
@@ -435,9 +436,6 @@ public class ServicioController {
         
         model.addAttribute("titulo", "Agregar Servicio");
         model.addAttribute("active", "servicio");
-
-        
-        System.out.println("###### EL ID DEL SERVICIO ES: " + servicio.getId());
         
         if(servicio.getId() != null){
             servicioService.guardar(servicio);

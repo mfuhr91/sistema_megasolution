@@ -81,8 +81,21 @@ public class ClienteController {
         List<Localidad> localidades = localidadService.buscarTodos();
         List<Provincia> provincias = provinciaService.buscarTodos();
         List<Pais> paises = paisService.buscarTodos();
-
-        if(clienteService.buscarPorDniCuit(cliente.getDniCuit()) != null){
+        if(cliente.getId() != null){ 
+            Cliente clienteBuscado = clienteService.buscarPorDniCuit(cliente.getDniCuit());
+            if(clienteBuscado != null){
+                if(cliente.getId() != null && clienteBuscado.getDniCuit().equals(cliente.getDniCuit()) 
+                                            && !clienteBuscado.getId().equals(cliente.getId())){
+                    model.addAttribute("alertDangerDniCuit", " alert-danger");
+                    model.addAttribute("errorDniCuit", "Ya existe un cliente con este número de documento!");
+                    model.addAttribute("localidades", localidades);
+                    model.addAttribute("provincias", provincias);
+                    model.addAttribute("paises", paises);
+                    return "clientes/form-cliente";
+                }
+            }
+        }
+        if(cliente.getId() == null && clienteService.buscarPorDniCuit(cliente.getDniCuit()) != null){
             model.addAttribute("alertDangerDniCuit", " alert-danger");
             model.addAttribute("errorDniCuit", "Ya existe un cliente con este número de documento!");
             model.addAttribute("localidades", localidades);
