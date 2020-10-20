@@ -13,8 +13,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-   /*  @Autowired
-    private MyUserDetailService myUserDetailService; */
+
 
     @Autowired
     private DataSource dataSource; 
@@ -37,9 +36,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                     .logout().permitAll();
     }
-
-    
-    
+  
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -48,27 +45,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     public void configurerGlobal(AuthenticationManagerBuilder auth) throws Exception {
 
-       /*  auth.userDetailsService(userDetailsService)
-        .passwordEncoder(passwordEncoder()); */
-
          auth.jdbcAuthentication()
             .dataSource(dataSource)
             .passwordEncoder(passwordEncoder())
             .usersByUsernameQuery("select nombre_usuario, contraseña, habilitado from usuarios where nombre_usuario = ?")
             .authoritiesByUsernameQuery("select u.nombre_usuario, a.authority from authorities a inner join usuarios u on (u.authority_id = a.id) where u.nombre_usuario = ?"); 
-       /* 
-        PasswordEncoder encoder = passwordEncoder();
-        
-        
-        UserBuilder users = User.builder().passwordEncoder(password -> {
-            return encoder.encode(password);
-        }); 
-
-        builder.inMemoryAuthentication().withUser(users.username("admin").password("admin").roles("ADMIN", "USER"))
-                .withUser(users.username("mariano").password("mariano").roles("USER"));
-
-                 */
-        
+             
     }
 
 }

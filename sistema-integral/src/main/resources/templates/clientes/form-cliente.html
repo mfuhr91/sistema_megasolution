@@ -43,26 +43,26 @@
                         <div class="form-group">
                             <label for="telefono" class="col-sm col-form-label">TELEFONO</label>
                             <div class="col-sm  mb-3">
-                                <input id="telefono" type="number" th:field="*{telefono}" class="form-control"  placeholder="Ingrese un teléfono" th:errorclass="'form-control alert-danger'" >
+                                <input  id="telefono" type="number" th:field="*{telefono}" class="form-control"  placeholder="Ingrese un teléfono" th:errorclass="'form-control alert-danger'" >
                                 <small class="form-text text-danger" th:if="${#fields.hasErrors('telefono')}" th:errors="*{telefono}"></small>
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="email" class="col-sm col-form-label">EMAIL</label>
                             <div class="col-sm  mb-3">
-                                <input id="email" type="text" th:field="*{email}" class="form-control"  placeholder="Ingrese un email" th:errorclass="'form-control alert-danger'">
+                                <input id="email" type="text" th:field="*{email}" class="form-control uppercase"  placeholder="Ingrese un email" th:errorclass="'form-control alert-danger'">
                                 <small class="form-text text-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></small>
                             </div>
                         </div>
                     </div>
                     <div class="col-xl-6">
-                                <div class="form-group">
-                                    <label for="web" class="col-sm col-form-label">WEB</label>
-                                    <div class="col-sm  mb-3">
-                                        <input id="web" type="text" th:field="*{web}" class="form-control"  placeholder="Ingrese un sitio web" th:errorclass="'form-control alert-danger'">
-                                        <small class="form-text text-danger" th:if="${#fields.hasErrors('web')}" th:errors="*{web}"></small>
-                                    </div>
-                                </div>
+                        <div class="form-group">
+                            <label for="web" class="col-sm col-form-label">WEB</label>
+                            <div class="col-sm  mb-3">
+                                <input id="web" type="text" th:field="*{web}" class="form-control"  placeholder="Ingrese un sitio web" th:errorclass="'form-control alert-danger'">
+                                <small class="form-text text-danger" th:if="${#fields.hasErrors('web')}" th:errors="*{web}"></small>
+                            </div>
+                        </div>
                         <div class="form-group">
                             <label for="direccion" class="col-sm col-form-label">DIRECCION</label>
                             <div class="col-sm  mb-3">

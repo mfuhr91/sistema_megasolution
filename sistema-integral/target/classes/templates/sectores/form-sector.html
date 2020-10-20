@@ -19,7 +19,7 @@
                             <label for="equipo" class="col-sm col-form-label">SECTOR</label>
                             <div class="col-sm  mb-3">
                                 <input id="nombre" type="text" th:field="*{nombre}" class="form-control" placeholder="Ingrese un sector" 
-                                th:errorclass="'form-control alert-danger'">
+                                th:errorclass="'form-control alert-danger'" autofocus>
                                 <small class="form-text text-danger" th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}"></small>
                             </div>
                         </div>

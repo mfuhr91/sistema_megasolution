@@ -83,6 +83,7 @@ public class UsuarioController {
         List<Rol> roles = rolService.buscarTodos();
 
         usuario.setFechaAlta(new Date());
+        usuario.setHabilitado(true);
 
         model.addAttribute("titulo", "Agregar Usuario");
         model.addAttribute("active", "usuarios");

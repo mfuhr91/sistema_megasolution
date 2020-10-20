@@ -10,29 +10,29 @@
   <div class="container-fluid my-4 pb-3">
     <ul class="nav nav-pills nav-fill">
       <li class="nav-item">
-        <a class="nav-link" th:class="${#strings.equals(pill_activo, 'todos')} ? 'nav-link active' : 'nav-link'" 
+        <a th:class="${#strings.equals(pill_activo, 'todos')} ? 'nav-link active' : 'nav-link'" 
         th:href="@{/servicios}">TODOS</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" th:class="${#strings.equals(pill_activo, 'pendiente')} ? 'nav-link active' : 'nav-link'" 
+        <a th:class="${#strings.equals(pill_activo, 'pendiente')} ? 'nav-link active' : 'nav-link'"  
         th:href="@{/servicios/pendiente}">PENDIENTE</a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link" th:class="${#strings.equals(pill_activo, 'en_proceso')} ? 'nav-link active' : 'nav-link'" 
+      <li class="nav-item ">
+        <a th:class="${#strings.equals(pill_activo, 'en_proceso')} ? 'nav-link active' : 'nav-link'" 
         th:href="@{/servicios/en-proceso}">EN PROCESO</a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link" th:class="${#strings.equals(pill_activo, 'terminado')} ? 'nav-link active' : 'nav-link'" 
+      <li class="nav-item ">
+        <a th:class="${#strings.equals(pill_activo, 'terminado')} ? 'nav-link active' : 'nav-link'"  
         th:href="@{/servicios/terminado}">TERMINADO</a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link" th:class="${#strings.equals(pill_activo, 'entregado')} ? 'nav-link active' : 'nav-link'" 
+      <li class="nav-item ">
+        <a th:class="${#strings.equals(pill_activo, 'entregado')} ? 'nav-link active' : 'nav-link'"  
         th:href="@{/servicios/entregado}">ENTREGADO</a>
       </li>
     </ul>
 
 
-    <input type="text" class="form-control col-sm-2 my-3 float-left buscador" focus placeholder="Buscar">
+    <input type="text" class="form-control col-sm-2 my-3 float-left buscador" placeholder="Buscar">
     <a th:href="@{/servicios/nuevo}" class="btn btn-primary my-3 float-right"><strong>Agregar</strong></a>
     <table class="table table-striped table-hover table-bordered text-center">
       <thead class="thead-dark text-light">

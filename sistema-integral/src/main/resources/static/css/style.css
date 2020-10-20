@@ -26,13 +26,24 @@ footer{
   height: 50px;
   line-height: 50px;
 }
+/* input{
+  text-transform: uppercase;
+} */
 
 .nav-pills .nav-link{
   color: #083a93 !important;
+  background-color: lightgray;
+  margin-right: 5px;
+  margin-left: 5px;
 }
+
+
 .nav-item .active {
   color: #fff !important;
   background-color: #083a93 !important;
+  margin-right: 5px;
+  margin-left: 5px;
+  
 }
 
 .btn-primary{
@@ -50,6 +61,22 @@ td{
   width: 225px;
   min-width: 225px;
 }
+
+#datosCliente{
+  background-color: lightsteelblue;
+  border-radius: 5px;
+  margin: 10px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+#datosEquipo{
+  background-color: #a77e6365;
+  border-radius: 5px;
+  margin: 10px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
 .cargador,
 .bateria,
 .ingreso,
@@ -61,6 +88,7 @@ td{
 #problemaReportado{
   height: 88px;
 }
+
 .monitor .cardPendiente a{
       position:absolute; /* posicion con respecto a la posicion del div */
        width:100%;
@@ -190,6 +218,10 @@ aside .card .card-header{
     flex: 1 0 25%;
     max-width: none;
   }
+  .sector{
+    width: 50px;
+ 
+  }
     
 }
 
@@ -226,5 +258,7 @@ aside .card .card-header{
   .observaciones{
     display: none;
   }
-
+  .sector{
+    width: 40px !important;
+  }
 }

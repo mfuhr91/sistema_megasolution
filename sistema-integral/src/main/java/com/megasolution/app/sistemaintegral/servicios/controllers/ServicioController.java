@@ -261,12 +261,16 @@ public class ServicioController {
     public String nuevoServicio(Model model){
         Servicio servicio = new Servicio();
         List<Estado> estados = estadoService.buscarTodos();
+        List<Sector> sectores = sectorService.buscarDisponibles();
+        List<Cliente> clientes = clienteService.buscarTodos();
         servicio.setCargador(true);
         servicio.setBateria(true);
         servicio.setFechaIngreso(new Date());
         model.addAttribute("titulo", "Agregar Servicio");
         model.addAttribute("active", "servicios");
         model.addAttribute("servicio", servicio);
+        model.addAttribute("sectores", sectores);
+        model.addAttribute("clientes", clientes);
 
         model.addAttribute("estados", estados);
        

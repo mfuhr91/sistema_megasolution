@@ -40,88 +40,27 @@ function borrarUsuario(id, nombreUsuario){
 
 //ABRE MODAL PARA BUSCAR CLIENTE
 function buscarCliente(){
-    $.get("/servicios/mostrar-clientes",{
-    }).done(function(clientes){
-        console.log("ANDA");
-
-        clientes.forEach(cliente => {
-            console.log("ANDA");
-            var fila = 
-            `<tr>
-            <td>
-            <a id="seleccionar_`+ cliente.id +`" 
-            onclick="seleccionarCliente('`+ cliente.id +`','`+ cliente.dniCuit +`','`+cliente.razonSocial +`')" 
-            class="btn btn-primary mx-1"><i class="far fa-check-circle"></i></a>
-            </td>
-            <td>` + cliente.dniCuit + `</td>
-            <td>` + cliente.razonSocial + `</td>
-            <td>` + cliente.contacto + `</td>
-            <td>` + cliente.telefono + `</td>
-            <td>` + cliente.email + `</td>
-            <td>` + cliente.direccion + `</td>
-            <td>` + moment(cliente.fechaAlta).format('HH:mm DD/MM/YYYY') + `</td>
-            <td>
-            <a href="/clientes/editar/`+ cliente.id +`" class="btn btn-warning mx-1"><i class="far fa-edit"></i></a>
-            </td>
-            </tr>`;
-
-            $('#tabla-clientes').append(fila);
-        });
-    })
     $('#buscarClienteModal').modal('show');
     $('#buscarClienteModal').on('shown.bs.modal', function(){
         $('.buscador').focus();
-    });
-    $('#buscarClienteModal').on('hidden.bs.modal', function(){
-        $('.tabla').empty();
-    });
-
-    
+    }); 
 }
 
 // SELECCIONA EL CLIENTE Y PASA LOS VALORES AL INPUT DEL FORM SERVICIO
-function seleccionarCliente(cliente_id,cliente_dni_cuit,cliente_razonSocial){
+function seleccionarCliente(cliente_id,cliente_dni_cuit,cliente_razonSocial, cliente_tel){
     $('#buscarClienteModal').modal('hide');
     $('#cliente').val(cliente_id);
     $('#cliente_ver').val(cliente_dni_cuit + ' - ' + cliente_razonSocial);
+    $('#clienteTelefono').val(cliente_tel);
     $('.tabla tr').show();
     $('#equipo').focus();    
 
 }
 //ABRE MODAL PARA BUSCAR SECTOR
 function buscarSector(){
-    $.get("/servicios/mostrar-sectores",{
-    }).done(function(sectores){
-        sectores.forEach(sector => {
-            var fila = 
-            `<tr>
-            <td>
-            <a id="seleccionar_`+sector.id+`"
-            onclick="seleccionarSector('`+sector.id+`', '`+sector.nombre +`')" 
-            class="btn btn-primary mx-1"><i class="far fa-check-circle"></i></a>
-            </td>
-            <td>` + sector.nombre + `</td>
-            <td>SI</td>
-            <td>
-            <a href="/sectores/editar/`+ sector.id +`" class="btn btn-warning mx-1"><i class="far fa-edit"></i></a>
-            </td>`;
-
-            $('#tabla-sectores').append(fila);
-        });
-        if($.isEmptyObject(sectores)){
-                var fila = 
-                `<td colspan="4" class="alert alert-warning">
-                                        No hay sectores disponibles
-                </td>`
-                $('#tabla-sectores').append(fila);
-        }
-    })
     $('#buscarSectorModal').modal('show');
     $('#buscarSectorModal').on('shown.bs.modal', function(){
         $('.buscador').focus();
-    });
-    $('#buscarSectorModal').on('hidden.bs.modal', function(){
-        $('.tabla').empty();
     });
 }
 
@@ -139,6 +78,58 @@ function seleccionarSector(sector_id, sector_nombre){
 $(document).ready(() => {
     $('.buscador').focus();
     $('#dniCuit').focus();
+
+    // CAMPOS CLIENTE EN MAYUSCULA
+    $('#razonSocial').focusout(()=>{
+        $('#razonSocial').val($('#razonSocial').val().trim());
+        $('#razonSocial').val($('#razonSocial').val().toUpperCase());
+    });
+
+    $('#contacto').focusout(()=>{
+        $('#contacto').val($('#contacto').val().trim());
+        $('#contacto').val($('#contacto').val().toUpperCase());
+    });
+    $('#email').focusout(()=>{
+        $('#email').val($('#email').val().trim());
+        $('#email').val($('#email').val().toUpperCase());
+    });
+    $('#web').focusout(()=>{
+        $('#web').val($('#web').val().trim());
+        $('#web').val($('#web').val().toUpperCase());
+    });
+    $('#direccion').focusout(()=>{
+        $('#direccion').val($('#direccion').val().trim());
+        $('#direccion').val($('#direccion').val().toUpperCase());
+    });
+
+
+    // CAMPOS SERVICIOS EN MAYUSCULA
+    $('#equipo').focusout(()=>{
+        $('#equipo').val($('#equipo').val().trim());
+        $('#equipo').val($('#equipo').val().toUpperCase());
+    });
+
+    $('#problemaReportado').focusout(()=>{
+        $('#problemaReportado').val($('#problemaReportado').val().trim());
+        $('#problemaReportado').val($('#problemaReportado').val().toUpperCase());
+    });
+    $('#observaciones').focusout(()=>{
+        $('#observaciones').val($('#observaciones').val().trim());
+        $('#observaciones').val($('#observaciones').val().toUpperCase());
+    });
+    $('#solucion').focusout(()=>{
+        $('#solucion').val($('#solucion').val().trim());
+        $('#solucion').val($('#solucion').val().toUpperCase());
+    });
+    
+    //CAMPO SECTOR EN MAYUSCULA
+    
+    $('#nombre').focusout(()=>{
+        $('#nombre').val($('#nombre').val().trim());
+        $('#nombre').val($('#nombre').val().toUpperCase());
+    });
+
+
 
     $('#estado').change(function() {
         var estadoSeleccionado = $(this).children('option:selected').val();
