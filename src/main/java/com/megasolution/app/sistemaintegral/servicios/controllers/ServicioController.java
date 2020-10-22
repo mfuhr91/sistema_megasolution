@@ -222,6 +222,8 @@ public class ServicioController {
         Cliente cliente = null;
         Sector sector = null;
         List<Estado> estados = estadoService.buscarTodos();
+        List<Sector> sectores = sectorService.buscarDisponibles();
+        List<Cliente> clientes = clienteService.buscarTodos();
         if(id > 0){
             servicio = servicioService.buscarPorId(id);
             cliente = clienteService.buscarPorId(servicio.getCliente().getId());
@@ -236,6 +238,8 @@ public class ServicioController {
         model.addAttribute("servicio", servicio);
         model.addAttribute("cliente", cliente.getDniCuit() + " - " + cliente.getRazonSocial());
         model.addAttribute("estados", estados);
+        model.addAttribute("sectores", sectores);
+        model.addAttribute("clientes", clientes);
         model.addAttribute("active", "servicios");
         model.addAttribute("titulo", "Editar Servicio");
         return "servicios/form-servicio";
@@ -261,14 +265,14 @@ public class ServicioController {
     public String nuevoServicio(Model model){
         Servicio servicio = new Servicio();
         List<Estado> estados = estadoService.buscarTodos();
-        List<Sector> sectores = sectorService.buscarDisponibles();
-        List<Cliente> clientes = clienteService.buscarTodos();
         servicio.setCargador(true);
         servicio.setBateria(true);
         servicio.setFechaIngreso(new Date());
         model.addAttribute("titulo", "Agregar Servicio");
         model.addAttribute("active", "servicios");
         model.addAttribute("servicio", servicio);
+        List<Sector> sectores = sectorService.buscarDisponibles();
+        List<Cliente> clientes = clienteService.buscarTodos();
         model.addAttribute("sectores", sectores);
         model.addAttribute("clientes", clientes);
 
