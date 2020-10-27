@@ -43,7 +43,7 @@ public class ServicioServiceImpl implements IServicioService {
     @Override
     @Transactional
     public Servicio guardar(Servicio servicio) {
-        return servicioRepo.save(servicio);
+        return servicioRepo.saveAndFlush(servicio);
     }
 
     @Override
