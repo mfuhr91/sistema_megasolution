@@ -42,8 +42,8 @@ public class ServicioServiceImpl implements IServicioService {
 
     @Override
     @Transactional
-    public Servicio guardar(Servicio servicio) {
-        return servicioRepo.saveAndFlush(servicio);
+    public void guardar(Servicio servicio) {
+        servicioRepo.saveAndFlush(servicio);
     }
 
     @Override
@@ -62,8 +62,8 @@ public class ServicioServiceImpl implements IServicioService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Servicio> buscarPorEstadoPorCliente(Integer estado_id, Integer cliente_id) {
-        return servicioRepo.findByServicioWithEstadoIdWithClienteId(estado_id, cliente_id);
+    public List<Servicio> buscarPorEstadoPorCliente(Integer estadoId, Integer clienteId) {
+        return servicioRepo.findByServicioWithEstadoIdWithClienteId(estadoId, clienteId);
     }
 
     public void recuperarEstadoTerminado(Servicio servicio){

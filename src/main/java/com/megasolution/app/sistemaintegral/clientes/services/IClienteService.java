@@ -10,14 +10,6 @@ public interface IClienteService {
 
     public Cliente buscarPorId(Integer id);
 
-  /*   public Cliente buscarPorDniCuit(String dniCuit);
-
-    public Cliente buscarPorRazonSocial(String razonSocial);
-
-    public Cliente buscarPorContacto(String contacto);
-
-    public Cliente buscarPorTelefono(Long telefono); */
-
     public void guardar(Cliente cliente);
 
     public void eliminar(Integer id);

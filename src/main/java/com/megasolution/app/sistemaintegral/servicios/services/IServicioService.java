@@ -19,13 +19,13 @@ public interface IServicioService {
     
     public List<Servicio> buscarPorEstadoServicioMonitor(Integer id);
 
-    public Servicio guardar(Servicio servicio);
+    public void guardar(Servicio servicio);
 
     public void eliminar(Integer id);
 
     public List<Servicio> buscarPorServicioConClienteId(Integer id);
 
-    public List<Servicio> buscarPorEstadoPorCliente(Integer estado_id, Integer cliente_id);
+    public List<Servicio> buscarPorEstadoPorCliente(Integer estadoId, Integer clienteId);
 
     public void recuperarEstadoTerminado(Servicio servicio);
 

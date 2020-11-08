@@ -28,7 +28,7 @@ public interface IServicioRepository extends JpaRepository<Servicio, Integer>{
     public List<Servicio> findByServicioWithClienteId(Integer id);
 
     @Query(value = "SELECT * FROM servicios WHERE estado_id = ?1 AND cliente_id = ?2 ORDER BY fecha_ingreso ASC;", nativeQuery = true)
-    public List<Servicio> findByServicioWithEstadoIdWithClienteId(Integer estado_id, Integer cliente_id);
+    public List<Servicio> findByServicioWithEstadoIdWithClienteId(Integer estadoId, Integer clienteId);
 
     @Query(value = "SELECT * FROM servicios WHERE sector_id = ?1", nativeQuery = true)
     public Servicio buscarServicioPorSector(Integer id);
