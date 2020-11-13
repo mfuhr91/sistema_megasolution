@@ -51,7 +51,7 @@ public class Servicio implements Serializable{
     private Estado estado;
 
     @OneToOne
-    @JoinColumn(name = "sector_id")
+    @JoinColumn(name = "sector_id", unique = true)
     private Sector sector;
 
     @NotBlank

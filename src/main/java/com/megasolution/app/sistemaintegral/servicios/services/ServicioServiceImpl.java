@@ -43,7 +43,7 @@ public class ServicioServiceImpl implements IServicioService {
     @Override
     @Transactional
     public void guardar(Servicio servicio) {
-        servicioRepo.saveAndFlush(servicio);
+        servicioRepo.save(servicio);
     }
 
     @Override

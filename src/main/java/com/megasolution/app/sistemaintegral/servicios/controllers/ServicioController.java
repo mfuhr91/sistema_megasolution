@@ -340,6 +340,10 @@ public class ServicioController {
                 model.addAttribute("errorSolucion", "Debe ingresar una solución antes de guardar el servicio terminado!");
                 model.addAttribute("alertDangerSolucion", " form-control alert-danger");
             }
+            if(servicio.getEstado().getId() == 4 && servicio.getSolucion().isEmpty()){
+                model.addAttribute("errorSolucion", "Debe ingresar una solución antes de guardar el servicio como entregado!");
+                model.addAttribute("alertDangerSolucion", " form-control alert-danger");
+            }
             return "servicios/form-servicio";
         }
         Sector sector = sectorService.buscarPorId(servicio.getSector().getId());
@@ -446,21 +450,26 @@ public class ServicioController {
         model.addAttribute("active", "servicio");
         
         if(servicio.getId() != null){
+            if(avisoBuscado == null){
+                avisoService.guardar(aviso);  
+            }
             servicioService.guardar(servicio);
             status.setComplete();
             flash.addFlashAttribute("success", "Servicio actualizado con éxito!");
-                        if(avisoBuscado == null){
-                            avisoService.guardar(aviso);  
-                        } 
             return "redirect:/servicios";
         }else{
-            servicioService.guardar(servicio);
+            if(avisoBuscado == null){
+                avisoService.guardar(aviso);  
+            } 
+            try{
+                servicioService.guardar(servicio);
+            }catch(Exception e){
+                
+                return "redirect:/servicios";
+            }
             status.setComplete();
             flash.addFlashAttribute("successNuevo", "Servicio guardado con éxito!");
             flash.addFlashAttribute("servicioId", servicio.getId());
-                            if(avisoBuscado == null){
-                                avisoService.guardar(aviso);  
-                            } 
             return "redirect:/servicios";
         }
     }
