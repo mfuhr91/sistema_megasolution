@@ -405,6 +405,8 @@ public class ServicioController {
             
             return "servicios/form-servicio";
         }
+
+        
         // ESTADO DEL SERVICIO CAMBIA A TERMINADO = ID 3
         Aviso aviso = new Aviso();
         Aviso avisoBuscado = new Aviso();
@@ -416,8 +418,19 @@ public class ServicioController {
             
                 
             sector.setDisponible(false);
+            
     
-        
+        // ESTADO DEL SERVICIO CAMBIA A ENTREGADO = ID 4
+        }else if(servicio.getEstado().getId() == 4){
+            aviso = avisoService.buscarAvisoPorServicioId(servicio.getId());
+
+            if(aviso != null){
+                avisoService.eliminar(aviso.getId());
+                servicio.setAviso(null);
+            }
+            servicio.setSector(null); 
+            sector.setDisponible(true);
+
         // EN CASO QUE ESTADO DE SERVICIO SEA 1 o 2
         }else{
             aviso = avisoService.buscarAvisoPorServicioId(servicio.getId());
@@ -427,24 +440,9 @@ public class ServicioController {
             }
         
             sector.setDisponible(false);
+            
         }
-        // ESTADO DEL SERVICIO CAMBIA A ENTREGADO = ID 4
-        if(servicio.getEstado().getId() == 4){
-            aviso = avisoService.buscarAvisoPorServicioId(servicio.getId());
-
-            if(aviso == null){
-                servicio.setSector(null);
-                sector.setDisponible(true);    
-                sectorService.guardar(sector);
-            }else{
-                
-                avisoService.eliminar(aviso.getId());
-                servicio.setSector(null);
-                servicio.setAviso(null);
-                sector.setDisponible(true);
-                sectorService.guardar(sector);
-            } 
-        }
+       
         
         model.addAttribute("titulo", "Agregar Servicio");
         model.addAttribute("active", "servicio");
@@ -453,6 +451,7 @@ public class ServicioController {
             if(avisoBuscado == null){
                 avisoService.guardar(aviso);  
             }
+            sectorService.guardar(sector);
             servicioService.guardar(servicio);
             status.setComplete();
             flash.addFlashAttribute("success", "Servicio actualizado con éxito!");
@@ -462,6 +461,7 @@ public class ServicioController {
                 avisoService.guardar(aviso);  
             } 
             try{
+                sectorService.guardar(sector);
                 servicioService.guardar(servicio);
             }catch(Exception e){
                 
