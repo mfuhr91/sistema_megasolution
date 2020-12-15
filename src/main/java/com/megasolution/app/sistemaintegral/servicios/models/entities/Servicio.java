@@ -55,13 +55,13 @@ public class Servicio implements Serializable{
     private Sector sector;
 
     @NotBlank
-    @Column(name = "problema_reportado")
+    @Column(name = "problema_reportado", columnDefinition="text")
     private String problemaReportado;
 
-    
+    @Column(columnDefinition="text")
     private String observaciones;
 
-
+    @Column(columnDefinition="text")
     private String solucion;
 
     @Temporal(TemporalType.TIMESTAMP)
