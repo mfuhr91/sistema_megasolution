@@ -265,6 +265,8 @@ public class ServicioController {
     public String nuevoServicio(Model model){
         Servicio servicio = new Servicio();
         List<Estado> estados = estadoService.buscarTodos();
+        estados.remove(2);
+        estados.remove(2);
         servicio.setCargador(true);
         servicio.setBateria(true);
         servicio.setFechaIngreso(new Date());
@@ -456,10 +458,7 @@ public class ServicioController {
             status.setComplete();
             flash.addFlashAttribute("success", "Servicio actualizado con éxito!");
             return "redirect:/servicios";
-        }else{
-            if(avisoBuscado == null){
-                avisoService.guardar(aviso);  
-            } 
+        }else{ 
             try{
                 sectorService.guardar(sector);
                 servicioService.guardar(servicio);
