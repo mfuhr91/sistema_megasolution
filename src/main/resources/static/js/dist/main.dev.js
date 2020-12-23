@@ -1,6 +1,11 @@
 "use strict";
 
-//BORRAR CLIENTE SELECCIONADO
+$(document).ready(function () {
+  if ($('#cliente_id').val()) {
+    $('#cliente').val($('#cliente_id').val());
+  }
+}); //BORRAR CLIENTE SELECCIONADO
+
 function borrarCliente(id, cliente_razonSocial) {
   $('#borrarModal').modal('show');
   $('#borrarBoton').attr("href", "/clientes/eliminar/" + id);
@@ -68,8 +73,7 @@ function seleccionarSector(sector_id, sector_nombre) {
   $('#sector_ver').val(sector_nombre);
   $('.tabla tr').show();
   $('#problemaReportado').focus();
-} // ASIGNA AUTOMATICAMENTE LA HORA Y FECHA AL CAMBIAR EL ESTADO A TERMINADO
-
+}
 
 $(document).ready(function () {
   $('.buscador').focus();
@@ -116,7 +120,8 @@ $(document).ready(function () {
   $('#nombre').focusout(function () {
     $('#nombre').val($('#nombre').val().trim());
     $('#nombre').val($('#nombre').val().toUpperCase());
-  });
+  }); // ASIGNA AUTOMATICAMENTE LA HORA Y FECHA AL CAMBIAR EL ESTADO A TERMINADO
+
   $('#estado').change(function () {
     var estadoSeleccionado = $(this).children('option:selected').val();
     moment.locale('es');

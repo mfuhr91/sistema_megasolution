@@ -35,6 +35,7 @@ footer{
   background-color: lightgray;
   margin-right: 5px;
   margin-left: 5px;
+  border-radius: 15px;
 }
 
 
@@ -46,13 +47,23 @@ footer{
   
 }
 
+.btn,.form-control,select{
+  border-radius: 12px;
+}
+
+select {
+  height: 38px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
 .btn-primary{
   background-color: #083a93 !important;
   border-color: #083a93 !important;
 }
 .active{
   background-color: rgba(255, 255, 255, 0.1); /*#083a93;*/
-  border-radius: 4px;
+  border-radius: 10px;
 }
 td{
   max-width: 300px;
@@ -62,18 +73,15 @@ td{
   min-width: 225px;
 }
 
-#datosCliente{
+#datosCliente, #datosEquipo{
   background-color: lightsteelblue;
-  border-radius: 5px;
+  border-radius: 15px;
   margin: 10px;
   padding-top: 10px;
-  padding-bottom: 10px;
+  padding-bottom: 5px;
 }
 #datosEquipo{
   background-color: #a77e6365;
-  border-radius: 5px;
-  margin: 10px;
-  padding-top: 10px;
   padding-bottom: 10px;
 }
 
@@ -85,17 +93,19 @@ td{
   width: 100px;
 }
 
-#problemaReportado{
+#problemaReportado, #solucion{
   height: 88px;
 }
 
 .monitor .cardPendiente a{
-      position:absolute; /* posicion con respecto a la posicion del div */
-       width:100%;
-       height:100%;
+  position:absolute; /* posicion con respecto a la posicion del div */
+  width:100%;
+  height:100%;
 }
 .monitor .cardPendiente{
   cursor: pointer;
+  border-radius: 20px;
+}
 }
 .monitor .cardEnProceso a{
       position:absolute; /* posicion con respecto a la posicion del div */
@@ -104,13 +114,14 @@ td{
 }
 .monitor .cardEnProceso{
   cursor: pointer;
+  border-radius: 20px;
 }
 .h2-monitor{
   font-size: 35px;
   font-weight: bold;
   background-color: #083a93;
   color: #fff;
-  border-radius: 4px;
+  border-radius: 20px;
   padding: 10px;
 }
 
@@ -132,7 +143,7 @@ td{
 }
 
 #tarjetas .card {
-  border-radius: 10px;
+  border-radius: 20px;
   margin: 15px;
   box-shadow: 0px 0px 10px 0px lightgray;
   padding: 10px;
@@ -141,57 +152,83 @@ td{
   background-color: rgba(0, 0, 0, 0.0);
 }
 aside .card{
-  border-radius: 10px;
+  border-radius: 20px;
   box-shadow: 0px 0px 10px 0px lightgray;
-  
   margin-top: 14px;
 }
 aside .card .card-header{
   background-color: rgba(0, 0, 0, 0.0);
   border-bottom: none;
 }
+.card-header:first-child{
+  border-radius: 20px 20px 0px 0px;
+}
 
 #listaAvisos{
   max-height: 618px;
   overflow-y: auto; 
+  border-radius: 0px 0px 20px 20px;
+
 }
+
+::-webkit-scrollbar {
+
+  -webkit-appearance: none;
+  
+}
+
+::-webkit-scrollbar:vertical {
+  width:10px;
+}
+
+::-webkit-scrollbar-button:increment,.listaAvisos::-webkit-scrollbar-button {
+  display: none;
+} 
+
+::-webkit-scrollbar:horizontal {
+  height: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #797979;
+  border-radius: 20px;
+  border: 2px solid #f1f2f3;
+  height: 15%;
+}
+
+::-webkit-scrollbar-track {
+  border-radius: 10px;  
+}
+
 #listaAvisos ul li{
  
   background-color: #eee;
 }
-#listaAvisos ul:last-child{
-  border-radius: 0px 0px 10px 10px;
-}
+
 #listaAvisos ul li .alert{
-  border-radius: 10px;
+  border-radius: 15px;
   
 }
 
-.ok{
-  border-radius: 5px;
+.ok, .no-tiene, .sector{
+  border-radius: 10px;
   padding: 4px;
   margin: auto;
   width: 30px;
   height: 30px;
 }
-.no-tiene{
-  border-radius: 5px;
-  padding: 4px;
-  margin: auto;
-  width: 30px;
-  height: 30px;
-}
+
 .sector{
-  border-radius: 5px;
-  padding: 4px;
-  margin: auto;
   width: 60px;
-  height: 30px;
   line-height: 23px;
 }
 
 .modal-dialog{
   max-width: 80%;
+}
+
+#cliente_ver, #sector_ver{
+  cursor: pointer;
 }
 
 @media(max-width: 1400px){

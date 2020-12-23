@@ -1,4 +1,14 @@
 
+$(document).ready(() => {
+
+    if($('#cliente_id').val()){
+        $('#cliente').val($('#cliente_id').val());
+    }
+   
+});
+
+
+
 //BORRAR CLIENTE SELECCIONADO
 function borrarCliente(id, cliente_razonSocial){
     $('#borrarModal').modal('show');
@@ -54,7 +64,6 @@ function seleccionarCliente(cliente_id,cliente_dni_cuit,cliente_razonSocial, cli
     $('#clienteTelefono').val(cliente_tel);
     $('.tabla tr').show();
     $('#equipo').focus();    
-
 }
 //ABRE MODAL PARA BUSCAR SECTOR
 function buscarSector(){
@@ -74,7 +83,7 @@ function seleccionarSector(sector_id, sector_nombre){
 
 }
 
-// ASIGNA AUTOMATICAMENTE LA HORA Y FECHA AL CAMBIAR EL ESTADO A TERMINADO
+
 $(document).ready(() => {
     $('.buscador').focus();
     $('#dniCuit').focus();
@@ -130,7 +139,7 @@ $(document).ready(() => {
     });
 
 
-
+    // ASIGNA AUTOMATICAMENTE LA HORA Y FECHA AL CAMBIAR EL ESTADO A TERMINADO
     $('#estado').change(function() {
         var estadoSeleccionado = $(this).children('option:selected').val();
         moment.locale('es');
@@ -196,14 +205,14 @@ $(document).ready(()=>{
 // ANIMACION CONTADOR DEL DASHBOARD
 $(document).ready(() => {
     $('.contar').each(function () {
-      var $this = $(this);
-      $({ Counter: 0 }).animate({ Counter: $this.text() }, {
-        duration: 1000,
-        easing: 'swing',
-        step: function () {
-          $this.text(Math.ceil(this.Counter));
-        }
-      });
+        var $this = $(this);
+        $({ Counter: 0 }).animate({ Counter: $this.text() }, {
+            duration: 1000,
+            easing: 'swing',
+            step: function () {
+                $this.text(Math.ceil(this.Counter));
+            }
+        });
     });
-  })
+})
   

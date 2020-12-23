@@ -46,7 +46,7 @@ public class Servicio implements Serializable{
     
     private Boolean bateria;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "estado_id")
     private Estado estado;
 

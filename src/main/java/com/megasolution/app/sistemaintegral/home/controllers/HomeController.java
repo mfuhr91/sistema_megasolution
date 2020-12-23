@@ -8,6 +8,7 @@ import com.megasolution.app.sistemaintegral.avisos.models.entities.Aviso;
 import com.megasolution.app.sistemaintegral.avisos.services.IAvisoService;
 import com.megasolution.app.sistemaintegral.avisos.services.ILlamadoService;
 import com.megasolution.app.sistemaintegral.clientes.services.IClienteService;
+import com.megasolution.app.sistemaintegral.servicios.models.entities.Servicio;
 import com.megasolution.app.sistemaintegral.servicios.services.IServicioService;
 
 
@@ -43,6 +44,12 @@ public class HomeController {
         Integer totalClientes = clienteService.contarClientes();
         Integer totalAvisos = avisos.size();
         long tiempo = servicioService.promedioServicios();
+        List<Servicio> serviciosPendientes = servicioService.buscarPorEstadoServicioMonitor(1);
+        List<Servicio> serviciosEnProceso = servicioService.buscarPorEstadoServicioMonitor(2);
+        List<Servicio> serviciosTerminados = servicioService.buscarPorEstadoServicioMonitor(3);
+        List<Servicio> serviciosEntregados = servicioService.buscarPorEstadoServicioMonitor(4);
+        
+        
 
         Date fechaHoy = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -57,6 +64,10 @@ public class HomeController {
         model.addAttribute("totalServicios", totalServicios);
         model.addAttribute("serviciosDeHoy", serviciosDeHoy);
         model.addAttribute("tiempoPromedio", tiempo);
+        model.addAttribute("totalPendientes", serviciosPendientes.size());
+        model.addAttribute("totalEnProceso", serviciosEnProceso.size());
+        model.addAttribute("totalTerminados", serviciosTerminados.size());
+        model.addAttribute("totalEntregados", serviciosEntregados.size());
       
         return "inicio";
     }

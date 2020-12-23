@@ -16,6 +16,7 @@
                             <div class="form-group col-sm-6">
                                 <label for="cliente" class="col-sm col-form-label">CLIENTE</label>
                                 <div class="col-sm  mb-3">
+                                    <input id="cliente_id" type="hidden" th:unless="${servicio.cliente}" th:value="${id}">
                                     <input id="cliente" type="hidden" th:field="*{cliente.id}">
                                     <input id="cliente_ver" th:onclick="|buscarCliente()|" type="text" class="form-control" 
                                     th:attrappend="class=${alertDangerCliente}" th:value="${cliente}" 
@@ -26,7 +27,7 @@
                             <div class="form-group col-sm-6">
                                 <label for="cliente" class="col-sm col-form-label">TELEFONO</label>
                                 <div class="col-sm  mb-3">
-                                    <input id="clienteTelefono" type="text" class="form-control" th:field="*{cliente.telefono}" readonly>
+                                    <input id="clienteTelefono" type="text" class="form-control" th:value="${telefono}" readonly>
                                 </div>
                             </div>
                     </div>
@@ -147,7 +148,7 @@
         </div>
         <div class="modal-body">
             <input type="text" class="form-control col-sm-3 my-3 float-left buscador" placeholder="Buscar">
-            <a th:href="@{/clientes/nuevo}" class="btn btn-primary my-3 float-right"><i class="fas fa-user-plus"></i></a>
+            <a th:href="@{/clientes/nuevo}" class="btn btn-primary my-3 float-right"><strong>Agregar</strong></a>
             <table class="table table-sm table-striped table-hover table-bordered text-center">
                 <thead class="thead-dark text-light">
                     <tr>
@@ -212,7 +213,7 @@
             </div>
             <div class="modal-body">
                 <input type="text" class="form-control col-sm-3 my-3 float-left buscador" placeholder="Buscar">
-                <a th:href="@{/sectores/nuevo}" class="btn btn-primary my-3 float-right"><i class="fas fa-plus"></i></a>
+                <a th:href="@{/sectores/nuevo}" class="btn btn-primary my-3 float-right"><strong>Agregar</strong></a>
                 <table class="table table-sm table-striped table-hover table-bordered text-center">
                     <thead class="thead-dark text-light">
                         <tr>

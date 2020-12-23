@@ -151,28 +151,6 @@ public class ClienteController {
         model.addAttribute("paises", paises);
         return "clientes/form-cliente";
     }
-    @GetMapping("/ver/{id}")
-    public String ver(@PathVariable Integer id, Model model, RedirectAttributes flash){
-        if(clienteService.buscarPorId(id) == null){
-            flash.addFlashAttribute("error", "El cliente no existe!"); 
-            return "redirect:/clientes";
-        }
-        Cliente cliente = null;
-        if(id > 0 ){
-            cliente = clienteService.buscarPorId(id);
-        }
-        List<Localidad> localidades = localidadService.buscarTodos();
-        List<Provincia> provincias = provinciaService.buscarTodos();
-        List<Pais> paises = paisService.buscarTodos();
-        // clienteService.buscarPorId(id);
-        model.addAttribute("cliente", cliente);
-        model.addAttribute("active", "clientes");
-        model.addAttribute("titulo", "Ver Cliente");
-        model.addAttribute("localidades", localidades);
-        model.addAttribute("provincias", provincias);
-        model.addAttribute("paises", paises);
-        return "clientes/form-cliente";
-    }
 
     @GetMapping("/eliminar/{id}")
     public String eliminar(@PathVariable Integer id, RedirectAttributes flash){

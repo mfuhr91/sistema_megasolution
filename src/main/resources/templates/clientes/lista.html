@@ -36,8 +36,6 @@
                             <td th:text="${cliente.direccion}"></td>
                             <td th:text="${#calendars.format(cliente.fechaAlta,'dd/MM/yyyy')}"></td>
                             <td class="opciones">
-                                <a th:href="@{/clientes/ver/} + ${cliente.id}" class="btn btn-success mx-1"
-                                data-toggle="tooltip" data-placement="bottom" title="Ver datos"><i class="far fa-eye"></i></a>
                                 <a th:href="@{/clientes/editar/} + ${cliente.id}" class="btn btn-warning mx-1"
                                 data-toggle="tooltip" data-placement="bottom" title="Editar"><i class="far fa-edit"></i></a>
                                 <a th:data_razonSocial="${cliente.razonSocial}" id="borrar_" th:attrappend="id=${cliente.id}" 
