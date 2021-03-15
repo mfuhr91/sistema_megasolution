@@ -39,9 +39,10 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "clientes")
 public class Cliente implements Serializable{
-    private static final long serialVersionUID = 1L;
 
-    @Id
+	private static final long serialVersionUID = -749881834291498513L;
+
+	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 

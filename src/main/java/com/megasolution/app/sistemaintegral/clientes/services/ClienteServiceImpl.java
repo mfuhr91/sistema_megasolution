@@ -51,4 +51,12 @@ public class ClienteServiceImpl implements IClienteService {
         return clienteRepo.findByDniCuit(dniCuit);
     }
 
+    @Override
+    public List<Cliente> buscarPorParametro(String param) {
+
+        param = param.toLowerCase();
+
+        List<Cliente> servicios = this.clienteRepo.findByParam(param);
+        return servicios;
+    }
 }

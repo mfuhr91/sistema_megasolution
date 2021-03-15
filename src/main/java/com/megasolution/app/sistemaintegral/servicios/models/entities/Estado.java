@@ -16,9 +16,10 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "estados")
 public class Estado implements Serializable{
-    private static final long serialVersionUID = 1L;
 
-    @Id
+	private static final long serialVersionUID = -4095715665479081208L;
+
+	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 

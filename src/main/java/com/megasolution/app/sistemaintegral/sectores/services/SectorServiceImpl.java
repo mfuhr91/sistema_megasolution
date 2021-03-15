@@ -47,5 +47,14 @@ public class SectorServiceImpl implements ISectorService {
     public List<Sector> buscarDisponibles() {
         return sectorRepo.findByDisponible();
     }
+
+    @Override
+    public List<Sector> buscarPorParametro(String param) {
+
+        param = param.toLowerCase();
+
+        List<Sector> servicios = this.sectorRepo.findByParam(param);
+        return servicios;
+    }
     
 }

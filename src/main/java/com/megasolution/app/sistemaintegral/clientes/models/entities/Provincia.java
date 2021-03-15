@@ -20,9 +20,10 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class Provincia implements Serializable{
-    private static final long serialVersionUID = 1L;
 
-    @Id
+	private static final long serialVersionUID = 5644264858532693819L;
+
+	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 

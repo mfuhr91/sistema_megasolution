@@ -17,5 +17,7 @@ public interface IClienteService {
     public Integer contarClientes();
 
     public Cliente buscarPorDniCuit(Long dniCuit);
+
+    public List<Cliente> buscarPorParametro(String param);
     
 }

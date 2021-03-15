@@ -28,9 +28,10 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class Aviso implements Serializable{
-    private static final long serialVersionUID = 1L;
-    
-    @Id
+ 
+	private static final long serialVersionUID = -8098425738271256629L;
+
+	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 

@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+
 @Service
 public class ServicioServiceImpl implements IServicioService {
 
@@ -57,7 +58,6 @@ public class ServicioServiceImpl implements IServicioService {
     @Transactional(readOnly = true)
     public List<Servicio> buscarPorServicioConClienteId(Integer id) {
       return servicioRepo.findByServicioWithClienteId(id);
-      //return null;
     }
 
     @Override
@@ -109,6 +109,15 @@ public class ServicioServiceImpl implements IServicioService {
     @Override
     public List<Servicio> buscarPorEstadoServicioMonitor(Integer id) {
         return servicioRepo.findByEstadoServicioMonitor(id);
+    }
+
+    @Override
+    public List<Servicio> buscarPorParametro(String param) {
+
+        param = param.toLowerCase();
+
+        List<Servicio> servicios = this.servicioRepo.findByParam(param);
+        return servicios;
     }
  
 }

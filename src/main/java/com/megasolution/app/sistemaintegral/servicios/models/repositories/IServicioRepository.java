@@ -5,6 +5,7 @@ import com.megasolution.app.sistemaintegral.servicios.models.entities.Servicio;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -36,5 +37,12 @@ public interface IServicioRepository extends JpaRepository<Servicio, Integer>{
     @Query(value = "SELECT COUNT(*) FROM servicios WHERE fecha_ingreso LIKE ?1", nativeQuery = true)
     public Integer buscarServiciosDeHoy(String fechaHoy);
 
-
+    
+    @Query(value = "SELECT * FROM servicios AS s INNER JOIN clientes AS c ON s.cliente_id = c.id " +
+                    "WHERE s.equipo LIKE %:param% OR s.observaciones LIKE %:param% " + 
+                    "OR s.problema_reportado LIKE %:param% OR s.solucion LIKE %:param% " +
+                    "OR c.contacto LIKE %:param% OR c.razon_social LIKE %:param% " +
+                    "OR c.direccion LIKE %:param% OR c.dni_cuit LIKE %:param% " +
+                    "OR c.email LIKE %:param% OR c.telefono LIKE %:param%", nativeQuery = true)
+    public List<Servicio> findByParam(@Param("param") String param);
 }

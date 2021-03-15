@@ -21,9 +21,10 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class Localidad implements Serializable {
-    private static final long serialVersionUID = 1L;
 
-    @Id
+	private static final long serialVersionUID = 2702559318278477147L;
+
+	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 

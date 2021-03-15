@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -126,6 +127,29 @@ public class SectorController {
         flash.addFlashAttribute("success", "Sector eliminado con éxito!");
         return "redirect:/sectores";
     }
+
+    @GetMapping("/buscar")
+    public String buscarSector(@RequestParam String param, Model model, RedirectAttributes flash){
+        
+        if(param == ""){
+            return "redirect:/sectores";
+        }
+
+        List<Sector> sectores = this.sectorService.buscarPorParametro(param);
+        if(sectores.size() > 0){
+        
+            model.addAttribute("titulo", "Sectores");
+            model.addAttribute("sectores", sectores);
+            model.addAttribute("active", "sectores");
+            
+    
+            return "sectores/lista";    
+        } else {
+            flash.addFlashAttribute("warning", "No se encontró ningún sector!");
+            
+            return "redirect:/sectores";
+        }
+    }  
     
 
 }

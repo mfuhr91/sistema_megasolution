@@ -16,9 +16,10 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class Pais implements Serializable{
-    private static final long serialVersionUID = 1L;
 
-    @Id
+	private static final long serialVersionUID = 2624401450484056370L;
+
+	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 

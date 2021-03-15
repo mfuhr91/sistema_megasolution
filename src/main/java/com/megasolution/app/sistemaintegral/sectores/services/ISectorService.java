@@ -18,4 +18,6 @@ public interface ISectorService {
     public void eliminar(Integer id);
 
     public Sector buscarPorNombre(String nombre);
+
+    public List<Sector> buscarPorParametro(String param);
 }

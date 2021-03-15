@@ -17,9 +17,10 @@ import lombok.Data;
 @Table(name = "sectores")
 @Data
 public class Sector implements Serializable{
-    private static final long serialVersionUID = 1L;
 
-    @Id
+	private static final long serialVersionUID = -2397916530373844760L;
+
+	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 

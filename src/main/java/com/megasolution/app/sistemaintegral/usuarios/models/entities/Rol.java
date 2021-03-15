@@ -16,9 +16,10 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class Rol implements Serializable{
-    private static final long serialVersionUID = 1L;
 
-    @Id
+	private static final long serialVersionUID = 5242932754278202984L;
+
+	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 

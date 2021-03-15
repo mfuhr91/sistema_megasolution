@@ -162,28 +162,6 @@ $(document).ready(() => {
     })
 })
 
-
-// FUNCION PARA FILTRAR LA BUSQUEDA EN TABLAS
-$(document).ready(() => {
- 
-    (function ($) {
- 
-        $('.buscador').keyup(function () {
- 
-             var rex = new RegExp($(this).val(), 'i'); // 'i' = ignoreCase
- 
-             $('.tabla tr').hide();
- 
-             $('.tabla tr').filter(function () {
-               return rex.test($(this).text());
-             }).show();
- 
-        })
- 
-    }(jQuery));
- 
-});
-
 // ELIMINA EL AVISO CAMBIANDO SU ESTADO A LEIDO
 function cerrarAviso(id){
     $.post("/aviso-leido",{id})

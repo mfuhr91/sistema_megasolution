@@ -16,9 +16,10 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class CondicionIva implements Serializable{
-    private static final long serialVersionUID = 1L;
     
-    @Id
+	private static final long serialVersionUID = 7146594361928878175L;
+
+	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 

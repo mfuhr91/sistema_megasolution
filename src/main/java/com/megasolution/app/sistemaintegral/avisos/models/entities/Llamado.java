@@ -17,9 +17,10 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class Llamado implements Serializable{
-    private static final long serialVersionUID = 1L;
 
-    @Id
+	private static final long serialVersionUID = -2167880175960518943L;
+
+	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 

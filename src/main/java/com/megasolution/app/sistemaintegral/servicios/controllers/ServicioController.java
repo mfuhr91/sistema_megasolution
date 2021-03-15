@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
@@ -547,5 +548,29 @@ public class ServicioController {
 
         return model;
     }
+
+
+    @GetMapping("/buscar")
+    public String buscarServicio(@RequestParam String param, Model model, RedirectAttributes flash){
+        
+        if(param == ""){
+            System.out.println("NADA");
+            return "redirect:/servicios";
+        }
+        List<Servicio> servicios = this.servicioService.buscarPorParametro(param);
+        if(servicios.size() > 0){
+            model.addAttribute("titulo", "Servicios");
+            model.addAttribute("servicios", servicios);
+            model.addAttribute("active", "servicios");
+            model.addAttribute("pill_activo", "todos");
+            
+            return "servicios/lista";
+        } else {
+            flash.addFlashAttribute("warning", "No se encontró ningún servicio!");
+            
+            return "redirect:/servicios";
+        }
+    }  
+    
 
 }

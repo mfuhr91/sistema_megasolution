@@ -33,9 +33,10 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "servicios")
 public class Servicio implements Serializable{
-    private static final long serialVersionUID = 1L;
 
-    @Id
+	private static final long serialVersionUID = -3889735587869995867L;
+
+	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 

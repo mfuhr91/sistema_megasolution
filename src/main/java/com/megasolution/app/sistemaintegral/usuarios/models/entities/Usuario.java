@@ -28,9 +28,10 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class Usuario implements Serializable{
-    private static final long serialVersionUID = 1L;
     
-    @Id
+	private static final long serialVersionUID = -6479715429121360652L;
+
+	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 

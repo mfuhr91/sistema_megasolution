@@ -26,9 +26,10 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class Mensaje implements Serializable{
-    private static final long serialVersionUID = 1L;
-    
-    @Id
+
+	private static final long serialVersionUID = 122032045943662616L;
+
+	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
