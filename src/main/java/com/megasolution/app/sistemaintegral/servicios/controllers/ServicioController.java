@@ -593,7 +593,7 @@ public class ServicioController {
     
             this.nuevoServicio(model);
            
-            return "/servicios/form-servicio";
+            return "servicios/form-servicio";
         } else {
             flash.addFlashAttribute("warning", "No se encontró ningún cliente!");
             
@@ -616,7 +616,7 @@ public class ServicioController {
             this.editarServicio(id, model, flash);
             
             
-            return "/servicios/form-servicio";
+            return "servicios/form-servicio";
         } else {
             flash.addFlashAttribute("warning", "No se encontró ningún cliente!");
             
