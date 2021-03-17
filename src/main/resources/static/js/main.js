@@ -62,7 +62,8 @@ function seleccionarCliente(cliente_id,cliente_dni_cuit,cliente_razonSocial, cli
     $('#cliente').val(cliente_id);
     $('#cliente_ver').val(cliente_dni_cuit + ' - ' + cliente_razonSocial);
     $('#clienteTelefono').val(cliente_tel);
-    $('.tabla tr').show();
+    $('#tabla-clientes').hide();
+    /* $('.tabla tr').show(); */
     $('#equipo').focus();    
 }
 //ABRE MODAL PARA BUSCAR SECTOR

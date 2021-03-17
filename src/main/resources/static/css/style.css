@@ -106,7 +106,7 @@ td{
   cursor: pointer;
   border-radius: 20px;
 }
-}
+
 .monitor .cardEnProceso a{
       position:absolute; /* posicion con respecto a la posicion del div */
        width:100%;
@@ -227,7 +227,7 @@ aside .card .card-header{
   max-width: 80%;
 }
 
-#cliente_ver, #sector_ver{
+#sector_ver{
   cursor: pointer;
 }
 
@@ -248,6 +248,9 @@ aside .card .card-header{
   }
   .opciones{
     min-width: 150px;
+  }
+  .opciones-servicios{
+    max-width: 65px;
   }
   .modal-dialog{
     max-width: 90%;

@@ -33,6 +33,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.servlet.FlashMap;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
@@ -216,6 +217,7 @@ public class ServicioController {
 
     @GetMapping("/editar/{id}")
     public String editarServicio(@PathVariable Integer id, Model model, RedirectAttributes flash){
+    
         if(servicioService.buscarPorId(id) == null){
             flash.addFlashAttribute("error","El servicio no existe!");
             return "redirect:/servicios";
@@ -225,7 +227,7 @@ public class ServicioController {
         Sector sector = null;
         List<Estado> estados = estadoService.buscarTodos();
         List<Sector> sectores = sectorService.buscarDisponibles();
-        List<Cliente> clientes = clienteService.buscarTodos();
+       /*  List<Cliente> clientes = clienteService.buscarTodos(); */
         if(id > 0){
             servicio = servicioService.buscarPorId(id);
             cliente = clienteService.buscarPorId(servicio.getCliente().getId());
@@ -239,10 +241,11 @@ public class ServicioController {
 
         model.addAttribute("servicio", servicio);
         model.addAttribute("cliente", cliente.getDniCuit() + " - " + cliente.getRazonSocial());
+        model.addAttribute("servicioId", servicio.getId());
         model.addAttribute("telefono", cliente.getTelefono());
         model.addAttribute("estados", estados);
         model.addAttribute("sectores", sectores);
-        model.addAttribute("clientes", clientes);
+        /* model.addAttribute("clientes", clientes); */
         model.addAttribute("active", "servicios");
         model.addAttribute("titulo", "Editar Servicio");
         return "servicios/form-servicio";
@@ -277,9 +280,9 @@ public class ServicioController {
         model.addAttribute("active", "servicios");
         model.addAttribute("servicio", servicio);
         List<Sector> sectores = sectorService.buscarDisponibles();
-        List<Cliente> clientes = clienteService.buscarTodos();
+        /* List<Cliente> clientes = clienteService.buscarTodos(); */
         model.addAttribute("sectores", sectores);
-        model.addAttribute("clientes", clientes);
+        /* model.addAttribute("clientes", clientes); */
 
         model.addAttribute("estados", estados);
        
@@ -323,7 +326,7 @@ public class ServicioController {
     @PostMapping("/guardar")
     public String guardarServicio(@Valid Servicio servicio, BindingResult result, Model model, SessionStatus status, RedirectAttributes flash){
         List<Estado> estados = estadoService.buscarTodos();
-        List<Cliente> clientes = clienteService.buscarTodos();
+       /*  List<Cliente> clientes = clienteService.buscarTodos(); */
         List<Sector> sectores = sectorService.buscarDisponibles();
         Sector sector = new Sector();
         Cliente cliente = new Cliente(); 
@@ -354,7 +357,7 @@ public class ServicioController {
                 model.addAttribute("sector", sector.getNombre());
             }
 
-            enviarModelo(cliente, sectores, estados, sector, servicio, clientes, model);
+            enviarModelo(cliente, sectores, estados, sector, servicio, model);
             return "servicios/form-servicio";
         }
         cliente = clienteService.buscarPorId(servicio.getCliente().getId());
@@ -370,7 +373,7 @@ public class ServicioController {
                 model.addAttribute("titulo", "Editar Servicio");
             }
             
-            enviarModelo(cliente, sectores, estados, sector, servicio, clientes, model);
+            enviarModelo(cliente, sectores, estados, sector, servicio, model);
             if(servicio.getEstado().getId() == 3 && servicio.getSolucion().isEmpty()){
                 model.addAttribute("errorSolucion", "Debe ingresar una solución antes de guardar el servicio terminado!");
                 model.addAttribute("alertDangerSolucion", " form-control alert-danger");
@@ -393,7 +396,7 @@ public class ServicioController {
                 model.addAttribute("titulo", "Editar Servicio");
             }
             
-            enviarModelo(cliente, sectores, estados, sector, servicio, clientes, model);
+            enviarModelo(cliente, sectores, estados, sector, servicio, model);
             return "servicios/form-servicio"; 
         }
 
@@ -407,7 +410,7 @@ public class ServicioController {
                 model.addAttribute("titulo", "Editar Servicio");
             }
             
-            enviarModelo(cliente, sectores, estados, sector, servicio, clientes, model);
+            enviarModelo(cliente, sectores, estados, sector, servicio, model);
             return "servicios/form-servicio"; 
         }
         // SI HAY ERRORES EN LA VALIDACION DE CAMPOS
@@ -418,7 +421,7 @@ public class ServicioController {
                 model.addAttribute("titulo", "Editar Servicio");
             }
 
-            enviarModelo(cliente, sectores, estados, sector, servicio, clientes, model);
+            enviarModelo(cliente, sectores, estados, sector, servicio, model);
             
             return "servicios/form-servicio";
         }
@@ -532,14 +535,14 @@ public class ServicioController {
     }
 
 
-    private Model enviarModelo(Cliente cliente, List<Sector> sectores, List<Estado> estados, Sector sector, Servicio servicio, List<Cliente> clientes, Model model ){
+    private Model enviarModelo(Cliente cliente, List<Sector> sectores, List<Estado> estados, Sector sector, Servicio servicio, Model model ){
 
         model.addAttribute("active", "servicio");
         if(cliente.getId() != null){
             model.addAttribute("cliente", cliente.getDniCuit() + " - " + cliente.getRazonSocial());
             model.addAttribute("telefono", cliente.getTelefono());
         }
-        model.addAttribute("clientes", clientes);
+       /*  model.addAttribute("clientes", clientes); */
         model.addAttribute("estados", estados);
         model.addAttribute("sectores", sectores);
         model.addAttribute("sector", sector.getNombre());
@@ -569,6 +572,51 @@ public class ServicioController {
             flash.addFlashAttribute("warning", "No se encontró ningún servicio!");
             
             return "redirect:/servicios";
+        }
+    }  
+
+    @GetMapping("/buscar-clientes")
+    public String buscarClientesEnServicioNuevo(@RequestParam String param, Model model, RedirectAttributes flash){
+        
+        if(param == ""){
+            return "redirect:/servicios/nuevo";
+        }
+        List<Cliente> clientes = this.clienteService.buscarPorParametro(param);
+        if(clientes.size() > 0){
+            model.addAttribute("titulo", "Servicios");
+            model.addAttribute("clientes", clientes);
+            model.addAttribute("active", "servicios");
+    
+            this.nuevoServicio(model);
+           
+            return "/servicios/form-servicio";
+        } else {
+            flash.addFlashAttribute("warning", "No se encontró ningún cliente!");
+            
+            return "redirect:/servicios/nuevo";
+        }
+    }  
+    @GetMapping("/buscar-clientes/{id}")
+    public String buscarClientesEnServicio(@RequestParam String param, @PathVariable Integer id, Model model, RedirectAttributes flash){
+        
+
+        if(param == ""){
+            return "redirect:/servicios/editar/{id}";
+        }
+        List<Cliente> clientes = this.clienteService.buscarPorParametro(param);
+        if(clientes.size() > 0){
+            model.addAttribute("titulo", "Servicios");
+            model.addAttribute("clientes", clientes);
+            model.addAttribute("active", "servicios");
+    
+            this.editarServicio(id, model, flash);
+            
+            
+            return "/servicios/form-servicio";
+        } else {
+            flash.addFlashAttribute("warning", "No se encontró ningún cliente!");
+            
+            return "redirect:/servicios/editar/{id}";
         }
     }  
     
