@@ -119,5 +119,10 @@ public class ServicioServiceImpl implements IServicioService {
         List<Servicio> servicios = this.servicioRepo.findByParam(param);
         return servicios;
     }
+
+    @Override
+    public List<Servicio> buscar50Ultimos() {
+       return this.servicioRepo.findLast50();
+    }
  
 }

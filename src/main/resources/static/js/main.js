@@ -1,14 +1,4 @@
 
-$(document).ready(() => {
-
-    if($('#cliente_id').val()){
-        $('#cliente').val($('#cliente_id').val());
-    }
-   
-});
-
-
-
 //BORRAR CLIENTE SELECCIONADO
 function borrarCliente(id, cliente_razonSocial){
     $('#borrarModal').modal('show');
@@ -48,44 +38,39 @@ function borrarUsuario(id, nombreUsuario){
 
 }
 
-//ABRE MODAL PARA BUSCAR CLIENTE
-function buscarCliente(){
-    $('#buscarClienteModal').modal('show');
-    $('#buscarClienteModal').on('shown.bs.modal', function(){
-        $('.buscador').focus();
-    }); 
-}
-
 // SELECCIONA EL CLIENTE Y PASA LOS VALORES AL INPUT DEL FORM SERVICIO
 function seleccionarCliente(cliente_id,cliente_dni_cuit,cliente_razonSocial, cliente_tel){
-    $('#buscarClienteModal').modal('hide');
     $('#cliente').val(cliente_id);
     $('#cliente_ver').val(cliente_dni_cuit + ' - ' + cliente_razonSocial);
     $('#clienteTelefono').val(cliente_tel);
     $('#tabla-clientes').hide();
-    /* $('.tabla tr').show(); */
     $('#equipo').focus();    
 }
-//ABRE MODAL PARA BUSCAR SECTOR
+
 function buscarSector(){
-    $('#buscarSectorModal').modal('show');
-    $('#buscarSectorModal').on('shown.bs.modal', function(){
-        $('.buscador').focus();
-    });
+
+    $(".lista-sectores").toggle();
+  
 }
 
 // SELECCIONA EL SECTOR Y PASA LOS VALORES AL INPUT DEL FORM SERVICIO
 function seleccionarSector(sector_id, sector_nombre){
-    $('#buscarSectorModal').modal('hide');
+
     $('#sector').val(sector_id);
     $('#sector_ver').val(sector_nombre);
-    $('.tabla tr').show();
+    $(".lista-sectores").hide();
     $('#problemaReportado').focus();    
 
 }
 
 
 $(document).ready(() => {
+
+    if($('#cliente_id').val()){
+        $('#cliente').val($('#cliente_id').val());
+    }
+
+    $(".lista-sectores").hide();
     $('.buscador').focus();
     $('#dniCuit').focus();
 
@@ -173,6 +158,8 @@ function cerrarAviso(id){
         })
     })
 }
+
+
 
 // DESHABILITA EL BOTON GUARDAR LUEGO DEL SUBMIT DEL FORM - EVITA GUARDAR DOS REGISTROS
 $(document).ready(()=>{

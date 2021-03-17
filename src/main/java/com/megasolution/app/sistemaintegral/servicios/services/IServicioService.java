@@ -11,6 +11,8 @@ public interface IServicioService {
 
     public List<Servicio> buscarTodos();
 
+    public List<Servicio> buscar50Ultimos();
+
     public Servicio buscarPorId(Integer id);
 
     public Integer contarServicios();

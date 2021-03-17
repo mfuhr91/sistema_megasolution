@@ -249,12 +249,17 @@ aside .card .card-header{
   .opciones{
     min-width: 150px;
   }
-  .opciones-servicios{
+  .opciones-servicios, .opciones-sectores{
     max-width: 65px;
   }
-  .modal-dialog{
-    max-width: 90%;
+
+  .lista-sectores{
+    display: inline;
+    border: 2px 2px 2px 2px;
+    height: 70px;
+    overflow-x: scroll !important;
   }
+
   #tarjetas{
     max-width: 60%;
   }

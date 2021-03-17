@@ -62,6 +62,16 @@ public class ServicioController {
     private ILlamadoService llamadoService;
 
     @GetMapping("")
+    public String listar50Ultimos(Model model){
+        List<Servicio> servicios = servicioService.buscar50Ultimos(); 
+        
+        model.addAttribute("titulo", "Servicios");
+        model.addAttribute("servicios", servicios);
+        model.addAttribute("active", "servicios");
+        model.addAttribute("pill_activo", "todos");
+        return "servicios/lista";
+    }
+    @GetMapping("/todos")
     public String listarServicios(Model model){
         List<Servicio> servicios = servicioService.buscarTodos(); 
         
@@ -225,7 +235,6 @@ public class ServicioController {
         Sector sector = null;
         List<Estado> estados = estadoService.buscarTodos();
         List<Sector> sectores = sectorService.buscarDisponibles();
-       /*  List<Cliente> clientes = clienteService.buscarTodos(); */
         if(id > 0){
             servicio = servicioService.buscarPorId(id);
             cliente = clienteService.buscarPorId(servicio.getCliente().getId());
@@ -243,7 +252,6 @@ public class ServicioController {
         model.addAttribute("telefono", cliente.getTelefono());
         model.addAttribute("estados", estados);
         model.addAttribute("sectores", sectores);
-        /* model.addAttribute("clientes", clientes); */
         model.addAttribute("active", "servicios");
         model.addAttribute("titulo", "Editar Servicio");
         return "servicios/form-servicio";
@@ -278,9 +286,8 @@ public class ServicioController {
         model.addAttribute("active", "servicios");
         model.addAttribute("servicio", servicio);
         List<Sector> sectores = sectorService.buscarDisponibles();
-        /* List<Cliente> clientes = clienteService.buscarTodos(); */
+  
         model.addAttribute("sectores", sectores);
-        /* model.addAttribute("clientes", clientes); */
 
         model.addAttribute("estados", estados);
        
@@ -324,7 +331,7 @@ public class ServicioController {
     @PostMapping("/guardar")
     public String guardarServicio(@Valid Servicio servicio, BindingResult result, Model model, SessionStatus status, RedirectAttributes flash){
         List<Estado> estados = estadoService.buscarTodos();
-       /*  List<Cliente> clientes = clienteService.buscarTodos(); */
+    
         List<Sector> sectores = sectorService.buscarDisponibles();
         Sector sector = new Sector();
         Cliente cliente = new Cliente(); 
@@ -540,7 +547,6 @@ public class ServicioController {
             model.addAttribute("cliente", cliente.getDniCuit() + " - " + cliente.getRazonSocial());
             model.addAttribute("telefono", cliente.getTelefono());
         }
-       /*  model.addAttribute("clientes", clientes); */
         model.addAttribute("estados", estados);
         model.addAttribute("sectores", sectores);
         model.addAttribute("sector", sector.getNombre());

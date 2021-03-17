@@ -14,7 +14,8 @@
                 <form id="formBuscador" th:action="@{/clientes/buscar}" method="GET">
                   <input th:name="param" type="text" class="form-control col-sm-2 my-3 float-left buscador" placeholder="Buscar">
                 </form>
-                <a th:href="@{/clientes/nuevo}" class="btn btn-primary my-3 float-right"><strong>Agregar</strong></a>
+                <a th:href="@{/clientes/nuevo}" class="btn btn-primary my-3 float-right mx-2"><strong>Agregar</strong></a>
+                <a th:href="@{/clientes/todos}" class="btn btn-success my-3 float-right mx-2"><strong>Todos</strong></a>
                 <table class="table table-sm table-striped table-hover table-bordered text-center">
                     <thead class="thead-dark text-light">
                         <tr>

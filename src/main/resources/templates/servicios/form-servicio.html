@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="es" xmlns="http://www.thymeleaf.org">
+
 <head th:replace="plantillas/principal :: head">
 </head>
+
 <body>
     <header th:replace="plantillas/principal :: header"></header>
-    
+
     <div class="container my-2">
         <div class="card">
             <div class="card-header" th:text="${titulo}"></div>
@@ -16,104 +18,113 @@
                     </div>
                     <div class="col-3 mr-3">
 
-                        <form th:if="${servicioId}" id="formBuscador" th:action="@{/servicios/buscar-clientes/} + ${servicioId}" method="GET">
-                            <input th:name="param" type="text" class="form-control my-3 float-left buscador" placeholder="Buscar cliente">
+                        <form th:if="${servicioId}" id="formBuscador"
+                            th:action="@{/servicios/buscar-clientes/} + ${servicioId}" method="GET">
+                            <input th:name="param" type="text" class="form-control my-3 float-left buscador"
+                                placeholder="Buscar cliente">
                         </form>
-                        <form th:if="not ${cliente}" id="formBuscador" th:action="@{/servicios/buscar-clientes/}" method="GET">
-                            <input th:name="param" type="text" class="form-control my-3 float-left buscador" placeholder="Buscar cliente">
+                        <form th:if="not ${cliente}" id="formBuscador" th:action="@{/servicios/buscar-clientes/}"
+                            method="GET">
+                            <input th:name="param" type="text" class="form-control my-3 float-left buscador"
+                                placeholder="Buscar cliente">
                         </form>
-                        <form th:if="${cliente} and not ${servicioId}" id="formBuscador" th:action="@{/servicios/buscar-clientes/}" method="GET">
-                            <input th:name="param" type="text" class="form-control my-3 float-left buscador" placeholder="Buscar cliente">
+                        <form th:if="${cliente} and not ${servicioId}" id="formBuscador"
+                            th:action="@{/servicios/buscar-clientes/}" method="GET">
+                            <input th:name="param" type="text" class="form-control my-3 float-left buscador"
+                                placeholder="Buscar cliente">
                         </form>
                     </div>
                 </div>
                 <form id="formServicio" th:action="@{/servicios/guardar}" th:object="${servicio}" method="POST">
                     <div id="datosCliente" class="row">
-                            <div class="form-group col-sm-6">
-                                <label for="cliente" class="col-sm col-form-label">CLIENTE</label>
-                                <div class="col-sm  mb-3">
-                                    <input id="cliente_id" type="hidden" th:unless="${servicio.cliente}" th:value="${id}">
-                                    <input id="cliente" type="hidden" th:field="*{cliente.id}">
-                                    <input id="cliente_ver" type="text" class="form-control" 
-                                    th:attrappend="class=${alertDangerCliente}" th:value="${cliente}" 
+                        <div class="form-group col-sm-6">
+                            <label for="cliente" class="col-sm col-form-label">CLIENTE</label>
+                            <div class="col-sm  mb-3">
+                                <input id="cliente_id" type="hidden" th:unless="${servicio.cliente}" th:value="${id}">
+                                <input id="cliente" type="hidden" th:field="*{cliente.id}">
+                                <input id="cliente_ver" type="text" class="form-control"
+                                    th:attrappend="class=${alertDangerCliente}" th:value="${cliente}"
                                     placeholder="Cliente" readonly>
-                                    
-                                    <small class="form-text text-danger" th:text="${errorCliente}"></small>
-                                </div>
 
+                                <small class="form-text text-danger" th:text="${errorCliente}"></small>
                             </div>
-                            <div class="form-group col-sm-6">
-                                <label for="cliente" class="col-sm col-form-label">TELEFONO</label>
-                                <div class="col-sm  mb-3">
-                                    <input id="clienteTelefono" type="text" class="form-control" th:value="${telefono}" placeholder="Teléfono" readonly>
-                                </div>
+
+                        </div>
+                        <div class="form-group col-sm-6">
+                            <label for="cliente" class="col-sm col-form-label">TELEFONO</label>
+                            <div class="col-sm  mb-3">
+                                <input id="clienteTelefono" type="text" class="form-control" th:value="${telefono}"
+                                    placeholder="Teléfono" readonly>
                             </div>
-                            <!-- <a th:href="@{/clientes/nuevo}" class="btn btn-primary my-3 float-right"><strong>Agregar</strong></a> -->
-                            <table th:if="${clientes}" id="tabla-clientes" class="table table-sm text-center mx-5">
-                                <thead class="bg-secondary text-white">
-                                    <tr>
-                                        <th>SELECCIONAR</th>
-                                        <th>DNI - CUIT</th>
-                                        <th>RAZON SOCIAL</th>
-                                        <th>CONTACTO</th>
-                                        <th>TELEFONO</th>
-                                        <th>EMAIL</th>
-                                        <th class="opciones-servicios">OPCIONES</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="tabla-clientes">
-                                    <tr th:each="cliente : ${clientes}">
-                                        <td>
-                                            <a id="seleccionar_" th:attrappend="id=${cliente.id}" 
-                                                th:data_dniCuit="${cliente.dniCuit}"
-                                                th:data_razonSocial="${cliente.razonSocial}"
-                                                th:data_telefono="${cliente.telefono}"
-                                                th:onclick="|seleccionarCliente('${cliente.id}',  
+                        </div>
+                        <table th:if="${clientes}" id="tabla-clientes" class="table table-sm text-center mx-5">
+                            <thead class="bg-secondary text-white">
+                                <tr>
+                                    <th>SELECCIONAR</th>
+                                    <th>DNI - CUIT</th>
+                                    <th>RAZON SOCIAL</th>
+                                    <th>CONTACTO</th>
+                                    <th>TELEFONO</th>
+                                    <th>EMAIL</th>
+                                    <th class="opciones-servicios">OPCIONES</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tabla-clientes">
+                                <tr th:each="cliente : ${clientes}">
+                                    <td>
+                                        <a id="seleccionar_" th:attrappend="id=${cliente.id}"
+                                            th:data_dniCuit="${cliente.dniCuit}"
+                                            th:data_razonSocial="${cliente.razonSocial}"
+                                            th:data_telefono="${cliente.telefono}" th:onclick="|seleccionarCliente('${cliente.id}',  
                                                 this.getAttribute('data_dniCuit'), 
                                                 this.getAttribute('data_razonSocial'),
-                                                this.getAttribute('data_telefono'))|"  
-                                                class="btn btn-primary mx-1"><i class="far fa-check-circle"></i>
-                                            </a>
-                                        </td>
-                                        
-                                        <td class="align-middle" th:text="${cliente.dniCuit}"></td>
-                                        <td class="align-middle" th:text="${cliente.razonSocial}"></td>
-                                        <td class="align-middle" th:text="${cliente.contacto}"></td>
-                                        <td class="align-middle" th:text="${cliente.telefono}"></td>
-                                        <td class="align-middle" th:text="${cliente.email}"></td>
-                                        <td class="align-middle opciones-servicios">
-                                            <a th:href="@{/clientes/editar/} + ${cliente.id}" class="btn btn-warning mx-1"
-                                            data-toggle="tooltip" data-placement="bottom" title="Editar"><i class="far fa-edit"></i></a>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                                                this.getAttribute('data_telefono'))|" class="btn btn-primary mx-1"><i
+                                                class="far fa-check-circle"></i>
+                                        </a>
+                                    </td>
+
+                                    <td class="align-middle" th:text="${cliente.dniCuit}"></td>
+                                    <td class="align-middle" th:text="${cliente.razonSocial}"></td>
+                                    <td class="align-middle" th:text="${cliente.contacto}"></td>
+                                    <td class="align-middle" th:text="${cliente.telefono}"></td>
+                                    <td class="align-middle" th:text="${cliente.email}"></td>
+                                    <td class="align-middle opciones-servicios">
+                                        <a th:href="@{/clientes/editar/} + ${cliente.id}" class="btn btn-warning mx-1"
+                                            data-toggle="tooltip" data-placement="bottom" title="Editar"><i
+                                                class="far fa-edit"></i></a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
 
                     </div>
                     <div id="datosEquipo" class="row">
-                        
+
                         <div class="col-sm-6">
-                            
+
                             <div class="form-group">
                                 <label for="equipo" class="col-sm col-form-label">EQUIPO</label>
                                 <div class="col-sm  mb-3">
-                                    <input id="equipo" type="text" th:field="*{equipo}" class="form-control" placeholder="Datos del equipo" 
-                                    th:errorclass="'form-control alert-danger'">
-                                    <small class="form-text text-danger" th:if="${#fields.hasErrors('equipo')}" th:errors="*{equipo}"></small>
+                                    <input id="equipo" type="text" th:field="*{equipo}" class="form-control"
+                                        placeholder="Datos del equipo" th:errorclass="'form-control alert-danger'">
+                                    <small class="form-text text-danger" th:if="${#fields.hasErrors('equipo')}"
+                                        th:errors="*{equipo}"></small>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="form-check ml-3">
                                     <label for="cargador" class="form-check-label">
-                                        <input id="cargador" th:field="*{cargador}" type="checkbox" class="form-check-input">CARGADOR
+                                        <input id="cargador" th:field="*{cargador}" type="checkbox"
+                                            class="form-check-input">CARGADOR
                                     </label>
-                                    
+
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="form-check ml-3">
                                     <label for="bateria" class="form-check-label">
-                                        <input id="bateria" checked th:field="*{bateria}" type="checkbox" class="form-check-input">BATERIA
+                                        <input id="bateria" checked th:field="*{bateria}" type="checkbox"
+                                            class="form-check-input">BATERIA
                                     </label>
                                 </div>
                             </div>
@@ -121,128 +132,126 @@
                                 <label for="sector" class="col-sm col-form-label">SECTOR</label>
                                 <div class="col-sm  mb-3">
                                     <input id="sector" type="hidden" th:field="*{sector.id}">
-                                    <input id="sector_ver" th:onclick="|buscarSector()|" type="text" class="form-control"  
-                                    th:attrappend="class=${alertDangerSector}" th:value="${sector}" 
-                                    placeholder="Haga click para seleccionar un sector" readonly>
+                                    <input id="sector_ver" th:onclick="|buscarSector()|" type="text"
+                                        class="form-control" th:attrappend="class=${alertDangerSector}"
+                                        th:value="${sector}" placeholder="Haga click para seleccionar un sector"
+                                        readonly>
                                     <small class="form-text text-danger" th:text="${errorSector}"></small>
                                 </div>
-                            
-                            </div>
-                            <div class="form-group">
-                                <label for="problemaReportado" class="col-sm col-form-label">PROBLEMA REPORTADO</label>
-                                <div class="col-sm  mb-3">
-                                    <textarea id="problemaReportado" type="text" th:field="*{problemaReportado}" class="form-control"  placeholder="Detalle el problema" 
-                                    th:errorclass="'form-control alert-danger'"></textarea>
-                                    <small class="form-text text-danger" th:if="${#fields.hasErrors('problemaReportado')}" th:errors="*{problemaReportado}"></small>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="observaciones" class="col-sm col-form-label">OBSERVACIONES</label>
-                                <div class="col-sm  mb-3">
-                                    <textarea id="observaciones" type="text" th:field="*{observaciones}" class="form-control"  placeholder="Ingrese una observación" 
-                                    th:errorclass="'form-control alert-danger'"></textarea>
-                                    <small class="form-text text-danger" th:if="${#fields.hasErrors('observaciones')}" th:errors="*{observaciones}"></small>
-                                </div>
-                            </div>
 
-                        </div>
+                            </div>
+                            <div class="lista-sectores px-4">
+                                <a th:href="@{/sectores/nuevo}"
+                                    class="btn btn-primary my-3 float-right"><strong>Agregar</strong></a>
+                                <table class="table table-sm text-center">
+                                    <thead class="bg-secondary text-light">
+                                        <tr>
+                                            <th>SELECCIONAR</th>
+                                            <th>SECTOR</th>
+                                            <th>DISPONIBLE</th>
+                                            <th class="opciones-sectores">OPCIONES</th>
+                                        </tr>
+                                    </thead>
+    
+                                    <tbody id="tabla-sectores" class="tabla">
+                                        <tr th:each="sector : ${sectores}">
+                                            <td class="align-middle">
+                                                <a id="seleccionar_" th:attrappend="id=${sector.id}"
+                                                    th:data_nombre="${sector.nombre}"
+                                                    th:onclick="|seleccionarSector('${sector.id}',  this.getAttribute('data_nombre'))|"
+                                                    class="btn btn-primary mx-1"><i class="far fa-check-circle"></i>
+                                                </a>
+                                            </td>
+                                            <td class="align-middle" th:text="${sector.nombre}"></td>
+                                            <td class="align-middle" th:text="${#strings.equals(sector.disponible, 'true')} ? 'SI' : 'NO'"></td>
+                                            <td class="align-middle">
+                                                <a th:href="@{/sectores/editar/} + ${sector.id}"
+                                                    class="btn btn-warning mx-1" data-toggle="tooltip"
+                                                    data-placement="bottom" title="Editar"><i class="far fa-edit"></i></a>
+    
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
 
-                        <div class="col-sm-6">
-                            
-                            <div class="form-group">
-                                <label for="solucion" class="col-sm col-form-label">SOLUCION</label>
-                                <div class="col-sm  mb-3">
-                                    <textarea id="solucion" type="text" th:field="*{solucion}" class="form-control" th:attrappend="class=${alertDangerSolucion}"  placeholder="Ingrese la solución"></textarea>
-                                    <small class="form-text text-danger" th:text="${errorSolucion}"></small>
-                                </div>
                             </div>
-                            <div class="form-group">
-                                <label for="estado" class="col-sm col-form-label">ESTADO</label>
-                                <div class="col-sm  mb-3">
-                                    <select name="estado" id="estado" th:field="*{estado}">
-                                        <option id="estado_" th:attrappend="id=${estado.id}"  th:each="estado : ${estados}" th:value="${estado.id}" th:text="${estado.nombre}"></option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="fechaIngreso" class="col-sm col-form-label">FECHA DE INGRESO</label>
-                                <div class="col-sm  mb-3">
-                                    <input id="fechaIngreso" type="text" th:field="*{fechaIngreso}" class="form-control"  placeholder="HH:MM DD/MM/AAAA"
-                                    th:errorclass="'form-control alert-danger'">
-                                    <small class="form-text text-danger" th:if="${#fields.hasErrors('fechaIngreso')}" th:errors="*{fechaIngreso}"></small>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="fechaTerminado" class="col-sm col-form-label">FECHA DE FINALIZACIÓN</label>
-                                <div class="col-sm  mb-3">
-                                    <input id="fechaTerminado" type="text" th:field="*{fechaTerminado}" class="form-control" placeholder="HH:MM DD/MM/AAAA"> <!--  th:errorclass="'form-control alert-danger'"> -->
-                                    <small class="form-text text-danger" th:if="${#fields.hasErrors('fechaTerminado')}" th:errors="*{fechaTerminado}"></small>
-                                </div>
-                            </div>
-                            
                         
+                        <div class="form-group">
+                            <label for="problemaReportado" class="col-sm col-form-label">PROBLEMA REPORTADO</label>
+                            <div class="col-sm  mb-3">
+                                <textarea id="problemaReportado" type="text" th:field="*{problemaReportado}"
+                                    class="form-control" placeholder="Detalle el problema"
+                                    th:errorclass="'form-control alert-danger'"></textarea>
+                                <small class="form-text text-danger" th:if="${#fields.hasErrors('problemaReportado')}"
+                                    th:errors="*{problemaReportado}"></small>
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group row">
-                        <div class="col-sm-6">
-                            <input id="botonGuardar" class="btn btn-success my-3 ml-3" type="submit" value="Guardar">
+                        <div class="form-group">
+                            <label for="observaciones" class="col-sm col-form-label">OBSERVACIONES</label>
+                            <div class="col-sm  mb-3">
+                                <textarea id="observaciones" type="text" th:field="*{observaciones}"
+                                    class="form-control" placeholder="Ingrese una observación"
+                                    th:errorclass="'form-control alert-danger'"></textarea>
+                                <small class="form-text text-danger" th:if="${#fields.hasErrors('observaciones')}"
+                                    th:errors="*{observaciones}"></small>
+                            </div>
                         </div>
+
                     </div>
-                </form>
-               
+
+                    <div class="col-sm-6">
+
+                        <div class="form-group">
+                            <label for="solucion" class="col-sm col-form-label">SOLUCION</label>
+                            <div class="col-sm  mb-3">
+                                <textarea id="solucion" type="text" th:field="*{solucion}" class="form-control"
+                                    th:attrappend="class=${alertDangerSolucion}"
+                                    placeholder="Ingrese la solución"></textarea>
+                                <small class="form-text text-danger" th:text="${errorSolucion}"></small>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="estado" class="col-sm col-form-label">ESTADO</label>
+                            <div class="col-sm  mb-3">
+                                <select name="estado" id="estado" th:field="*{estado}">
+                                    <option id="estado_" th:attrappend="id=${estado.id}" th:each="estado : ${estados}"
+                                        th:value="${estado.id}" th:text="${estado.nombre}"></option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="fechaIngreso" class="col-sm col-form-label">FECHA DE INGRESO</label>
+                            <div class="col-sm  mb-3">
+                                <input id="fechaIngreso" type="text" th:field="*{fechaIngreso}" class="form-control"
+                                    placeholder="HH:MM DD/MM/AAAA" th:errorclass="'form-control alert-danger'">
+                                <small class="form-text text-danger" th:if="${#fields.hasErrors('fechaIngreso')}"
+                                    th:errors="*{fechaIngreso}"></small>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="fechaTerminado" class="col-sm col-form-label">FECHA DE FINALIZACIÓN</label>
+                            <div class="col-sm  mb-3">
+                                <input id="fechaTerminado" type="text" th:field="*{fechaTerminado}" class="form-control"
+                                    placeholder="HH:MM DD/MM/AAAA">
+                                <small class="form-text text-danger" th:if="${#fields.hasErrors('fechaTerminado')}"
+                                    th:errors="*{fechaTerminado}"></small>
+                            </div>
+                        </div>
+
+
+                    </div>
             </div>
+            <div class="form-group row">
+                <div class="col-sm-6">
+                    <input id="botonGuardar" class="btn btn-success my-3 ml-3" type="submit" value="Guardar">
+                </div>
+            </div>
+            </form>
+
         </div>
     </div>
-
-
-    <!-- MODAL SELECCIONAR SECTOR -->
-    <div class="modal fade" id="buscarSectorModal" tabindex="-1" aria-labelledby="buscarSectorModal" aria-hidden="true">
-        <div class="modal-dialog modal-xl">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLabel">Seleccionar Sector</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body">
-                <a th:href="@{/sectores/nuevo}" class="btn btn-primary my-3 float-right"><strong>Agregar</strong></a>
-                <table class="table table-sm table-striped table-hover table-bordered text-center">
-                    <thead class="thead-dark text-light">
-                        <tr>
-                            <th>SELECCIONAR</th>
-                            <th>SECTOR</th>
-                            <th>DISPONIBLE</th>
-                            <th class="opciones">OPCIONES</th>
-                        </tr>
-                    </thead>
-                    
-                    <tbody id="tabla-sectores" class="tabla">
-                        <tr th:each="sector : ${sectores}">
-                            <td>
-                                <a id="seleccionar_" th:attrappend="id=${sector.id}" 
-                                    th:data_nombre="${sector.nombre}"
-                                    th:onclick="|seleccionarSector('${sector.id}',  this.getAttribute('data_nombre'))|"  
-                                    class="btn btn-primary mx-1"><i class="far fa-check-circle"></i>
-                                </a>
-                            </td>
-                            <td th:text="${sector.nombre}"></td>
-                            <td th:text="${#strings.equals(sector.disponible, 'true')} ? 'SI' : 'NO'"></td>
-                            <td>
-                                <a th:href="@{/sectores/editar/} + ${sector.id}" class="btn btn-warning mx-1"
-                                data-toggle="tooltip" data-placement="bottom" title="Editar"><i class="far fa-edit"></i></a>
-
-                            </td>
-                          </tr>
-                    </tbody>
-                </table>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-            </div>
-          </div>
-        </div>
-      </div>
+    </div>
 
 </body>
+
 </html>

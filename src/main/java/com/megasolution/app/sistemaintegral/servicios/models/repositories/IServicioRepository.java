@@ -13,8 +13,11 @@ public interface IServicioRepository extends JpaRepository<Servicio, Integer>{
 
 
  
-    @Query(value = "SELECT * FROM servicios ORDER BY fecha_ingreso ASC;", nativeQuery = true)
-    public List<Servicio> findAll(); 
+    @Query(value = "SELECT * FROM servicios ORDER BY fecha_ingreso DESC;", nativeQuery = true)
+    public List<Servicio> findAll();
+
+    @Query(value = "SELECT * FROM servicios ORDER BY fecha_ingreso DESC LIMIT 50;", nativeQuery = true)
+    public List<Servicio> findLast50(); 
 
     @Query(value = "SELECT * FROM servicios WHERE estado_id = ?1 ORDER BY fecha_ingreso ASC;", nativeQuery = true)
     public List<Servicio> findByEstadoServicio(Integer id);

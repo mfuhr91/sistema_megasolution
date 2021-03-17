@@ -59,4 +59,9 @@ public class ClienteServiceImpl implements IClienteService {
         List<Cliente> servicios = this.clienteRepo.findByParam(param);
         return servicios;
     }
+
+    @Override
+    public List<Cliente> buscar100() {
+        return this.clienteRepo.find100();
+    }
 }

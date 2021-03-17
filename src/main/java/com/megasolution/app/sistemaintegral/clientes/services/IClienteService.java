@@ -8,6 +8,8 @@ public interface IClienteService {
 
     public List<Cliente> buscarTodos();
 
+    public List<Cliente> buscar100();
+
     public Cliente buscarPorId(Integer id);
 
     public void guardar(Cliente cliente);

@@ -46,6 +46,17 @@ public class ClienteController {
     private IPaisService paisService;
 
     @GetMapping("")
+    public String listar100(Model model){
+        List<Cliente> clientes = clienteService.buscar100();
+
+        model.addAttribute("titulo", "Clientes");
+        model.addAttribute("clientes", clientes);
+        model.addAttribute("active", "clientes");
+
+        return "clientes/lista";
+    }
+
+    @GetMapping("/todos")
     public String listarClientes(Model model){
         List<Cliente> clientes = clienteService.buscarTodos();
 
