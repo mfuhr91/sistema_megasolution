@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
   <link rel="stylesheet" th:href="@{/css/style.css}">
+  <link rel="stylesheet" th:href="@{/css/animate.min.css}">
   <link rel="stylesheet" th:href="@{/css/fontawesome/all.min.css}">
   <link rel="shortcut icon" type="image/webp" th:href="@{/img/logo.webp}" />
   <script th:src="@{/js/jquery.min.js}"></script>
@@ -21,7 +22,7 @@
 
 <body>
   <header th:fragment="header">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark ">
       <a class="navbar-brand" th:href="@{/inicio}">MEGASOLUTION</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
         aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -73,7 +74,7 @@
     </nav>
 
     <!-- ALERTAS -->
-    <div class="alert alert-success alert-dismissible fade show mt-1 mx-1" th:if="${successNuevo != null}">
+    <div class="alert alert-success alert-dismissible fade show mt-1 mx-1 animate__animated animate__headShake" th:if="${successNuevo != null}">
       <span th:text="${successNuevo}"></span>&nbsp;&nbsp;
         <a class="btn btn-secondary" th:href="@{'/servicios/imprimir/' + ${servicioId}(format=pdf)}" target="_blank" >
           <i class="fas fa-print"></i>
@@ -83,25 +84,25 @@
         </button>
     </div>
     
-    <div class="alert alert-success alert-dismissible fade show mt-1 mx-1" th:if="${success != null}" >
+    <div class="alert alert-success alert-dismissible fade show mt-1 mx-1 animate__animated animate__headShake" th:if="${success != null}" >
       <span th:text="${success}"></span>
       <button type="button" class="close" data-dismiss="alert" aria-label="Close">
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
-    <div class="alert alert-danger alert-dismissible fade show mt-1 mx-1"  th:if="${error != null && error != 'Forbidden'}"  >
+    <div class="alert alert-danger alert-dismissible fade show mt-1 mx-1 animate__animated animate__headShake"  th:if="${error != null && error != 'Forbidden'}"  >
       <span th:text="${error}"></span>
       <button type="button" class="close" data-dismiss="alert" aria-label="Close">
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
-    <div class="alert alert-warning alert-dismissible fade show mt-1 mx-1" th:if="${warning != null}"  >
+    <div class="alert alert-warning alert-dismissible fade show mt-1 mx-1 animate__animated animate__headShake" th:if="${warning != null}"  >
       <span th:text="${warning}"></span>
       <button type="button" class="close" data-dismiss="alert" aria-label="Close">
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
-    <div class="alert alert-info alert-dismissible fade show mt-1 mx-1" th:if="${info != null}" >
+    <div class="alert alert-info alert-dismissible fade show mt-1 mx-1 animate__animated animate__headShake" th:if="${info != null}" >
       <span th:text="${successNuevo}"></span>
       <button type="button" class="close" data-dismiss="alert" aria-label="Close">
         <span aria-hidden="true">&times;</span>

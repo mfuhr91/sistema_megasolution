@@ -246,6 +246,11 @@ aside .card .card-header{
     padding-right: 4px;
     /* font-size: 10px; */
   }
+  .card .card-body #sect {
+    
+    height: 70px !important;
+    overflow-x: scroll !important;
+  }
   .opciones{
     min-width: 150px;
   }
@@ -253,12 +258,7 @@ aside .card .card-header{
     max-width: 65px;
   }
 
-  .lista-sectores{
-    display: inline;
-    border: 2px 2px 2px 2px;
-    height: 70px;
-    overflow-x: scroll !important;
-  }
+  
 
   #tarjetas{
     max-width: 60%;

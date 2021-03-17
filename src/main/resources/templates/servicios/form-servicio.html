@@ -7,7 +7,7 @@
 <body>
     <header th:replace="plantillas/principal :: header"></header>
 
-    <div class="container my-2">
+    <div class="container my-2 animate__animated animate__fadeIn">
         <div class="card">
             <div class="card-header" th:text="${titulo}"></div>
             <div class="card-body">
@@ -57,50 +57,55 @@
                                     placeholder="Teléfono" readonly>
                             </div>
                         </div>
-                        <table th:if="${clientes}" id="tabla-clientes" class="table table-sm text-center mx-5">
-                            <thead class="bg-secondary text-white">
-                                <tr>
-                                    <th>SELECCIONAR</th>
-                                    <th>DNI - CUIT</th>
-                                    <th>RAZON SOCIAL</th>
-                                    <th>CONTACTO</th>
-                                    <th>TELEFONO</th>
-                                    <th>EMAIL</th>
-                                    <th class="opciones-servicios">OPCIONES</th>
-                                </tr>
-                            </thead>
-                            <tbody id="tabla-clientes">
-                                <tr th:each="cliente : ${clientes}">
-                                    <td>
-                                        <a id="seleccionar_" th:attrappend="id=${cliente.id}"
-                                            th:data_dniCuit="${cliente.dniCuit}"
-                                            th:data_razonSocial="${cliente.razonSocial}"
-                                            th:data_telefono="${cliente.telefono}" th:onclick="|seleccionarCliente('${cliente.id}',  
-                                                this.getAttribute('data_dniCuit'), 
-                                                this.getAttribute('data_razonSocial'),
-                                                this.getAttribute('data_telefono'))|" class="btn btn-primary mx-1"><i
-                                                class="far fa-check-circle"></i>
-                                        </a>
-                                    </td>
+                        <div th:if="${clientes}" class="mx-5">
 
-                                    <td class="align-middle" th:text="${cliente.dniCuit}"></td>
-                                    <td class="align-middle" th:text="${cliente.razonSocial}"></td>
-                                    <td class="align-middle" th:text="${cliente.contacto}"></td>
-                                    <td class="align-middle" th:text="${cliente.telefono}"></td>
-                                    <td class="align-middle" th:text="${cliente.email}"></td>
-                                    <td class="align-middle opciones-servicios">
-                                        <a th:href="@{/clientes/editar/} + ${cliente.id}" class="btn btn-warning mx-1"
-                                            data-toggle="tooltip" data-placement="bottom" title="Editar"><i
-                                                class="far fa-edit"></i></a>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                            <a th:href="@{/clientes/nuevo}" class="btn btn-primary mb-2 float-right mx-2"><strong>Agregar</strong></a>
+                            <table id="tabla-clientes" class="table table-sm text-center ">
+                                <thead class="bg-secondary text-white">
+                                    <tr>
+                                        <th>SELECCIONAR</th>
+                                        <th>DNI - CUIT</th>
+                                        <th>RAZON SOCIAL</th>
+                                        <th>CONTACTO</th>
+                                        <th>TELEFONO</th>
+                                        <th>EMAIL</th>
+                                        <th class="opciones-servicios">OPCIONES</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tabla-clientes">
+                                    <tr th:each="cliente : ${clientes}">
+                                        <td>
+                                            <a id="seleccionar_" th:attrappend="id=${cliente.id}"
+                                                th:data_dniCuit="${cliente.dniCuit}"
+                                                th:data_razonSocial="${cliente.razonSocial}"
+                                                th:data_telefono="${cliente.telefono}" th:onclick="|seleccionarCliente('${cliente.id}',  
+                                                    this.getAttribute('data_dniCuit'), 
+                                                    this.getAttribute('data_razonSocial'),
+                                                    this.getAttribute('data_telefono'))|" class="btn btn-primary mx-1"><i
+                                                    class="far fa-check-circle"></i>
+                                            </a>
+                                        </td>
+    
+                                        <td class="align-middle" th:text="${cliente.dniCuit}"></td>
+                                        <td class="align-middle" th:text="${cliente.razonSocial}"></td>
+                                        <td class="align-middle" th:text="${cliente.contacto}"></td>
+                                        <td class="align-middle" th:text="${cliente.telefono}"></td>
+                                        <td class="align-middle" th:text="${cliente.email}"></td>
+                                        <td class="align-middle opciones-servicios">
+                                            <a th:href="@{/clientes/editar/} + ${cliente.id}" class="btn btn-warning mx-1"
+                                                data-toggle="tooltip" data-placement="bottom" title="Editar"><i
+                                                    class="far fa-edit"></i></a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                        </div>
 
                     </div>
                     <div id="datosEquipo" class="row">
 
-                        <div class="col-sm-6">
+                        <div class="col-6">
 
                             <div class="form-group">
                                 <label for="equipo" class="col-sm col-form-label">EQUIPO</label>
@@ -140,7 +145,7 @@
                                 </div>
 
                             </div>
-                            <div class="lista-sectores px-4">
+                            <div id="sect" class="lista-sectores mb-3 px-2 mx-3 animate__animated animate__fadeIn" style="height: 300px; overflow-y: scroll;">
                                 <a th:href="@{/sectores/nuevo}"
                                     class="btn btn-primary my-3 float-right"><strong>Agregar</strong></a>
                                 <table class="table table-sm text-center">
