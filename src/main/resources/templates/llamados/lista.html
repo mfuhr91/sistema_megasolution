@@ -22,9 +22,9 @@
                     </thead>
                     <tbody class="tabla">
                         <tr th:each="llamado : ${llamados}" th:unless="${llamado.id == 1}">
-                            <td th:text="${llamado.nombreLlamado}"></td>
-                            <td th:text="${llamado.horas}"></td>
-                            <td class="opciones">
+                            <td class="align-middle" th:text="${llamado.nombreLlamado}"></td>
+                            <td class="align-middle" th:text="${llamado.horas}"></td>
+                            <td class="align-middle opciones">
                                 <a th:href="@{/llamados/editar/} + ${llamado.id}" class="btn btn-warning mx-1"
                                 data-toggle="tooltip" data-placement="bottom" title="Editar"><i class="far fa-edit"></i></a>
                             </td>

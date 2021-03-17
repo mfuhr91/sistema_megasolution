@@ -55,39 +55,39 @@
       </thead>
       <tbody class="tabla">
         <tr th:each="servicio : ${servicios}">
-          <td th:text="${servicio.cliente.razonSocial}"></td>
-          <td th:text="${servicio.equipo}"></td>
-          <td th:if="${servicio.cargador}">
+          <td class="align-middle" th:text="${servicio.cliente.razonSocial}"></td>
+          <td class="align-middle" th:text="${servicio.equipo}"></td>
+          <td class="align-middle" th:if="${servicio.cargador}">
             <div class="ok bg-success">
               <i class="fas fa-check"></i>
             </div>
           </td>
 
-          <td th:if="${!servicio.cargador}">
+          <td class="align-middle" th:if="${!servicio.cargador}">
             <div class="no-tiene bg-danger">
               <i class="fas fa-times-circle"></i>
             </div>
           </td>
 
-          <td th:if="${servicio.bateria}">
+          <td class="align-middle" th:if="${servicio.bateria}">
             <div class="ok bg-success">
               <i class="fas fa-check"></i>
             </div>
           </td>
-          <td th:if="${!servicio.bateria}">
+          <td class="align-middle" th:if="${!servicio.bateria}">
             <div class="no-tiene bg-danger">
               <i class="fas fa-times-circle"></i>
             </div>
           </td>
-          <td th:if="${servicio.sector != null}"><div class="sector bg-info" th:text="${servicio.sector.nombre}"></div></td>
-          <td th:if="${servicio.sector == null}" th:text="${''}"></td>
-          <td th:text="${servicio.problemaReportado}"></td>
-          <td class="observaciones" th:text="${servicio.observaciones}"></td>
-          <td th:text="${servicio.solucion}"></td>
-          <td th:text="${#calendars.format(servicio.fechaIngreso,'HH:mm dd/MM/yyyy')}"></td>
-          <td th:text="${#calendars.format(servicio.fechaTerminado,'HH:mm dd/MM/yyyy')}"></td>
-          <td th:text="${servicio.estado.nombre}"></td>
-          <td >
+          <td class="align-middle" th:if="${servicio.sector != null}"><div class="sector bg-info" th:text="${servicio.sector.nombre}"></div></td>
+          <td class="align-middle" th:if="${servicio.sector == null}" th:text="${''}"></td>
+          <td class="align-middle" th:text="${servicio.problemaReportado}"></td>
+          <td class="align-middle observaciones" th:text="${servicio.observaciones}"></td>
+          <td class="align-middle" th:text="${servicio.solucion}"></td>
+          <td class="align-middle" th:text="${#calendars.format(servicio.fechaIngreso,'HH:mm dd/MM/yyyy')}"></td>
+          <td class="align-middle" th:text="${#calendars.format(servicio.fechaTerminado,'HH:mm dd/MM/yyyy')}"></td>
+          <td class="align-middle" th:text="${servicio.estado.nombre}"></td>
+          <td class="align-middle" >
               <a th:href="@{/servicios/editar/} + ${servicio.id}" class="btn btn-warning mx-1" 
               data-toggle="tooltip" data-placement="bottom" title="Editar"><i class="far fa-edit"></i></a>
               <a id="borrar_" th:attrappend="id=${servicio.id}" 

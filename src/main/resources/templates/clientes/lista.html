@@ -30,14 +30,14 @@
                     </thead>
                     <tbody class="tabla">
                         <tr th:each="cliente : ${clientes}">
-                            <td th:text="${cliente.dniCuit}"></td>
-                            <td th:text="${cliente.razonSocial}"></td>
-                            <td th:text="${cliente.contacto}"></td>
-                            <td th:text="${cliente.telefono}"></td>
-                            <td th:text="${cliente.email}"></td>
-                            <td th:text="${cliente.direccion}"></td>
-                            <td th:text="${#calendars.format(cliente.fechaAlta,'dd/MM/yyyy')}"></td>
-                            <td class="opciones">
+                            <td class="align-middle" th:text="${cliente.dniCuit}"></td>
+                            <td class="align-middle" th:text="${cliente.razonSocial}"></td>
+                            <td class="align-middle" th:text="${cliente.contacto}"></td>
+                            <td class="align-middle" th:text="${cliente.telefono}"></td>
+                            <td class="align-middle" th:text="${cliente.email}"></td>
+                            <td class="align-middle" th:text="${cliente.direccion}"></td>
+                            <td class="align-middle" th:text="${#calendars.format(cliente.fechaAlta,'dd/MM/yyyy')}"></td>
+                            <td class="align-middle opciones">
                                 <a th:href="@{/clientes/editar/} + ${cliente.id}" class="btn btn-warning mx-1"
                                 data-toggle="tooltip" data-placement="bottom" title="Editar"><i class="far fa-edit"></i></a>
                                 <a th:data_razonSocial="${cliente.razonSocial}" id="borrar_" th:attrappend="id=${cliente.id}" 

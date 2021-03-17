@@ -26,12 +26,12 @@
                     </thead>
                     <tbody class="tabla">
                         <tr th:each="usuario : ${usuarios}" th:unless="${usuario.nombreUsuario == 'admin'}">
-                            <td th:text="${usuario.nombreUsuario}"></td>
-                            <td th:text="${usuario.nombreCompleto}"></td>
-                            <td th:text="${#strings.equals(usuario.rol.authority, 'admin')} ? 'administrador' : 'usuario'"></td>
-                            <td th:text="${#strings.equals(usuario.habilitado, 'true')} ? 'SI' : 'NO'"></td>
-                            <td th:text="${#calendars.format(usuario.fechaAlta,'dd/MM/yyyy')}"></td>
-                            <td>
+                            <td class="align-middle" th:text="${usuario.nombreUsuario}"></td>
+                            <td class="align-middle" th:text="${usuario.nombreCompleto}"></td>
+                            <td class="align-middle" th:text="${#strings.equals(usuario.rol.authority, 'admin')} ? 'administrador' : 'usuario'"></td>
+                            <td class="align-middle" th:text="${#strings.equals(usuario.habilitado, 'true')} ? 'SI' : 'NO'"></td>
+                            <td class="align-middle" th:text="${#calendars.format(usuario.fechaAlta,'dd/MM/yyyy')}"></td>
+                            <td class="align-middle">
                                 <a th:href="@{/usuarios/editar/} + ${usuario.id}" class="btn btn-warning mx-1"
                                 data-toggle="tooltip" data-placement="bottom" title="Editar"><i class="far fa-edit"></i></a>
                                 <a th:data_nombreUsuario="${usuario.nombreUsuario}" id="borrar_" th:attrappend="id=${usuario.id}" 
