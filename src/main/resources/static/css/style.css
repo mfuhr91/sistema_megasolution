@@ -26,9 +26,25 @@ footer{
   height: 50px;
   line-height: 50px;
 }
-/* input{
-  text-transform: uppercase;
-} */
+
+.navbar .navbar-brand {
+  background-color: #f3f3f3f3; 
+  color: #343b40; 
+  border-radius: 10px; 
+  padding-top: 5px; 
+  padding-bottom: 0; 
+  padding-left: 5px; 
+  padding-right: 5px;
+}
+.navbar .navbar-brand:hover {
+  color: #343b40;
+}
+.navbar .navbar-brand img {
+  margin-bottom: 4px;
+  width: 30px;
+}
+
+
 
 .nav-pills .nav-link{
   color: #083a93 !important;
