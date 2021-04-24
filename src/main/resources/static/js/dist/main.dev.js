@@ -45,15 +45,21 @@ function seleccionarCliente(cliente_id, cliente_dni_cuit, cliente_razonSocial, c
 }
 
 function buscarSector() {
-  $(".lista-sectores").toggle();
+  $("html, body").animate({
+    scrollTop: 400
+  }, 600);
+  $(".lista-sectores").slideToggle();
 } // SELECCIONA EL SECTOR Y PASA LOS VALORES AL INPUT DEL FORM SERVICIO
 
 
 function seleccionarSector(sector_id, sector_nombre) {
   $('#sector').val(sector_id);
   $('#sector_ver').val(sector_nombre);
-  $(".lista-sectores").hide();
+  $(".lista-sectores").slideToggle();
   $('#problemaReportado').focus();
+  $("html, body").animate({
+    scrollTop: 150
+  }, 600);
 }
 
 $(document).ready(function () {

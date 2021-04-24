@@ -223,6 +223,9 @@ aside .card .card-header{
   line-height: 23px;
 }
 
+.card .card-body .lista-sectores .table {
+  font-size: 15px !important;
+}
 .modal-dialog{
   max-width: 80%;
 }
@@ -246,11 +249,7 @@ aside .card .card-header{
     padding-right: 4px;
     /* font-size: 10px; */
   }
-  .card .card-body #sect {
-    
-    height: 70px !important;
-    overflow-x: scroll !important;
-  }
+  
   .opciones{
     min-width: 150px;
   }
