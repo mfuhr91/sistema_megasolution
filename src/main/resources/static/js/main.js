@@ -49,7 +49,7 @@ function seleccionarCliente(cliente_id,cliente_dni_cuit,cliente_razonSocial, cli
 
 function buscarSector(){
 
-    $(".lista-sectores").toggle();
+    $(".lista-sectores").slideToggle();
   
 }
 
@@ -58,7 +58,7 @@ function seleccionarSector(sector_id, sector_nombre){
 
     $('#sector').val(sector_id);
     $('#sector_ver').val(sector_nombre);
-    $(".lista-sectores").hide();
+    $(".lista-sectores").slideToggle();
     $('#problemaReportado').focus();    
 
 }

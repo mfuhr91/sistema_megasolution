@@ -7,7 +7,7 @@
 <body>
   <header th:replace="plantillas/principal :: header"></header>
 
-  <div class="container-fluid my-4 pb-3">
+  <div class="container-fluid my-4 pb-3 animate__animated animate__fadeIn">
     <ul class="nav nav-pills nav-fill">
       <li class="nav-item">
         <a th:class="${#strings.equals(pill_activo, 'todos')} ? 'nav-link active' : 'nav-link'" 
