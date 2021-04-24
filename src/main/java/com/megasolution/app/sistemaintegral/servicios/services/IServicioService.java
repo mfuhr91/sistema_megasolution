@@ -37,6 +37,6 @@ public interface IServicioService {
 
     public long promedioServicios();
 
-    public List<Servicio> buscarPorParametro(String param);
+    public List<Servicio> buscarPorParametro(String param, String estado);
     
 }

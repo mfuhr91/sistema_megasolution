@@ -112,11 +112,11 @@ public class ServicioServiceImpl implements IServicioService {
     }
 
     @Override
-    public List<Servicio> buscarPorParametro(String param) {
+    public List<Servicio> buscarPorParametro(String param, String estado) {
 
         param = param.toLowerCase();
 
-        List<Servicio> servicios = this.servicioRepo.findByParam(param);
+        List<Servicio> servicios = this.servicioRepo.findByParam(param, estado);
         return servicios;
     }
 

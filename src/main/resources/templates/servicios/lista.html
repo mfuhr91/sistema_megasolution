@@ -31,9 +31,23 @@
       </li>
     </ul>
 
-    <form id="formBuscador" th:action="@{/servicios/buscar}" method="GET">
-      <input th:name="param" type="text" class="form-control col-sm-2 my-3 float-left buscador" placeholder="Buscar">
-    </form>
+    <div th:switch="${pill_activo}">    
+      <form th:case="'todos'" id="formBuscador" th:action="@{/servicios/buscar/todos}" method="POST">
+        <input th:name="param" type="text" class="form-control col-sm-2 my-3 float-left buscador" placeholder="Buscar todos">
+      </form>
+      <form th:case="'pendiente'" id="formBuscador" th:action="@{/servicios/buscar/pendientes}" method="POST">
+        <input th:name="param" type="text" class="form-control col-sm-2 my-3 float-left buscador" placeholder="Buscar pendientes">
+      </form>
+      <form th:case="'en_proceso'" id="formBuscador" th:action="@{/servicios/buscar/en_proceso}" method="POST">
+        <input th:name="param" type="text" class="form-control col-sm-2 my-3 float-left buscador" placeholder="Buscar en proceso">
+      </form>
+      <form th:case="'terminado'" id="formBuscador" th:action="@{/servicios/buscar/terminados}" method="POST">
+        <input th:name="param" type="text" class="form-control col-sm-2 my-3 float-left buscador" placeholder="Buscar terminados">
+      </form>
+      <form th:case="'entregado'" id="formBuscador" th:action="@{/servicios/buscar/entregados}" method="POST">
+        <input th:name="param" type="text" class="form-control col-sm-2 my-3 float-left buscador" placeholder="Buscar entregados">
+      </form>
+    </div>
     <!-- <input type="text" class="form-control col-sm-2 my-3 float-left buscador" placeholder="Buscar"> -->
     <a th:href="@{/servicios/nuevo}" class="btn btn-primary my-3 float-right mx-2"><strong>Agregar</strong></a>
     <a th:href="@{/servicios/todos}" class="btn btn-success my-3 float-right mx-2"><strong>Todos</strong></a>

@@ -19,17 +19,17 @@
                     <div class="col-3 mr-3">
 
                         <form th:if="${servicioId}" id="formBuscador"
-                            th:action="@{/servicios/buscar-clientes/} + ${servicioId}" method="GET">
+                            th:action="@{/servicios/buscar-clientes/} + ${servicioId}" method="POST">
                             <input th:name="param" type="text" class="form-control my-3 float-left buscador"
                                 placeholder="Buscar cliente">
                         </form>
                         <form th:if="not ${cliente}" id="formBuscador" th:action="@{/servicios/buscar-clientes/}"
-                            method="GET">
+                            method="POST">
                             <input th:name="param" type="text" class="form-control my-3 float-left buscador"
                                 placeholder="Buscar cliente">
                         </form>
                         <form th:if="${cliente} and not ${servicioId}" id="formBuscador"
-                            th:action="@{/servicios/buscar-clientes/}" method="GET">
+                            th:action="@{/servicios/buscar-clientes/}" method="POST">
                             <input th:name="param" type="text" class="form-control my-3 float-left buscador"
                                 placeholder="Buscar cliente">
                         </form>

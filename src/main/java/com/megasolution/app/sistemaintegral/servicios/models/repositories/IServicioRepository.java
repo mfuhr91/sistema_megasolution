@@ -41,11 +41,11 @@ public interface IServicioRepository extends JpaRepository<Servicio, Integer>{
     public Integer buscarServiciosDeHoy(String fechaHoy);
 
     
-    @Query(value = "SELECT * FROM servicios AS s INNER JOIN clientes AS c ON s.cliente_id = c.id " +
-                    "WHERE s.equipo LIKE %:param% OR s.observaciones LIKE %:param% " + 
+    @Query(value = "SELECT * FROM servicios AS s INNER JOIN clientes  AS c INNER JOIN estados AS e ON s.cliente_id = c.id AND s.estado_id = e.id " +
+                    "WHERE (s.equipo LIKE %:param% OR s.observaciones LIKE %:param% " + 
                     "OR s.problema_reportado LIKE %:param% OR s.solucion LIKE %:param% " +
                     "OR c.contacto LIKE %:param% OR c.razon_social LIKE %:param% " +
                     "OR c.direccion LIKE %:param% OR c.dni_cuit LIKE %:param% " +
-                    "OR c.email LIKE %:param% OR c.telefono LIKE %:param%", nativeQuery = true)
-    public List<Servicio> findByParam(@Param("param") String param);
+                    "OR c.email LIKE %:param% OR c.telefono LIKE %:param%) AND e.nombre LIKE %:estado%", nativeQuery = true)
+    public List<Servicio> findByParam(@Param("param") String param,@Param("estado") String estado);
 }

@@ -556,20 +556,47 @@ public class ServicioController {
         return model;
     }
 
-
-    @GetMapping("/buscar")
-    public String buscarServicio(@RequestParam String param, Model model, RedirectAttributes flash){
+    @PostMapping("/buscar/{estado}")
+    public String buscarServicio(@RequestParam String param,@PathVariable String estado, Model model, RedirectAttributes flash){
+       
+        System.out.println(estado);
         
+        List<Servicio> servicios = null;
+        switch (estado){
+            case "todos":
+                estado = "";
+                servicios = this.servicioService.buscarPorParametro(param, estado);
+                estado = "todos";
+                break;
+            case "pendientes":
+                estado = "Pendiente";
+                servicios = this.servicioService.buscarPorParametro(param, estado);
+                estado = "pendiente";
+                break;
+            case "en_proceso":
+                estado = "En proceso";
+                servicios = this.servicioService.buscarPorParametro(param, estado);
+                estado = "en_proceso";
+                break;
+            case "terminados":
+                estado = "Terminado";
+                servicios = this.servicioService.buscarPorParametro(param, estado);
+                estado = "terminado";
+                break;
+            case "entregados":
+                estado = "Entregado";
+                servicios = this.servicioService.buscarPorParametro(param, estado);
+                estado = "entregado";
+                break;       
+        }
         if(param == ""){
-            System.out.println("NADA");
             return "redirect:/servicios";
         }
-        List<Servicio> servicios = this.servicioService.buscarPorParametro(param);
         if(servicios.size() > 0){
             model.addAttribute("titulo", "Servicios");
             model.addAttribute("servicios", servicios);
             model.addAttribute("active", "servicios");
-            model.addAttribute("pill_activo", "todos");
+            model.addAttribute("pill_activo", estado);
             
             return "servicios/lista";
         } else {
@@ -577,9 +604,9 @@ public class ServicioController {
             
             return "redirect:/servicios";
         }
-    }  
+    } 
 
-    @GetMapping("/buscar-clientes")
+    @PostMapping("/buscar-clientes")
     public String buscarClientesEnServicioNuevo(@RequestParam String param, Model model, RedirectAttributes flash){
         
         if(param == ""){
@@ -600,7 +627,7 @@ public class ServicioController {
             return "redirect:/servicios/nuevo";
         }
     }  
-    @GetMapping("/buscar-clientes/{id}")
+    @PostMapping("/buscar-clientes/{id}")
     public String buscarClientesEnServicio(@RequestParam String param, @PathVariable Integer id, Model model, RedirectAttributes flash){
         
 
