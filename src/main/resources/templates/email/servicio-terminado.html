@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 16px;
+        }
+    </style>
+</head>
+
+<body>
+    <p>
+        ¡Hola <span th:text="${razonSocial}"></span>!
+    </p>
+    <p>
+        Tu equipo <span th:text="${equipo}"></span> está listo para ser retirado, te recordamos que nuestro horario de atención 
+        es de <strong>Lunes a Sábado de 10 a 13 y de 15:30 a 20:00hs</strong>. 
+    </p>
+    <p>
+        ¡Te esperamos!
+    </p>
+    <p>
+        Gobernador Paz 2098
+        <br>
+        Celular | WhatsApp: 2901 550863
+    </p>
+    <img th:src="|cid:imagen|" width="300"/>
+
+</body>
+
+</html>

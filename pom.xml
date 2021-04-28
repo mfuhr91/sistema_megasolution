@@ -84,6 +84,13 @@
 			<artifactId>thymeleaf-extras-springsecurity5</artifactId>
 			<scope>compile</scope>
 		</dependency>
+
+		<!-- ================= MAIL =================== -->
+		
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-mail</artifactId>
+		 </dependency>
 	</dependencies>
 	
 

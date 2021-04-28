@@ -1,10 +1,13 @@
 package com.megasolution.app.sistemaintegral.servicios.controllers;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
+import javax.mail.MessagingException;
 import javax.validation.Valid;
 
+import com.lowagie.text.BadElementException;
 import com.megasolution.app.sistemaintegral.avisos.models.entities.Aviso;
 import com.megasolution.app.sistemaintegral.avisos.models.entities.Llamado;
 import com.megasolution.app.sistemaintegral.avisos.models.entities.Mensaje;
@@ -13,6 +16,7 @@ import com.megasolution.app.sistemaintegral.avisos.services.ILlamadoService;
 import com.megasolution.app.sistemaintegral.avisos.services.IMensajeService;
 import com.megasolution.app.sistemaintegral.clientes.models.entities.Cliente;
 import com.megasolution.app.sistemaintegral.clientes.services.IClienteService;
+import com.megasolution.app.sistemaintegral.email.IMailService;
 import com.megasolution.app.sistemaintegral.sectores.models.entities.Sector;
 import com.megasolution.app.sistemaintegral.sectores.services.ISectorService;
 import com.megasolution.app.sistemaintegral.servicios.models.entities.Estado;
@@ -60,6 +64,9 @@ public class ServicioController {
 
     @Autowired
     private ILlamadoService llamadoService;
+
+    @Autowired
+    private IMailService mailService;
 
     @GetMapping("")
     public String listar50Ultimos(Model model){
@@ -436,6 +443,16 @@ public class ServicioController {
         Aviso aviso = new Aviso();
         Aviso avisoBuscado = new Aviso();
         if(servicio.getEstado().getId() == 3){
+           
+            try {
+                // Envío informacion del cliente al html del correo determinado
+                String contenido = this.mailService.avisoServicioTerminado(cliente, servicio);
+                
+                this.mailService.enviarMail(cliente.getEmail(), contenido);
+            } catch (MessagingException | BadElementException | IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
             Llamado llamado = llamadoService.buscarPorId(1);
             Mensaje mensaje = mensajeService.buscarPorId(1);
             avisoBuscado = avisoService.buscarAvisoPorServicioId(servicio.getId());
