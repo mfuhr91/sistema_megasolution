@@ -450,7 +450,6 @@ public class ServicioController {
                 
                 this.mailService.enviarMail(cliente.getEmail(), contenido);
             } catch (MessagingException | BadElementException | IOException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
             Llamado llamado = llamadoService.buscarPorId(1);

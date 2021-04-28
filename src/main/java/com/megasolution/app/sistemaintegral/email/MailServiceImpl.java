@@ -1,20 +1,10 @@
 package com.megasolution.app.sistemaintegral.email;
 
-import java.io.File;
 import java.io.IOException;
-import java.net.URL;
-
-import javax.activation.DataSource;
-import javax.activation.FileDataSource;
-import javax.imageio.ImageIO;
-import javax.mail.BodyPart;
 import javax.mail.MessagingException;
-import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMultipart;
 
 import com.lowagie.text.BadElementException;
-import com.lowagie.text.Image;
 import com.megasolution.app.sistemaintegral.clientes.models.entities.Cliente;
 import com.megasolution.app.sistemaintegral.servicios.models.entities.Servicio;
 
@@ -23,7 +13,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.MailException;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
@@ -85,8 +74,6 @@ public class MailServiceImpl implements IMailService {
 
     public String avisoServicioTerminado(Cliente cliente, Servicio servicio ) throws MessagingException, BadElementException, IOException{
 
-         //TODO: MAIL
-
          this.remitente = "serviciotecnico@megasolution.com.ar";
          this.asunto = "¡Equipo terminado y listo para ser retirado! - Equipo de MegaSolution";
 
@@ -96,20 +83,6 @@ public class MailServiceImpl implements IMailService {
          context.setVariable("equipo", servicio.getEquipo());
          
          return templateEngine.process("email/servicio-terminado", context);
-
-         /*
-         String contenido = "<h2>¡Hola ".concat(cliente.getRazonSocial()).concat("!\n\n</h2>")
-         .concat("                           <p>Su equipo " + servicio.getEquipo() + " está listo para ser retirado, recuerde que nuestro horario de atención")
-         .concat(" es de Lunes a Sábado 10 a 13 y de 15:30 a 20:00hs. ¡Te esperamos!\n\n</p>")
-         .concat("<img src='/img/header_mega.jpg' />")
-         .concat("¡Muchas gracias!");
-         
-         String asunto = "¡Equipo terminado y listo para ser retirado! - Equipo de MegaSolution";
-         String destinatario = cliente.getEmail();
-
-         this.enviarMail(destinatario, asunto, contenido);
-
-         */
 
     }
 
