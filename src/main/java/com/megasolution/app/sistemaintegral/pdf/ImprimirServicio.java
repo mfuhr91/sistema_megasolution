@@ -19,7 +19,7 @@ import com.lowagie.text.Rectangle;
 import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfWriter;
-import com.megasolution.app.sistemaintegral.servicios.models.entities.Servicio;
+import com.megasolution.app.sistemaintegral.models.entities.Servicio;
 
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.view.document.AbstractPdfView;
@@ -59,7 +59,7 @@ public class ImprimirServicio extends AbstractPdfView {
             
         // CELDA CONTACTO
         cel = new PdfPCell(new Phrase("GOBERNADOR PAZ 2098\n" +
-                                        "2901-550863 / 422762", FontFactory.getFont(FONT, 10)));
+                                        "Celular | WhatsApp: 2901 550863", FontFactory.getFont(FONT, 10)));
 
         cel.setBorder(Rectangle.NO_BORDER);
         cel.setPaddingTop(15f);
