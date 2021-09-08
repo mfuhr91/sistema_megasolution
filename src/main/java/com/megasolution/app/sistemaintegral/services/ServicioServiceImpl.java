@@ -42,6 +42,9 @@ public class ServicioServiceImpl implements IServicioService {
     @Autowired
     private IMailService mailService;
 
+    @Autowired
+    private ISectorService sectorService;
+
     private final Logger log = LoggerFactory.getLogger(ServicioServiceImpl.class);
 
     @Override
@@ -209,6 +212,18 @@ public class ServicioServiceImpl implements IServicioService {
         return model;
     }
 
+    @Override
+    public Servicio asignarSector(Servicio servicio, Sector sector){
+        if(servicio.getEstado().getCodigo().equals(Estado.ENTREGADO)){ 
+            sector.setDisponible(true);
+            servicio.setSector(null); 
+        }else{
+            sector.setDisponible(false);
+        }
+        sectorService.guardar(sector);
+        return servicio;
+    }
+
 
 
     @Override
@@ -232,31 +247,13 @@ public class ServicioServiceImpl implements IServicioService {
                 aviso = new Aviso(mensaje.getTipoMensaje(), mensaje, servicio, llamado);
                 avisoService.guardar(aviso);
             }
-                
-            servicio.getSector().setDisponible(false);
-            
-    
-        // ESTADO DEL SERVICIO CAMBIA A ENTREGADO
-        }else if(servicio.getEstado().getCodigo().equals(Estado.ENTREGADO)){
-            aviso = avisoService.buscarAvisoPorServicioId(servicio.getId());
 
-            if(aviso != null){
-                avisoService.eliminar(aviso.getId());
-                servicio.setAviso(null);
-            }
-            servicio.setSector(null); 
-            servicio.getSector().setDisponible(true);
-
-        // EN CASO QUE ESTADO DE SERVICIO SEA PENDIENTE O EN PROCESO
         }else{
             aviso = avisoService.buscarAvisoPorServicioId(servicio.getId());
             if(aviso != null){
                 avisoService.eliminar(aviso.getId());
                 servicio.setAviso(null);
             }
-        
-            servicio.getSector().setDisponible(false);
-            
         }
     }
 

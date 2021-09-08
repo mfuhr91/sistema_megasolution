@@ -51,5 +51,7 @@ public interface IServicioService {
     public Model enviarModelo(Cliente cliente, List<Sector> sectores, List<Estado> estados, Sector sector, Servicio servicio, Model model);
 
     public List<Servicio> buscarPorParamEstado(String param, String estado);
+
+    public Servicio asignarSector(Servicio servicio, Sector sector);
     
 }

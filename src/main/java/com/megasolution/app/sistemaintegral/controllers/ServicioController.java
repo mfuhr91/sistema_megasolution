@@ -410,7 +410,8 @@ public class ServicioController {
             return "servicios/form-servicio";
         }
         
-        this.servicioService.crearAviso(servicio);       
+        this.servicioService.crearAviso(servicio);   
+        this.servicioService.asignarSector(servicio, sector);    
         
         if(servicio.getId() != null){
             sectorService.guardar(sector);
