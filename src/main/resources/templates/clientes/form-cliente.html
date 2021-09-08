@@ -22,7 +22,7 @@
                                     <input id="dniCuit" type="number" th:field="*{dniCuit}" class="form-control"
                                         th:attrappend="class=${alertDangerDniCuit}" placeholder="Ingrese un dni o cuit"
                                         th:errorclass="'form-control alert-danger'">
-                                   t <small class="form-text text-danger" th:if="${#fields.hasErrors('dniCuit')}" h:errors="*{dniCuit}"></small> 
+                                    <small class="form-text text-danger" th:if="${#fields.hasErrors('dniCuit')}" h:errors="*{dniCuit}"></small> 
                                 <small class="form-text text-danger" th:if="${errorDniCuit}" th:text="${errorDniCuit}"></small>
                             </div>
                         </div>
