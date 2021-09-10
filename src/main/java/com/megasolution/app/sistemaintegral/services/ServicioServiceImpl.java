@@ -214,7 +214,7 @@ public class ServicioServiceImpl implements IServicioService {
 
     @Override
     public Servicio asignarSector(Servicio servicio, Sector sector){
-        if(servicio.getEstado().getCodigo().equals(Estado.ENTREGADO)){ 
+        if(servicio.getEstado().getCodigo().equals(Estado.ENTREGADO) || servicio.getEstado().getCodigo().equals(Estado.GUARDADO)){ 
             sector.setDisponible(true);
             servicio.setSector(null); 
         }else{

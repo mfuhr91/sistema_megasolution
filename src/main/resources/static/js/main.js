@@ -151,6 +151,8 @@ $(document).ready(() => {
             }
             $('#sector_ver').val('');
 
+        } else if (estadoSeleccionado == 5){
+            $('#sector_ver').val('');
         }else{
             $('#fechaTerminado').val('');
         }
