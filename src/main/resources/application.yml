@@ -35,7 +35,7 @@ spring:
 logging:
     file:
         #path: ./logs // no se puede usar junto con flie.name, uno u otro
-        name: ./logs/app.log
+        name: ~/logs/app.log
     level:
         org:
             hibernate:
