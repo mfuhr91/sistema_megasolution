@@ -90,6 +90,7 @@ td{
 }
 
 #datosCliente, #datosEquipo{
+  color: white;
   background-color: #083a93a6;
   border-radius: 15px;
   margin: 10px;
@@ -97,8 +98,12 @@ td{
   padding-bottom: 5px;
 }
 #datosEquipo{
+  color: black;
   background-color: #e57a178f;
   padding-bottom: 10px;
+}
+#tabla-clientes{
+  color: white;
 }
 
 .cargador,
