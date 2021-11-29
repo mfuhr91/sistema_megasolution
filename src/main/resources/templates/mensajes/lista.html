@@ -25,7 +25,7 @@
                         <tr th:each="mensaje : ${mensajes}">
                             <td class="align-middle" th:text="${mensaje.tipoMensaje}"></td>
                             <td class="align-middle" th:text="${mensaje.textoMensaje}"></td>
-                            <td class="align-middle" th:text="${#calendars.format(mensaje.fechaAlta,'dd/MM/yyyy')}"></td>
+                            <td class="align-middle" th:text="${#temporals.format(mensaje.fechaAlta,'dd/MM/yyyy')}"></td>
                             <td class="align-middle opciones">
                                 <a th:href="@{/mensajes/editar/} + ${mensaje.id}" class="btn btn-warning mx-1"
                                 data-toggle="tooltip" data-placement="bottom" title="Editar"><i class="far fa-edit"></i></a>

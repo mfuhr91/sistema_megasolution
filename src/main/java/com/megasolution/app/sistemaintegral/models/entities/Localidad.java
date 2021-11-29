@@ -14,11 +14,14 @@ import javax.persistence.Table;
 
 
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "localidades")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 public class Localidad implements Serializable {
 

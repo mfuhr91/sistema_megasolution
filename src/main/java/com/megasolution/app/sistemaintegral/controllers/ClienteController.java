@@ -1,5 +1,6 @@
 package com.megasolution.app.sistemaintegral.controllers;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -71,7 +72,7 @@ public class ClienteController {
     public String nuevo(Model model){
         Cliente cliente = new Cliente();
         
-        cliente.setFechaAlta(new Date());
+        cliente.setFechaAlta(LocalDateTime.now());
 
         List<Localidad> localidades = localidadService.buscarTodos();
         List<Provincia> provincias = provinciaService.buscarTodos();

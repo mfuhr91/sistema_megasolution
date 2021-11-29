@@ -37,7 +37,7 @@
                             <td class="align-middle" th:text="${cliente.telefono}"></td>
                             <td class="align-middle" th:text="${cliente.email}"></td>
                             <td class="align-middle" th:text="${cliente.direccion}"></td>
-                            <td class="align-middle" th:text="${#calendars.format(cliente.fechaAlta,'dd/MM/yyyy')}"></td>
+                            <td class="align-middle" th:text="${#temporals.format(cliente.fechaAlta,'dd/MM/yyyy')}"></td>
                             <td class="align-middle opciones">
                                 <a th:href="@{/clientes/editar/} + ${cliente.id}" class="btn btn-warning mx-1"
                                 data-toggle="tooltip" data-placement="bottom" title="Editar"><i class="far fa-edit"></i></a>

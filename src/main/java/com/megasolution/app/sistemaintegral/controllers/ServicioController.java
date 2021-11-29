@@ -1,5 +1,7 @@
 package com.megasolution.app.sistemaintegral.controllers;
 
+import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -7,11 +9,10 @@ import java.util.stream.Collectors;
 import javax.validation.Valid;
 
 import com.megasolution.app.sistemaintegral.models.entities.Cliente;
-import com.megasolution.app.sistemaintegral.models.entities.Estado;
+import com.megasolution.app.sistemaintegral.utils.Estado;
 import com.megasolution.app.sistemaintegral.models.entities.Sector;
 import com.megasolution.app.sistemaintegral.models.entities.Servicio;
 import com.megasolution.app.sistemaintegral.services.IClienteService;
-import com.megasolution.app.sistemaintegral.services.IEstadoService;
 import com.megasolution.app.sistemaintegral.services.ISectorService;
 import com.megasolution.app.sistemaintegral.services.IServicioService;
 
@@ -20,6 +21,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.ObjectUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -42,9 +44,6 @@ public class ServicioController {
 
     @Autowired
     private IClienteService clienteService;
-
-    @Autowired
-    private IEstadoService estadoService;
 
     @Autowired
     private ISectorService sectorService;
@@ -177,7 +176,7 @@ public class ServicioController {
         }
         Cliente cliente = clienteService.buscarPorId(id);
         
-        List<Servicio> servicios = servicioService.buscarPorEstadoPorCliente(1, cliente.getId());
+        List<Servicio> servicios = servicioService.buscarPorEstadoPorCliente(Estado.PENDIENTE, cliente.getId());
         log.info("servicios pendientes del cliente: ".concat(cliente.getRazonSocial()).concat(" listados"));
         model.addAttribute("titulo", "Servicios");
         model.addAttribute("servicios", servicios);
@@ -198,7 +197,7 @@ public class ServicioController {
             return "redirect:/clientes";
         }
         Cliente cliente = clienteService.buscarPorId(id);
-        List<Servicio> servicios = servicioService.buscarPorEstadoPorCliente(2, cliente.getId());
+        List<Servicio> servicios = servicioService.buscarPorEstadoPorCliente(Estado.EN_PROCESO, cliente.getId());
         log.info("servicios en proceso del cliente: ".concat(cliente.getRazonSocial()).concat(" listados"));
         model.addAttribute("titulo", "Servicios");
         model.addAttribute("servicios", servicios);
@@ -218,7 +217,7 @@ public class ServicioController {
             return "redirect:/clientes";
         }
         Cliente cliente = clienteService.buscarPorId(id);
-        List<Servicio> servicios = servicioService.buscarPorEstadoPorCliente(3, cliente.getId());
+        List<Servicio> servicios = servicioService.buscarPorEstadoPorCliente(Estado.TERMINADO, cliente.getId());
         log.info("servicios terminados del cliente: ".concat(cliente.getRazonSocial()).concat(" listados"));
 
         model.addAttribute("titulo", "Servicios");
@@ -240,7 +239,7 @@ public class ServicioController {
             return "redirect:/clientes";
         }
         Cliente cliente = clienteService.buscarPorId(id);
-        List<Servicio> servicios = servicioService.buscarPorEstadoPorCliente(4, cliente.getId());
+        List<Servicio> servicios = servicioService.buscarPorEstadoPorCliente(Estado.ENTREGADO, cliente.getId());
         log.info("servicios entregados del cliente: ".concat(cliente.getRazonSocial()).concat(" listados"));
 
         model.addAttribute("titulo", "Servicios");
@@ -265,26 +264,27 @@ public class ServicioController {
         }
         Servicio servicio = null;
         Cliente cliente = null;
-        List<Estado> estados = estadoService.buscarTodos();
-        estados = estados.stream()
-                         .filter(estado -> !estado.getCodigo().equals(Estado.ENVIADO) && !estado.getCodigo().equals(Estado.NO_ENVIADO))
-                         .collect(Collectors.toList());
+        List<Estado> estados = Estado.getEstadosServicios();
         List<Sector> sectores = sectorService.buscarDisponibles();
         if(id > 0){
             servicio = servicioService.buscarPorId(id);
             cliente = clienteService.buscarPorId(servicio.getCliente().getId());
         }
-        if(servicio.getSector() != null){
+        if(!ObjectUtils.isEmpty(servicio) && servicio.getSector() != null){
             model.addAttribute("sector", servicio.getSector().getNombre());
         }
-        model.addAttribute("servicio", servicio);
-        model.addAttribute("cliente", cliente.getDniCuit() + " - " + cliente.getRazonSocial());
-        model.addAttribute("servicioId", servicio.getId());
-        model.addAttribute("telefono", cliente.getTelefono());
-        model.addAttribute("estados", estados);
-        model.addAttribute("sectores", sectores);
-        model.addAttribute("active", "servicios");
-        model.addAttribute("titulo", "Editar Servicio");
+        if( !ObjectUtils.isEmpty(cliente) ) {
+
+            model.addAttribute("servicio", servicio);
+            model.addAttribute("cliente", cliente.getDniCuit() + " - " + cliente.getRazonSocial());
+            model.addAttribute("servicioId", servicio.getId());
+            model.addAttribute("telefono", cliente.getTelefono());
+            model.addAttribute("estados", estados);
+            model.addAttribute("sectores", sectores);
+            model.addAttribute("active", "servicios");
+            model.addAttribute("titulo", "Editar Servicio");
+
+        }
         return "servicios/form-servicio";
     }
     
@@ -308,14 +308,14 @@ public class ServicioController {
     @GetMapping("/nuevo")
     public String nuevoServicio(Model model){
         Servicio servicio = new Servicio();
-        List<Estado> estados = estadoService.buscarTodos();
-        estados = estados.stream()
-                         .filter(estado -> estado.getCodigo().equals(Estado.PENDIENTE) || estado.getCodigo().equals(Estado.EN_PROCESO))
-                         .collect(Collectors.toList());
+
+        List<Estado> estados = Arrays.stream(Estado.values())
+                                     .filter(estado -> estado.equals(Estado.PENDIENTE) || estado.equals(Estado.EN_PROCESO))
+                                     .collect(Collectors.toList());
 
         servicio.setCargador(true);
         servicio.setBateria(true);
-        servicio.setFechaIngreso(new Date());
+        servicio.setFechaIngreso(LocalDateTime.now());
         model.addAttribute("titulo", "Agregar Servicio");
         model.addAttribute("active", "servicios");
         model.addAttribute("servicio", servicio);
@@ -337,13 +337,12 @@ public class ServicioController {
         }
         Cliente cliente = clienteService.buscarPorId(id);
         Servicio servicio = new Servicio();
-        List<Estado> estados = estadoService.buscarTodos();
-        estados = estados.stream()
-                         .filter(estado -> estado.getCodigo().equals(Estado.PENDIENTE) || estado.getCodigo().equals(Estado.EN_PROCESO))
-                         .collect(Collectors.toList());
+        List<Estado> estados = Arrays.stream(Estado.values())
+                                    .filter(estado -> estado.equals(Estado.PENDIENTE) || estado.equals(Estado.EN_PROCESO))
+                                    .collect(Collectors.toList());
         servicio.setCargador(true);
         servicio.setBateria(true);
-        servicio.setFechaIngreso(new Date());
+        servicio.setFechaIngreso(LocalDateTime.now());
         model.addAttribute("titulo", "Agregar Servicio");
         model.addAttribute("active", "servicios");
         model.addAttribute("servicio", servicio);
@@ -365,10 +364,7 @@ public class ServicioController {
 
     @PostMapping("/guardar")
     public String guardarServicio(@Valid Servicio servicio, BindingResult result, Model model, SessionStatus status, RedirectAttributes flash){
-        List<Estado> estados = estadoService.buscarTodos();
-        estados = estados.stream()
-                        .filter(estado -> !estado.getCodigo().equals(Estado.ENVIADO) && !estado.getCodigo().equals(Estado.NO_ENVIADO))
-                        .collect(Collectors.toList());
+        List<Estado> estados = Estado.getEstadosServicios();
     
         List<Sector> sectores = sectorService.buscarDisponibles();
         Sector sector = new Sector();
@@ -410,12 +406,13 @@ public class ServicioController {
             return "servicios/form-servicio";
         }
         
-        this.servicioService.crearAviso(servicio);   
+        this.servicioService.crearAviso(servicio);
         this.servicioService.asignarSector(servicio, sector);    
         
         if(servicio.getId() != null){
             sectorService.guardar(sector);
             servicioService.guardar(servicio);
+            this.servicioService.enviarMail(servicio);
             status.setComplete();
             flash.addFlashAttribute("success", "Servicio actualizado con éxito!");
             return "redirect:/servicios";
@@ -424,7 +421,6 @@ public class ServicioController {
                 sectorService.guardar(sector);
                 servicioService.guardar(servicio);
             }catch(Exception e){
-                
                 return "redirect:/servicios";
             }
             status.setComplete();
@@ -454,8 +450,8 @@ public class ServicioController {
 
     @GetMapping("/monitor")
     public String monitor(Model model){
-        List<Servicio> serviciosPendientes = servicioService.buscarPorEstadoServicioMonitor(1);
-        List<Servicio> serviciosEnProceso = servicioService.buscarPorEstadoServicioMonitor(2);
+        List<Servicio> serviciosPendientes = servicioService.buscarPorEstadoServicioMonitor(Estado.PENDIENTE);
+        List<Servicio> serviciosEnProceso = servicioService.buscarPorEstadoServicioMonitor(Estado.EN_PROCESO);
         
         model.addAttribute("totalPendientes", serviciosPendientes.size());
         model.addAttribute("totalEnProceso", serviciosEnProceso.size());

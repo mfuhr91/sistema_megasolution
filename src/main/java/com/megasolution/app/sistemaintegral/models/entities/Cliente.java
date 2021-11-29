@@ -1,37 +1,19 @@
 package com.megasolution.app.sistemaintegral.models.entities;
 
-import java.io.Serializable;
-import java.util.Date;
-import java.util.List;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
-
-import javax.validation.constraints.NotNull;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import javax.persistence.*;
+import javax.validation.constraints.*;
+import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.util.List;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @Entity
 @Table(name = "clientes")
@@ -44,13 +26,10 @@ public class Cliente implements Serializable{
     private Integer id;
 
     @NotNull
-    @Column(name = "dni_cuit")
     @Min(1000000L)
     @Max(99999999999L)
     private Long dniCuit;
 
-     
-    @Column(name = "razon_social") 
     private String razonSocial;
 
     private String contacto;    
@@ -64,11 +43,9 @@ public class Cliente implements Serializable{
 
     private String web;
 
-    @Temporal(TemporalType.TIMESTAMP)
     @DateTimeFormat(pattern = "HH:mm dd/MM/yyyy")
-    @Column(name = "fecha_alta")
     @NotNull
-    private Date fechaAlta;
+    private LocalDateTime fechaAlta;
 
     private String direccion;
 

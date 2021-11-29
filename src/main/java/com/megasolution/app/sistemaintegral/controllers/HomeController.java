@@ -1,6 +1,9 @@
 package com.megasolution.app.sistemaintegral.controllers;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -11,6 +14,7 @@ import com.megasolution.app.sistemaintegral.services.IClienteService;
 import com.megasolution.app.sistemaintegral.services.ILlamadoService;
 import com.megasolution.app.sistemaintegral.services.IServicioService;
 
+import com.megasolution.app.sistemaintegral.utils.Estado;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -43,10 +47,10 @@ public class HomeController {
         Integer totalClientes = clienteService.contarClientes();
         Integer totalAvisos = avisos.size();
         long tiempo = servicioService.promedioServicios();
-        List<Servicio> serviciosPendientes = servicioService.buscarPorEstadoServicioMonitor(1);
-        List<Servicio> serviciosEnProceso = servicioService.buscarPorEstadoServicioMonitor(2);
-        List<Servicio> serviciosTerminados = servicioService.buscarPorEstadoServicioMonitor(3);
-        List<Servicio> serviciosEntregados = servicioService.buscarPorEstadoServicioMonitor(4);
+        List<Servicio> serviciosPendientes = servicioService.buscarPorEstadoServicioMonitor(Estado.PENDIENTE);
+        List<Servicio> serviciosEnProceso = servicioService.buscarPorEstadoServicioMonitor(Estado.EN_PROCESO);
+        List<Servicio> serviciosTerminados = servicioService.buscarPorEstadoServicioMonitor(Estado.TERMINADO);
+        List<Servicio> serviciosEntregados = servicioService.buscarPorEstadoServicioMonitor(Estado.ENTREGADO);
         
         
 
@@ -89,7 +93,7 @@ public class HomeController {
             aviso.setLlamado(null);
         }     
         aviso.setLeido(true);
-        aviso.setFechaLeido(new Date());
+        aviso.setFechaLeido(LocalDate.now());
     
         avisoService.guardar(aviso);
     }

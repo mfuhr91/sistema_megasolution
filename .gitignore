@@ -34,4 +34,3 @@ build/
 
 **/.DS_Store*
 logs
-src/main/resources/application.yml

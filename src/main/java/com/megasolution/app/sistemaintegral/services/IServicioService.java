@@ -3,10 +3,11 @@ package com.megasolution.app.sistemaintegral.services;
 import java.util.List;
 
 import com.megasolution.app.sistemaintegral.models.entities.Cliente;
-import com.megasolution.app.sistemaintegral.models.entities.Estado;
+import com.megasolution.app.sistemaintegral.utils.Estado;
 import com.megasolution.app.sistemaintegral.models.entities.Sector;
 import com.megasolution.app.sistemaintegral.models.entities.Servicio;
 
+import com.megasolution.app.sistemaintegral.utils.TipoMail;
 import org.springframework.ui.Model;
 
 
@@ -22,9 +23,9 @@ public interface IServicioService {
 
     public Integer contarServicios();
 
-    public List<Servicio> buscarPorEstadoServicio(String codigoEstado);
+    public List<Servicio> buscarPorEstadoServicio(Estado estado);
     
-    public List<Servicio> buscarPorEstadoServicioMonitor(Integer id);
+    public List<Servicio> buscarPorEstadoServicioMonitor(Estado estado);
 
     public void guardar(Servicio servicio);
 
@@ -32,7 +33,7 @@ public interface IServicioService {
 
     public List<Servicio> buscarPorServicioConClienteId(Integer id);
 
-    public List<Servicio> buscarPorEstadoPorCliente(Integer estadoId, Integer clienteId);
+    public List<Servicio> buscarPorEstadoPorCliente(Estado estado, Integer clienteId);
 
     public void recuperarEstadoTerminado(Servicio servicio);
 
@@ -47,6 +48,8 @@ public interface IServicioService {
     public Model validarForm(Servicio servicio, Model model);
 
     public void crearAviso(Servicio servicio);
+
+    public void enviarMail(Servicio servicio);
 
     public Model enviarModelo(Cliente cliente, List<Sector> sectores, List<Estado> estados, Sector sector, Servicio servicio, Model model);
 

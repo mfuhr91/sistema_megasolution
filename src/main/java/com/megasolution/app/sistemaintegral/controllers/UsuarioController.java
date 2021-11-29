@@ -1,5 +1,6 @@
 package com.megasolution.app.sistemaintegral.controllers;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -82,7 +83,7 @@ public class UsuarioController {
         Usuario usuario = new Usuario();
         List<Rol> roles = rolService.buscarTodos();
 
-        usuario.setFechaAlta(new Date());
+        usuario.setFechaAlta(LocalDateTime.now());
         usuario.setHabilitado(true);
 
         model.addAttribute("titulo", "Agregar Usuario");

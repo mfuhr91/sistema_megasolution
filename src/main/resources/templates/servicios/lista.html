@@ -106,8 +106,8 @@
           <td class="align-middle" th:text="${servicio.problemaReportado}"></td>
           <td class="align-middle observaciones" th:text="${servicio.observaciones}"></td>
           <td class="align-middle" th:text="${servicio.solucion}"></td>
-          <td class="align-middle" th:text="${#calendars.format(servicio.fechaIngreso,'HH:mm dd/MM/yyyy')}"></td>
-          <td class="align-middle" th:text="${#calendars.format(servicio.fechaTerminado,'HH:mm dd/MM/yyyy')}"></td>
+          <td class="align-middle" th:text="${#temporals.format(servicio.fechaIngreso,'HH:mm dd/MM/yyyy')}"></td>
+          <td class="align-middle" th:text="${#temporals.format(servicio.fechaTerminado,'HH:mm dd/MM/yyyy')}"></td>
           <td class="align-middle" th:text="${servicio.estado.nombre}"></td>
           <td class="align-middle" >
               <a th:href="@{/servicios/editar/} + ${servicio.id}" class="btn btn-warning mx-1" 

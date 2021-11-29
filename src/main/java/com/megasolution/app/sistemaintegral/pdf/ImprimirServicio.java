@@ -3,6 +3,7 @@ package com.megasolution.app.sistemaintegral.pdf;
 import java.awt.Color;
 import java.net.URL;
 import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -94,11 +95,11 @@ public class ImprimirServicio extends AbstractPdfView {
         cel.setPadding(8f);
         
         tabla1.addCell(cel);
-        
-        SimpleDateFormat format = new SimpleDateFormat("HH:mm dd/MM/yyyy");
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm dd/MM/yyyy");
         
         Phrase tituloFecha = new Phrase("Fecha:", FontFactory.getFont(FONT,12, Font.BOLD));
-        Phrase fecha = new Phrase(format.format(servicio.getFechaIngreso()),FontFactory.getFont(FONT));
+        Phrase fecha = new Phrase(servicio.getFechaIngreso().format(formatter),FontFactory.getFont(FONT));
         cel = new PdfPCell();
         cel.addElement(tituloFecha);
         cel.addElement(fecha);

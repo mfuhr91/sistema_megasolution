@@ -30,7 +30,7 @@
                             <td class="align-middle" th:text="${usuario.nombreCompleto}"></td>
                             <td class="align-middle" th:text="${#strings.equals(usuario.rol.authority, 'admin')} ? 'administrador' : 'usuario'"></td>
                             <td class="align-middle" th:text="${#strings.equals(usuario.habilitado, 'true')} ? 'SI' : 'NO'"></td>
-                            <td class="align-middle" th:text="${#calendars.format(usuario.fechaAlta,'dd/MM/yyyy')}"></td>
+                            <td class="align-middle" th:text="${#temporals.format(usuario.fechaAlta,'dd/MM/yyyy')}"></td>
                             <td class="align-middle">
                                 <a th:href="@{/usuarios/editar/} + ${usuario.id}" class="btn btn-warning mx-1"
                                 data-toggle="tooltip" data-placement="bottom" title="Editar"><i class="far fa-edit"></i></a>

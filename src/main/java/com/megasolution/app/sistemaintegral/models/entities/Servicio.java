@@ -1,30 +1,20 @@
 package com.megasolution.app.sistemaintegral.models.entities;
 
-import java.io.Serializable;
-import java.util.Date;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-
+import com.megasolution.app.sistemaintegral.utils.Estado;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.util.Date;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @Entity
 @Table(name = "servicios")
@@ -43,11 +33,10 @@ public class Servicio implements Serializable{
     
     private Boolean bateria;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "estado_id")
+    @Enumerated(value = EnumType.STRING)
     private Estado estado;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sector_id", unique = true)
     private Sector sector;
 
@@ -61,21 +50,17 @@ public class Servicio implements Serializable{
     @Column(columnDefinition="text")
     private String solucion;
 
-    @Temporal(TemporalType.TIMESTAMP)
     @DateTimeFormat(pattern = "HH:mm dd/MM/yyyy")
-    @Column(name = "fecha_ingreso")
     @NotNull
-    private Date fechaIngreso;
+    private LocalDateTime fechaIngreso;
 
-    @Temporal(TemporalType.TIMESTAMP)
     @DateTimeFormat(pattern = "HH:mm dd/MM/yyyy")
-    @Column(name = "fecha_terminado")
-    private Date fechaTerminado;
+    private LocalDateTime fechaTerminado;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Cliente cliente;
 
-    @OneToOne(mappedBy= "servicio",cascade = CascadeType.ALL)
+    @OneToOne(mappedBy= "servicio",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Aviso aviso;
 
 }

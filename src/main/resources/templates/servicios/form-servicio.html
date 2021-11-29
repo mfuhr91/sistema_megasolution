@@ -219,8 +219,8 @@
                             <label for="estado" class="col-sm col-form-label">ESTADO</label>
                             <div class="col-sm  mb-3">
                                 <select name="estado" id="estado" th:field="*{estado}">
-                                    <option id="estado_" th:attrappend="id=${estado.id}" th:each="estado : ${estados}"
-                                        th:value="${estado.id}" th:text="${estado.nombre}"></option>
+                                    <option id="estado_" th:attrappend="id=${estado}" th:each="estado : ${estados}"
+                                        th:value="${estado}" th:text="${estado.nombre}"></option>
                                 </select>
                             </div>
                         </div>

@@ -1,50 +1,50 @@
 package com.megasolution.app.sistemaintegral.models.entities;
 
 import java.io.Serializable;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.*;
 
+import com.megasolution.app.sistemaintegral.utils.Estado;
+import com.megasolution.app.sistemaintegral.utils.TipoMail;
+
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
-
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "mails")
-@Data
-@NoArgsConstructor
+@Getter
+@Setter
 public class Mail implements Serializable {
+
+    private static final long serialVersionUID = 354664130521988245L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
-    private String asunto;
 
-    @Column(columnDefinition="text")
-    private String texto;
+    @Enumerated(value = EnumType.STRING)
+    private TipoMail tipoMail;
 
-    private String destinatario;
+    @ManyToOne
+    @JoinColumn(name = "servicio_id")
+    private Servicio servicio;
 
-    private String equipo;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "estado_id")
+    @Enumerated(value = EnumType.STRING)
     private Estado estado;
 
-    @Temporal(TemporalType.TIMESTAMP)
+    @ManyToOne
+    @JoinColumn(name = "cliente_id")
+    private Cliente cliente;
+
     @DateTimeFormat(pattern = "HH:mm dd/MM/yyyy")
-    private Date fecha;
+    private LocalDateTime fecha;
+
+    public Mail(){
+        this.fecha = LocalDateTime.now();
+    }
 
 }

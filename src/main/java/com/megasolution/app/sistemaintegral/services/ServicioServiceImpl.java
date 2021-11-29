@@ -1,6 +1,9 @@
 package com.megasolution.app.sistemaintegral.services;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoField;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.List;
 
@@ -9,19 +12,24 @@ import javax.mail.MessagingException;
 import com.lowagie.text.BadElementException;
 import com.megasolution.app.sistemaintegral.models.entities.Aviso;
 import com.megasolution.app.sistemaintegral.models.entities.Cliente;
-import com.megasolution.app.sistemaintegral.models.entities.Estado;
+import com.megasolution.app.sistemaintegral.utils.Estado;
 import com.megasolution.app.sistemaintegral.models.entities.Llamado;
 import com.megasolution.app.sistemaintegral.models.entities.Mensaje;
 import com.megasolution.app.sistemaintegral.models.entities.Sector;
 import com.megasolution.app.sistemaintegral.models.entities.Servicio;
 import com.megasolution.app.sistemaintegral.models.repositories.IServicioRepository;
 
+import com.megasolution.app.sistemaintegral.utils.TipoMail;
+import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.MailException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+
+import static java.time.temporal.ChronoUnit.DAYS;
 
 
 @Service
@@ -45,12 +53,12 @@ public class ServicioServiceImpl implements IServicioService {
     @Autowired
     private ISectorService sectorService;
 
-    private final Logger log = LoggerFactory.getLogger(ServicioServiceImpl.class);
+    private final Logger LOG = LoggerFactory.getLogger(ServicioServiceImpl.class);
 
     @Override
     @Transactional(readOnly = true)
     public List<Servicio> buscarTodos() {
-        return servicioRepo.findAll();
+        return servicioRepo.findByOrderByFechaIngresoDesc();
     }
 
     @Override
@@ -67,39 +75,21 @@ public class ServicioServiceImpl implements IServicioService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Servicio> buscarPorEstadoServicio(String codigoEstado) {
-        Integer nroId = 0;
-        switch(codigoEstado) {
-            case Estado.PENDIENTE:
-                nroId = 1;
-                break;
-            case Estado.EN_PROCESO:
-                nroId = 2;
-                break;
-            case Estado.TERMINADO:
-                nroId = 3;
-                break;
-            case Estado.ENTREGADO:
-                nroId = 4;
-                break;
-            case Estado.GUARDADO:
-                nroId = 5;
-                break;
-        }
-        return servicioRepo.findByEstadoServicio(nroId);
+    public List<Servicio> buscarPorEstadoServicio(Estado estado) {
+        return servicioRepo.findByEstadoOrderByFechaIngresoDesc(estado);
     }
 
     @Override
     @Transactional
     public void guardar(Servicio servicio) {
-        log.info("servicio guardado!");
+        LOG.info("servicio guardado!");
         servicioRepo.save(servicio);
     }
 
     @Override
     @Transactional
     public void eliminar(Integer id) {
-        log.info("servicio eliminado!");
+        LOG.info("servicio eliminado!");
         servicioRepo.deleteById(id);
     }
 
@@ -111,41 +101,45 @@ public class ServicioServiceImpl implements IServicioService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Servicio> buscarPorEstadoPorCliente(Integer estadoId, Integer clienteId) {
-        return servicioRepo.findByServicioWithEstadoIdWithClienteId(estadoId, clienteId);
+    public List<Servicio> buscarPorEstadoPorCliente(Estado estado, Integer clienteId) {
+        return servicioRepo.findByServicioWithEstadoWithClienteId(estado, clienteId);
     }
 
     public void recuperarEstadoTerminado(Servicio servicio){
-        if(servicio.getEstado().getCodigo().equals(Estado.ENTREGADO)){
-            servicio.setFechaTerminado(new Date());
+        if(servicio.getEstado().equals(Estado.ENTREGADO)){
+            servicio.setFechaTerminado(LocalDateTime.now());
          }else{
              servicio.setFechaTerminado(null);
          }
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Servicio buscarServicioPorSector(Integer id) {
         return servicioRepo.buscarServicioPorSector(id);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Integer buscarServiciosDeHoy(String fechaHoy) {
         return servicioRepo.buscarServiciosDeHoy(fechaHoy);
     }
 
+    @Transactional(readOnly = true)
     public long promedioServicios(){
-        List<Servicio> servicios = servicioRepo.findByEstadoServicio(3);
-        Date fechaActual = new Date();
+        List<Servicio> servicios = this.buscarPorEstadoServicio(Estado.TERMINADO);
+        LocalDateTime fechaActual = LocalDateTime.now();
         long tiempoTotal = 0;
         int nroServicios7Dias = 0;
         for (Servicio servicio : servicios) {
-            
-            if(fechaActual.getTime() - servicio.getFechaIngreso().getTime() <= 604800000){ // 7dias = 604800000 ms - 1dia = 86400000 - 1hr= 3600000
+            long dif = ChronoUnit.MILLIS.between(servicio.getFechaIngreso(), fechaActual);
+            LOG.info(String.valueOf(dif));
+            if( dif <= 604_800_000 ){ // 7dias = 604800000 ms - 1dia = 86400000 - 1hr= 3600000
                 nroServicios7Dias++;
-                float tiempo = (servicio.getFechaTerminado().getTime() - servicio.getFechaIngreso().getTime());
-                float tiempoEnHoras = (float) Math.ceil(tiempo / 3600000);
+                float tiempo = ChronoUnit.MILLIS.between(servicio.getFechaIngreso(), servicio.getFechaTerminado());
+                float tiempoEnHoras = (float) Math.ceil(tiempo / 3_600_000);
                 tiempoTotal += tiempoEnHoras;
-            }           
+            }
         }
         if(tiempoTotal != 0){
             return tiempoTotal / nroServicios7Dias;
@@ -156,11 +150,13 @@ public class ServicioServiceImpl implements IServicioService {
     }
 
     @Override
-    public List<Servicio> buscarPorEstadoServicioMonitor(Integer id) {
-        return servicioRepo.findByEstadoServicioMonitor(id);
+    @Transactional(readOnly = true)
+    public List<Servicio> buscarPorEstadoServicioMonitor(Estado estado) {
+        return servicioRepo.findByEstadoServicioMonitor(estado.getValor());
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Servicio> buscarPorParametro(String param, String estado) {
 
         param = param.toLowerCase();
@@ -170,6 +166,7 @@ public class ServicioServiceImpl implements IServicioService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Servicio> buscar50Ultimos() {
        return this.servicioRepo.findLast50();
     }
@@ -186,7 +183,7 @@ public class ServicioServiceImpl implements IServicioService {
     private Model validarSolucion(Servicio servicio, Model model) {
 
         if(servicio.getSolucion().isEmpty() &&
-            (servicio.getEstado().getCodigo().equals(Estado.TERMINADO) || servicio.getEstado().getCodigo().equals(Estado.ENTREGADO))) {
+            (servicio.getEstado().equals(Estado.TERMINADO) || servicio.getEstado().equals(Estado.ENTREGADO))) {
                 model.addAttribute("errorSolucion", "Debe ingresar una solución antes de guardar el servicio!");
                 model.addAttribute("alertDangerSolucion", " form-control alert-danger");
         } 
@@ -214,7 +211,7 @@ public class ServicioServiceImpl implements IServicioService {
 
     @Override
     public Servicio asignarSector(Servicio servicio, Sector sector){
-        if(servicio.getEstado().getCodigo().equals(Estado.ENTREGADO) || servicio.getEstado().getCodigo().equals(Estado.GUARDADO)){ 
+        if(servicio.getEstado().equals(Estado.ENTREGADO) || servicio.getEstado().equals(Estado.GUARDADO)){
             sector.setDisponible(true);
             servicio.setSector(null); 
         }else{
@@ -227,19 +224,11 @@ public class ServicioServiceImpl implements IServicioService {
 
 
     @Override
+    @Transactional()
     public void crearAviso(Servicio servicio){
-        Aviso aviso = new Aviso();
-        Aviso avisoBuscado = new Aviso();
-        if(servicio.getEstado().getCodigo().equals(Estado.TERMINADO)){
-           
-            try {
-                // Envío informacion del cliente al html del correo determinado
-                String contenido = this.mailService.avisoServicioTerminado(servicio.getCliente(), servicio);
-                
-                this.mailService.enviarMail(servicio.getCliente().getEmail(), contenido);
-            } catch (MessagingException | BadElementException | IOException e) {
-                ((Throwable) e).printStackTrace();
-            }
+        Aviso aviso;
+        Aviso avisoBuscado;
+        if(servicio.getEstado().equals(Estado.TERMINADO)){
             Llamado llamado = llamadoService.buscarPorId(1);
             Mensaje mensaje = mensajeService.buscarPorId(1);
             avisoBuscado = avisoService.buscarAvisoPorServicioId(servicio.getId());
@@ -254,6 +243,19 @@ public class ServicioServiceImpl implements IServicioService {
                 avisoService.eliminar(aviso.getId());
                 servicio.setAviso(null);
             }
+        }
+    }
+
+    @Override
+    public void enviarMail(Servicio servicio){
+        if (servicio.getEstado().equals(Estado.TERMINADO)) {
+            try {
+                this.mailService.enviarMailServicioTerminado(servicio);
+            } catch (MailException | MessagingException | BadElementException | IOException e) {
+                LOG.error(e.getMessage());
+            }
+        } else if ( servicio.getEstado().equals(Estado.ENTREGADO)){
+            this.mailService.crearMail(servicio.getCliente(), servicio, TipoMail.VALORACION);
         }
     }
 
@@ -278,27 +280,11 @@ public class ServicioServiceImpl implements IServicioService {
     public List<Servicio> buscarPorParamEstado(String param, String estado){
         estado = estado.toUpperCase();
         List<Servicio> servicios = null;
-        switch (estado){
-            case "TODOS":
-                servicios = this.buscarPorParametro(param, "");
-                break;
-            case Estado.PENDIENTE:
-                servicios = this.buscarPorParametro(param, Estado.PENDIENTE);
-                break;
-            case Estado.EN_PROCESO:
-                servicios = this.buscarPorParametro(param, Estado.EN_PROCESO); 
-                break;
-            case Estado.TERMINADO:
-                servicios = this.buscarPorParametro(param, Estado.TERMINADO);
-                break;
-            case Estado.ENTREGADO:
-                servicios = this.buscarPorParametro(param, Estado.ENTREGADO);
-                break;       
-            case Estado.GUARDADO:
-                servicios = this.buscarPorParametro(param, Estado.GUARDADO);
-                break;       
+        if(estado.equals("TODOS")){
+            servicios = this.buscarPorParametro(param, "");
+        } else {
+            servicios = this.buscarPorParametro(param, estado);
         }
-
         return servicios;
     }
  

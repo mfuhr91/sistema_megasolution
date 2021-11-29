@@ -1,28 +1,19 @@
 package com.megasolution.app.sistemaintegral.models.entities;
 
-import java.io.Serializable;
-import java.util.Date;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import javax.persistence.*;
+import java.io.Serializable;
+import java.time.LocalDate;
+import java.util.Date;
 
 @Entity
 @Table(name = "avisos")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 public class Aviso implements Serializable{
  
@@ -38,19 +29,15 @@ public class Aviso implements Serializable{
     @JoinColumn(name = "mensaje_id")
     private Mensaje mensaje;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "servicio_id")
     private Servicio servicio;
     
     private Boolean leido;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "fecha_alta")
-    private Date fechaAlta;
+    private LocalDate fechaAlta;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "fecha_leido")
-    private Date fechaLeido;
+    private LocalDate fechaLeido;
 
     @ManyToOne // NO PUEDE SER UN LAZY FETCH POR QUE NO LEE LOS LLAMADOS LEIDOS
     @JoinColumn(name = "llamado_id")
@@ -61,7 +48,7 @@ public class Aviso implements Serializable{
         this.mensaje = mensaje;
         this.servicio = servicio;
         this.leido = false;
-        this.fechaAlta = new Date();
+        this.fechaAlta = LocalDate.now();
         this.llamado = llamado;
     }
 

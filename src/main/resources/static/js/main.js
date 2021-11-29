@@ -137,13 +137,12 @@ $(document).ready(() => {
 
     // ASIGNA AUTOMATICAMENTE LA HORA Y FECHA AL CAMBIAR EL ESTADO A TERMINADO
     $('#estado').change(function() {
-        var estadoSeleccionado = $(this).children('option:selected').val();
+        let estadoSeleccionado = $(this).children('option:selected').val();
         moment.locale('es');
-
-        if(estadoSeleccionado == 3){
+        if(estadoSeleccionado == "TERMINADO"){
             $('#fechaTerminado').val(moment().format('HH:mm DD/MM/YYYY'));
             
-        }else if(estadoSeleccionado == 4){
+        }else if(estadoSeleccionado == "ENTREGADO"){
             if(!$('#fechaTerminado').val()){
                 $('#fechaTerminado').val(moment().format('HH:mm DD/MM/YYYY'));
             }else{
@@ -151,7 +150,7 @@ $(document).ready(() => {
             }
             $('#sector_ver').val('');
 
-        } else if (estadoSeleccionado == 5){
+        } else if (estadoSeleccionado == "GUARDADO"){
             $('#sector_ver').val('');
         }else{
             $('#fechaTerminado').val('');

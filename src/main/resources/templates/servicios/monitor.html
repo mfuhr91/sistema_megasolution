@@ -12,7 +12,7 @@
             th:text="${'(' + totalPendientes + ')'}"></span></h2>
         <div class="card my-3 cardPendiente" th:each="servicioPendiente : ${serviciosPendientes}">
           <div class="card-header alert-danger">
-            <span th:text="${servicioPendiente.equipo} + ' - ' + ${#calendars.format(servicioPendiente.fechaIngreso,'HH:mm dd/MM/yyyy')}"></span>
+            <span th:text="${servicioPendiente.equipo} + ' - ' + ${#temporals.format(servicioPendiente.fechaIngreso,'HH:mm dd/MM/yyyy')}"></span>
             <span th:if="${#strings.contains(servicioPendiente.observaciones, 'URGENTE')}"> -> ¡URGENTE!</span>
             <span class="float-right" th:text="${servicioPendiente.sector.nombre}"></span>
           </div>
@@ -29,7 +29,7 @@
         <h2 class="text-center my-2 h2-monitor">SERVICIOS EN PROCESO <span th:text="${'(' + totalEnProceso + ')'}"></span></h2>
         <div class="card my-3 cardEnProceso" th:each="servicioEnProceso : ${serviciosEnProceso}">
           <div class="card-header alert-warning" >
-            <span th:text="${servicioEnProceso.equipo}  + ' - ' + ${#calendars.format(servicioEnProceso.fechaIngreso,'HH:mm dd/MM/yyyy')}"></span>
+            <span th:text="${servicioEnProceso.equipo}  + ' - ' + ${#temporals.format(servicioEnProceso.fechaIngreso,'HH:mm dd/MM/yyyy')}"></span>
             <span th:if="${#strings.contains(servicioEnProceso.observaciones, 'URGENTE')}"> -> ¡URGENTE!</span>
             <span class="float-right" th:text="${servicioEnProceso.sector.nombre}"></span>
           </div>
