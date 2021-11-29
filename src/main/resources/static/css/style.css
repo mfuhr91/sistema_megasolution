@@ -90,14 +90,14 @@ td{
 }
 
 #datosCliente, #datosEquipo{
-  background-color: lightsteelblue;
+  background-color: #083a93a6;
   border-radius: 15px;
   margin: 10px;
   padding-top: 10px;
   padding-bottom: 5px;
 }
 #datosEquipo{
-  background-color: #a77e6365;
+  background-color: #e57a178f;
   padding-bottom: 10px;
 }
 
