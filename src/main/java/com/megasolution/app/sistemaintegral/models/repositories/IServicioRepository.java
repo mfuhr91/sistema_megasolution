@@ -50,6 +50,6 @@ public interface IServicioRepository extends JpaRepository<Servicio, Integer>{
                     "OR s.problema_reportado LIKE %:param% OR s.solucion LIKE %:param% " +
                     "OR c.contacto LIKE %:param% OR c.razon_social LIKE %:param% " +
                     "OR c.direccion LIKE %:param% OR c.dni_cuit LIKE %:param% " +
-                    "OR c.email LIKE %:param% OR c.telefono LIKE %:param%) AND s.estado LIKE %:estado%", nativeQuery = true)
+                    "OR c.email LIKE %:param% OR c.telefono LIKE %:param%) AND s.estado LIKE %:estado% order by fecha_ingreso desc", nativeQuery = true)
     public List<Servicio> findByParam(@Param("param") String param,@Param("estado") String estado);
 }

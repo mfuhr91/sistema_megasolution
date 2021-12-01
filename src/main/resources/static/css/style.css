@@ -14,7 +14,7 @@
 }
 
 body {
-    font-family: "titilium";
+  font-family: "titilium",'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     font-weight: bolder;
     background-color: #eee;
 }
