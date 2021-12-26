@@ -14,16 +14,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 public interface IServicioRepository extends JpaRepository<Servicio, Integer>{
 
-
-
-    /*@Query(value = "SELECT * FROM servicios ORDER BY fecha_ingreso DESC;", nativeQuery = true)*/
     public List<Servicio> findByOrderByFechaIngresoDesc();
-
 
     @Query(value = "SELECT * FROM servicios ORDER BY fecha_ingreso DESC LIMIT 50", nativeQuery = true)
     public List<Servicio> findLast50();
 
-    /*@Query(value = "SELECT * FROM servicios WHERE estado = ?1 ORDER BY fecha_ingreso ASC", nativeQuery = true)*/
     public List<Servicio> findByEstadoOrderByFechaIngresoAsc(Estado estado);
 
     public List<Servicio> findByEstadoOrderByFechaIngresoDesc(Estado estado);
@@ -46,7 +41,6 @@ public interface IServicioRepository extends JpaRepository<Servicio, Integer>{
     @Query(value = "SELECT COUNT(*) FROM servicios WHERE fecha_ingreso LIKE ?1", nativeQuery = true)
     public Integer buscarServiciosDeHoy(String fechaHoy);
 
-    
     @Query(value = "SELECT * FROM servicios AS s INNER JOIN clientes  AS c ON s.cliente_id = c.id " +
                     "WHERE (s.equipo LIKE %:param% OR s.observaciones LIKE %:param% " + 
                     "OR s.problema_reportado LIKE %:param% OR s.solucion LIKE %:param% " +

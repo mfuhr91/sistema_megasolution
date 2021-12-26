@@ -1,43 +1,38 @@
 <!DOCTYPE html>
-<html lang="es" xmlns="http://www.thymeleaf.org">
+<html lang="es" xmlns="http://www.thymeleaf.com">
 
-<head th:replace="plantillas/principal :: head">
-</head>
+  <head th:replace="plantillas/principal :: head"></head>
+  <body>
+    <header th:replace="plantillas/principal :: header"></header>
+    <div class="container-fluid my-4 row animate__animated animate__fadeIn" >
+      <div id="tarjetas" class="container-fluid m-4">
 
-<body>
-  <header th:replace="plantillas/principal :: header"></header>
-
-
-  <div class="container-fluid my-4 row animate__animated animate__fadeIn" >
-    <div id="tarjetas" class="container m-4 col-9">
-
-      <div class="card float-left bg-primary text-white">
-        <div class="card-header">
-          <h2>Total de clientes</h2>
-        </div>
-        <div class="card-body">
-          <h1 class="mx-4 float-none contar" th:text="${totalClientes}"></h1> <!--  -->
+        <div class="card float-left bg-primary text-white">
+          <div class="card-header">
+            <h2>Total de clientes</h2>
+          </div>
+          <div class="card-body">
+            <h1 class="mx-4 float-none contar" th:text="${totalClientes}"></h1> <!--  -->
+          </div>
         </div>
 
+        <div class="card float-left bg-info text-white">
+          <div class="card-header">
+            <h2>Total de Servicios</h2>
+          </div>
+          <div class="card-body">
+            <h1 class="mx-4 float-none contar" th:text="${totalServicios}"></h1>
+          </div>
+        </div>
 
-      </div>
-      <div class="card float-left bg-info text-white">
-        <div class="card-header">
-          <h2>Total de Servicios</h2>
+        <div class="card float-left bg-secondary text-white">
+          <div class="card-header">
+            <h2>Servicios del día</h2>
+          </div>
+          <div class="card-body">
+            <h1 class="mx-4 float-none contar" th:text="${serviciosDeHoy}"></h1>
+          </div>
         </div>
-        <div class="card-body">
-          <h1 class="mx-4 float-none contar" th:text="${totalServicios}"></h1>
-        </div>
-
-      </div>
-      <div class="card float-left bg-secondary text-white">
-        <div class="card-header">
-          <h2>Servicios del día</h2>
-        </div>
-        <div class="card-body">
-          <h1 class="mx-4 float-none contar" th:text="${serviciosDeHoy}"></h1>
-        </div>
-      </div>
 
         <div class="card float-left bg-danger text-white">
           <div class="card-header">
@@ -47,6 +42,7 @@
             <h1 class="mx-4 float-none contar" th:text="${totalPendientes}"></h1>
           </div>
         </div>
+
         <div class="card float-left bg-warning text-dark">
           <div class="card-header">
             <h2>Servicios en Proceso</h2>
@@ -55,6 +51,7 @@
             <h1 class="mx-4 float-none contar" th:text="${totalEnProceso}"></h1>
           </div>
         </div>
+
         <div class="card float-left bg-dark text-white">
           <div class="card-header">
             <h2>Servicios Terminados</h2>
@@ -63,6 +60,7 @@
             <h1 class="mx-4 float-none contar" th:text="${totalTerminados}"></h1>
           </div>
         </div>
+
         <div class="card float-left bg-success text-white">
           <div class="card-header">
             <h2>Servicios Entregados</h2>
@@ -71,74 +69,16 @@
             <h1 class="mx-4 float-none contar" th:text="${totalEntregados}"></h1>
           </div>
         </div>
-      
-      <div class="card float-left bg-light ">
-        <div class="card-header">
-          <h2>Horas promedio por servicio</h2>
+
+        <div class="card float-left bg-light ">
+            <div class="card-header">
+              <h2>Horas promedio por servicio</h2>
+            </div>
+          <div class="card-body">
+            <h1 class="mx-4 float-none contar" th:text="${tiempoPromedio}"></h1>
+          </div>
         </div>
-        <div class="card-body">
-          <h1 class="mx-4 float-none contar" th:text="${tiempoPromedio}"></h1>
-
-        </div>
-
-
       </div>
     </div>
-
-    <aside class="float-right col-3">
-
-      <div class="card avisos">
-        <div id="totalAvisosNoLeidos" class="card-header bg-secondary text-light">Avisos totales: <span th:text="${totalAvisos}"></span>
-        </div>
-        <div id="listaAvisos">
-          <ul class="list-group list-group-flush" th:each="aviso : ${avisosNoLeidos}">
-            <li class="list-group-item" th:if="${aviso.llamado.id} == 1" role="alert" id="alerta_"
-              th:attrappend="id=${aviso.id}">
-              <div class="alert alert-dismissible" th:classappend="${aviso.llamado.id} == 1 ? 'alert-success'">
-                <h4><strong th:text="${aviso.mensaje.textoMensaje}"></strong></h4>
-                <h5 th:text="${aviso.servicio.cliente.razonSocial} + ' - ' + ${aviso.servicio.cliente.telefono}"></h5>
-                <h5 th:text="${aviso.servicio.equipo}"></h5>
-                <p>1er llamado</p>
-                <button type="button" class="close" aria-label="Close" 
-                th:data_totalAvisos="${totalAvisos}"
-                th:onclick="|cerrarAviso('${aviso.id}',this.getAttribute('data_totalAvisos'))|">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-            </li>
-            <li class="list-group-item" th:if="${aviso.llamado.id} == 2" role="alert" id="alerta_"
-              th:attrappend="id=${aviso.id}">
-              <div class="alert alert-dismissible" th:classappend="${aviso.llamado.id} == 2 ? 'alert-warning'">
-                <h4><strong th:text="${aviso.mensaje.textoMensaje}"></strong></h4>
-                <h5 th:text="${aviso.servicio.cliente.razonSocial} + ' - ' + ${aviso.servicio.cliente.telefono}"></h5>
-                <h5 th:text="${aviso.servicio.equipo}"></h5>
-                <p>2do llamado</p>
-                <button type="button" class="close" aria-label="Close" th:onclick="|cerrarAviso('${aviso.id}')|">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-            </li>
-            <li class="list-group-item" th:if="${aviso.llamado.id} == 3" role="alert" id="alerta_"
-              th:attrappend="id=${aviso.id}">
-              <div class="alert alert-dismissible" th:classappend="${aviso.llamado.id} == 3 ? 'alert-danger'">
-                <h4><strong th:text="${aviso.mensaje.textoMensaje}"></strong></h4>
-                <h5 th:text="${aviso.servicio.cliente.razonSocial} + ' - ' + ${aviso.servicio.cliente.telefono}"></h5>
-                <h5 th:text="${aviso.servicio.equipo}"></h5>
-                <p>3er llamado</p>
-                <button type="button" class="close" aria-label="Close" th:onclick="|cerrarAviso('${aviso.id}')|">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-            </li>
-          </ul>
-
-        </div>
-      </div>
-
-  </div>
-
-  </aside>
-  </div>
-</body>
-
+  </body>
 </html>

@@ -45,13 +45,6 @@
           <li class="nav-item" th:class="${#strings.equals(active, 'sectores')} ? 'nav-item active' : 'nav-item'">
             <a class="nav-link" th:href="@{/sectores}">SECTORES</a>
           </li>
-          <li class="nav-item dropdown" th:class="${#strings.equals(active, 'avisos')} ? 'nav-item dropdown active' : 'nav-item dropdown'">
-            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">AVISOS</a>
-            <div class="dropdown-menu">
-              <a class="dropdown-item text-dark" th:href="@{/mensajes}">MENSAJES</a>
-              <a class="dropdown-item text-dark" th:href="@{/llamados}">LLAMADOS</a>
-            </div>
-          </li>
           <li class="nav-item" th:class="${#strings.equals(active, 'usuarios')} ? 'nav-item active' : 'nav-item'">
             <a class="nav-link" th:href="@{/usuarios}">USUARIOS</a>
           </li>
@@ -60,18 +53,16 @@
           </li>
         </ul>
         <ul class="navbar-nav navbar-right">
-          <li sec:authorize="isAuthenticated()" class="dropdown">
-            <a class="btn btn-info dropdown-toggle" style="min-width: 7rem;" href="#" role="button"
-              id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <li sec:authorize="isAuthenticated()" class="nav-item">
+            <a class="nav-link text-white" style="min-width: 7rem;">
               <span sec:authentication="name"></span>
             </a>
-            <div class="dropdown-menu" style="min-width: 7rem;" aria-labelledby="dropdownMenuLink">
-              <form th:action="@{/logout}" method="POST">
-                <input class="dropdown-item" type="submit" th:href="@{/logout}" value="Salir"></input>
-              </form>
-            </div>
           </li>
-
+          <li class="nav-item">
+            <form th:action="@{/logout}" method="POST">
+              <button id="btn-salir" class="btn btn-dark bg-dark text-white" type="submit" th:href="@{/logout}" value="Salir">Salir</button>
+            </form>
+          </li>
         </ul>
       </div>
     </nav>
@@ -134,14 +125,6 @@
       </div>
     </div>
   </div>
-
-  <footer th:fragment="footer" class="bg-dark text-light text-center">
-    <div>
-      <p> Sistema Integral de Megasolution</p>
-    </div>
-    
-  </footer>
-
 </body>
 
 </html>

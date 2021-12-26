@@ -60,7 +60,4 @@ public class Servicio implements Serializable{
     @ManyToOne(fetch = FetchType.LAZY)
     private Cliente cliente;
 
-    @OneToOne(mappedBy= "servicio",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Aviso aviso;
-
 }

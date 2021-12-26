@@ -47,8 +47,6 @@ public interface IServicioService {
 
     public Model validarForm(Servicio servicio, Model model);
 
-    public void crearAviso(Servicio servicio);
-
     public void enviarMail(Servicio servicio);
 
     public Model enviarModelo(Cliente cliente, List<Sector> sectores, List<Estado> estados, Sector sector, Servicio servicio, Model model);

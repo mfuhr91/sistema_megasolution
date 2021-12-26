@@ -405,8 +405,7 @@ public class ServicioController {
             this.servicioService.enviarModelo(cliente, sectores, estados, sector, servicio, model);          
             return "servicios/form-servicio";
         }
-        
-        this.servicioService.crearAviso(servicio);
+
         this.servicioService.asignarSector(servicio, sector);    
         
         if(servicio.getId() != null){

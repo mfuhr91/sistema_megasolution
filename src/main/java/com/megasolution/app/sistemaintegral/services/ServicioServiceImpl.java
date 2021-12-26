@@ -2,25 +2,19 @@ package com.megasolution.app.sistemaintegral.services;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoField;
 import java.time.temporal.ChronoUnit;
-import java.util.Date;
 import java.util.List;
 
 import javax.mail.MessagingException;
 
 import com.lowagie.text.BadElementException;
-import com.megasolution.app.sistemaintegral.models.entities.Aviso;
 import com.megasolution.app.sistemaintegral.models.entities.Cliente;
 import com.megasolution.app.sistemaintegral.utils.Estado;
-import com.megasolution.app.sistemaintegral.models.entities.Llamado;
-import com.megasolution.app.sistemaintegral.models.entities.Mensaje;
 import com.megasolution.app.sistemaintegral.models.entities.Sector;
 import com.megasolution.app.sistemaintegral.models.entities.Servicio;
 import com.megasolution.app.sistemaintegral.models.repositories.IServicioRepository;
 
 import com.megasolution.app.sistemaintegral.utils.TipoMail;
-import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,23 +23,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 
-import static java.time.temporal.ChronoUnit.DAYS;
-
 
 @Service
 public class ServicioServiceImpl implements IServicioService {
 
     @Autowired
     private IServicioRepository servicioRepo;
-
-    @Autowired
-    private IAvisoService avisoService;
-
-    @Autowired
-    private IMensajeService mensajeService;
-
-    @Autowired
-    private ILlamadoService llamadoService;
 
     @Autowired
     private IMailService mailService;
@@ -222,31 +205,6 @@ public class ServicioServiceImpl implements IServicioService {
         }
         sectorService.guardar(sector);
         return servicio;
-    }
-
-
-
-    @Override
-    @Transactional()
-    public void crearAviso(Servicio servicio){
-        Aviso aviso;
-        Aviso avisoBuscado;
-        if(servicio.getEstado().equals(Estado.TERMINADO)){
-            Llamado llamado = llamadoService.buscarPorId(1);
-            Mensaje mensaje = mensajeService.buscarPorId(1);
-            avisoBuscado = avisoService.buscarAvisoPorServicioId(servicio.getId());
-            if (avisoBuscado == null){
-                aviso = new Aviso(mensaje.getTipoMensaje(), mensaje, servicio, llamado);
-                avisoService.guardar(aviso);
-            }
-
-        }else{
-            aviso = avisoService.buscarAvisoPorServicioId(servicio.getId());
-            if(aviso != null){
-                avisoService.eliminar(aviso.getId());
-                servicio.setAviso(null);
-            }
-        }
     }
 
     @Override
