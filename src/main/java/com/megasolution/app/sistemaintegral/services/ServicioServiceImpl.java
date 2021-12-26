@@ -76,6 +76,9 @@ public class ServicioServiceImpl implements IServicioService {
     @Override
     @Transactional(readOnly = true)
     public List<Servicio> buscarPorEstadoServicio(Estado estado) {
+        if( estado.equals(Estado.PENDIENTE) || estado.equals(Estado.EN_PROCESO)) {
+            return servicioRepo.findByEstadoOrderByFechaIngresoAsc(estado);
+        }
         return servicioRepo.findByEstadoOrderByFechaIngresoDesc(estado);
     }
 

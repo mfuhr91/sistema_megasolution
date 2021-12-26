@@ -24,6 +24,8 @@ public interface IServicioRepository extends JpaRepository<Servicio, Integer>{
     public List<Servicio> findLast50();
 
     /*@Query(value = "SELECT * FROM servicios WHERE estado = ?1 ORDER BY fecha_ingreso ASC", nativeQuery = true)*/
+    public List<Servicio> findByEstadoOrderByFechaIngresoAsc(Estado estado);
+
     public List<Servicio> findByEstadoOrderByFechaIngresoDesc(Estado estado);
 
     @Query(value = "SELECT * FROM servicios WHERE estado = ?1 ORDER BY observaciones LIKE '%URGENTE%' DESC, fecha_ingreso ASC", nativeQuery = true)

@@ -11,6 +11,9 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
@@ -52,5 +55,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .authoritiesByUsernameQuery("select u.nombre_usuario, a.authority from authorities a inner join usuarios u on (u.authority_id = a.id) where u.nombre_usuario = ?"); 
              
     }
+
 
 }

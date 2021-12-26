@@ -22,6 +22,9 @@ public class SistemaIntegralApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
+
+
+
 	
 	/* 	String password = "admin";
 

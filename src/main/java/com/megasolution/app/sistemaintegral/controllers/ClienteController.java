@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import com.megasolution.app.sistemaintegral.models.ClienteModel;
 import com.megasolution.app.sistemaintegral.models.entities.Cliente;
 import com.megasolution.app.sistemaintegral.models.entities.Localidad;
 import com.megasolution.app.sistemaintegral.models.entities.Pais;
@@ -15,9 +16,12 @@ import com.megasolution.app.sistemaintegral.services.ILocalidadService;
 import com.megasolution.app.sistemaintegral.services.IPaisService;
 import com.megasolution.app.sistemaintegral.services.IProvinciaService;
 
+import com.megasolution.app.sistemaintegral.utils.Constantes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,8 +34,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
 @Controller
-@SessionAttributes("cliente")
-@RequestMapping("/clientes")
+@SessionAttributes(Constantes.CLIENTE)
+@RequestMapping(Constantes.CLIENTES)
 public class ClienteController {
     
     @Autowired
@@ -46,153 +50,106 @@ public class ClienteController {
     @Autowired
     private IPaisService paisService;
 
-    @GetMapping("")
+    @GetMapping(Constantes.ROOT)
     public String listar100(Model model){
         List<Cliente> clientes = clienteService.buscar100();
-
-        model.addAttribute("titulo", "Clientes");
-        model.addAttribute("clientes", clientes);
-        model.addAttribute("active", "clientes");
-
-        return "clientes/lista";
+        ClienteModel clienteModel = new ClienteModel(clientes);
+        model.addAttribute(this.clienteService.enviarModelo(clienteModel,model));
+        return Constantes.TEMPLATE_LISTA_CLIENTES;
     }
 
-    @GetMapping("/todos")
+    @GetMapping(Constantes.TODOS)
     public String listarClientes(Model model){
         List<Cliente> clientes = clienteService.buscarTodos();
-
-        model.addAttribute("titulo", "Clientes");
-        model.addAttribute("clientes", clientes);
-        model.addAttribute("active", "clientes");
-
-        return "clientes/lista";
+        ClienteModel clienteModel = new ClienteModel(clientes);
+        model.addAttribute(this.clienteService.enviarModelo(clienteModel,model));
+        return Constantes.TEMPLATE_LISTA_CLIENTES;
     }
 
-    @GetMapping("/nuevo")
+    @GetMapping(Constantes.NUEVO)
     public String nuevo(Model model){
         Cliente cliente = new Cliente();
-        
         cliente.setFechaAlta(LocalDateTime.now());
-
-        List<Localidad> localidades = localidadService.buscarTodos();
-        List<Provincia> provincias = provinciaService.buscarTodos();
-        List<Pais> paises = paisService.buscarTodos();
-        
-
-        model.addAttribute("titulo", "Agregar cliente");
-        model.addAttribute("cliente", cliente);
-        model.addAttribute("active", "clientes");
-        model.addAttribute("localidades", localidades);
-        model.addAttribute("provincias", provincias);
-        model.addAttribute("paises", paises);
-        return "clientes/form-cliente";
+        ClienteModel clienteModel = new ClienteModel(cliente);
+        model.addAttribute(this.clienteService.enviarModelo(clienteModel,model));
+        return Constantes.TEMPLATE_FORM_CLIENTES;
     }
 
-    @PostMapping("/guardar")
+    @PostMapping(Constantes.GUARDAR)
     public String guardar(@Valid Cliente cliente, BindingResult result, 
                             RedirectAttributes flash, Model model, SessionStatus status){
-        List<Localidad> localidades = localidadService.buscarTodos();
-        List<Provincia> provincias = provinciaService.buscarTodos();
-        List<Pais> paises = paisService.buscarTodos();
+        ClienteModel clienteModel = new ClienteModel(cliente);
         if(cliente.getId() != null){ 
             Cliente clienteBuscado = clienteService.buscarPorDniCuit(cliente.getDniCuit());
             if(clienteBuscado != null){
                 if(cliente.getId() != null && clienteBuscado.getDniCuit().equals(cliente.getDniCuit()) 
                                             && !clienteBuscado.getId().equals(cliente.getId())){
-                    model.addAttribute("alertDangerDniCuit", " alert-danger");
-                    model.addAttribute("errorDniCuit", "Ya existe un cliente con este número de documento!");
-                    model.addAttribute("localidades", localidades);
-                    model.addAttribute("provincias", provincias);
-                    model.addAttribute("paises", paises);
-                    return "clientes/form-cliente";
+                    model.addAttribute(clienteService.enviarModelo(clienteModel, model));
+                    model.addAttribute(clienteService.enviarModeloErrorDniCuit(clienteModel, model));
+                    return Constantes.TEMPLATE_FORM_CLIENTES;
                 }
             }
         }
         if(cliente.getId() == null && clienteService.buscarPorDniCuit(cliente.getDniCuit()) != null){
-            model.addAttribute("alertDangerDniCuit", " alert-danger");
-            model.addAttribute("errorDniCuit", "Ya existe un cliente con este número de documento!");
-            model.addAttribute("localidades", localidades);
-            model.addAttribute("provincias", provincias);
-            model.addAttribute("paises", paises);
-            return "clientes/form-cliente";
+            model.addAttribute(clienteService.enviarModelo(clienteModel, model));
+            model.addAttribute(clienteService.enviarModeloErrorDniCuit(clienteModel, model));
+            return Constantes.TEMPLATE_FORM_CLIENTES;
         }
         if(result.hasErrors()){
-            if(cliente.getId() == null){
-                model.addAttribute("titulo", "Agregar Cliente");
-                model.addAttribute("active", "clientes"); 
-            }else{
-                model.addAttribute("titulo", "Editar Cliente");
-                model.addAttribute("active", "clientes"); 
-            }
-            model.addAttribute("localidades", localidades);
-            model.addAttribute("provincias", provincias);
-            model.addAttribute("paises", paises);
-            return "clientes/form-cliente";
+            return Constantes.TEMPLATE_FORM_CLIENTES;
         }
         if(cliente.getId() == null){
             clienteService.guardar(cliente);
             status.setComplete();
-            flash.addFlashAttribute("success", "Cliente guardado con éxito!");  
+            flash.addFlashAttribute(Constantes.SUCCESS, Constantes.MSJ_CLIENTE_GUARDADO);
         }else{
             clienteService.guardar(cliente);
             status.setComplete();
-            flash.addFlashAttribute("success", "Cliente actualizado con éxito!");  
+            flash.addFlashAttribute(Constantes.SUCCESS, Constantes.MSJ_CLIENTE_ACTUALIZADO);
         }
-        
-        
-        return "redirect:/clientes";
+
+        return Constantes.REDIRECT_CLIENTES;
     }
 
-    @GetMapping("/editar/{id}")
+    @GetMapping(Constantes.EDITAR_ID)
     public String editar(@PathVariable Integer id, Model model, RedirectAttributes flash){
         if(clienteService.buscarPorId(id) == null){
-            flash.addFlashAttribute("error", "El cliente no existe!"); 
-            return "redirect:/clientes";
+            flash.addFlashAttribute(Constantes.ERROR, Constantes.MSJ_CLIENTE_NO_EXISTE);
+            return Constantes.REDIRECT_CLIENTES;
         }
         Cliente cliente = null;
-        if(id > 0 ){
+        if(!ObjectUtils.isEmpty(id) ){
             cliente = clienteService.buscarPorId(id);
         }
-        List<Localidad> localidades = localidadService.buscarTodos();
-        List<Provincia> provincias = provinciaService.buscarTodos();
-        List<Pais> paises = paisService.buscarTodos();
-        model.addAttribute("cliente", cliente);
-        model.addAttribute("active", "clientes");
-        model.addAttribute("titulo", "Editar Cliente");
-        model.addAttribute("localidades", localidades);
-        model.addAttribute("provincias", provincias);
-        model.addAttribute("paises", paises);
-        return "clientes/form-cliente";
+        ClienteModel clienteModel = new ClienteModel(cliente);
+        model.addAttribute(this.clienteService.enviarModelo(clienteModel,model));
+        return Constantes.TEMPLATE_FORM_CLIENTES;
     }
 
-    @GetMapping("/eliminar/{id}")
+    @GetMapping(Constantes.ELIMINAR_ID)
     public String eliminar(@PathVariable Integer id, RedirectAttributes flash){
         if(clienteService.buscarPorId(id) == null){
-            flash.addFlashAttribute("error", "El cliente no existe!"); 
-            return "redirect:/clientes";
+            flash.addFlashAttribute(Constantes.ERROR, Constantes.MSJ_CLIENTE_NO_EXISTE);
+            return Constantes.REDIRECT_CLIENTES;
         }
         clienteService.eliminar(id);
-        flash.addFlashAttribute("success", "Cliente eliminado con éxito!"); 
-        return "redirect:/clientes";
+        flash.addFlashAttribute(Constantes.SUCCESS, Constantes.MSJ_CLIENTE_ELIMINADO);
+        return Constantes.REDIRECT_CLIENTES;
     }
 
-    @GetMapping("/buscar")
+    @GetMapping(Constantes.BUSCAR)
     public String buscarClientes(@RequestParam String param, Model model, RedirectAttributes flash){
-        
-        if(param == ""){
-            return "redirect:/clientes";
+        if(StringUtils.isEmpty(param)){
+            return Constantes.REDIRECT_CLIENTES;
         }
         List<Cliente> clientes = this.clienteService.buscarPorParametro(param);
-        if(clientes.size() > 0){
-            model.addAttribute("titulo", "Clientes");
-            model.addAttribute("clientes", clientes);
-            model.addAttribute("active", "clientes");
-    
-            return "clientes/lista";
+        if(!clientes.isEmpty()){
+            ClienteModel clienteModel = new ClienteModel(clientes);
+            model.addAttribute(this.clienteService.enviarModelo(clienteModel,model));
+            return Constantes.TEMPLATE_LISTA_CLIENTES;
         } else {
-            flash.addFlashAttribute("warning", "No se encontró ningún cliente!");
-            
-            return "redirect:/clientes";
+            flash.addFlashAttribute(Constantes.WARNING, Constantes.MSJ_CLIENTE_NO_ENCONTRADO);
+            return Constantes.REDIRECT_CLIENTES;
         }
     }  
 }
