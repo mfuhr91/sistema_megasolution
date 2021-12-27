@@ -1,20 +1,16 @@
 package com.megasolution.app.sistemaintegral.controllers;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 
 import javax.validation.Valid;
 
+import com.megasolution.app.sistemaintegral.models.respuestaJson.Localidad;
 import com.megasolution.app.sistemaintegral.models.ClienteModel;
+import com.megasolution.app.sistemaintegral.models.Provincias;
 import com.megasolution.app.sistemaintegral.models.entities.Cliente;
-import com.megasolution.app.sistemaintegral.models.entities.Localidad;
-import com.megasolution.app.sistemaintegral.models.entities.Pais;
-import com.megasolution.app.sistemaintegral.models.entities.Provincia;
 import com.megasolution.app.sistemaintegral.services.IClienteService;
-import com.megasolution.app.sistemaintegral.services.ILocalidadService;
-import com.megasolution.app.sistemaintegral.services.IPaisService;
-import com.megasolution.app.sistemaintegral.services.IProvinciaService;
 
 import com.megasolution.app.sistemaintegral.utils.Constantes;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,12 +19,7 @@ import org.springframework.ui.Model;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -41,17 +32,17 @@ public class ClienteController {
     @Autowired
     private IClienteService clienteService;
 
-    @Autowired
+ /*   @Autowired
     private ILocalidadService localidadService;
 
     @Autowired
     private IProvinciaService provinciaService;
 
     @Autowired
-    private IPaisService paisService;
+    private IPaisService paisService;*/
 
     @GetMapping(Constantes.ROOT)
-    public String listar100(Model model){
+    public String listar100(Model model) throws IOException {
         List<Cliente> clientes = clienteService.buscar100();
         ClienteModel clienteModel = new ClienteModel(clientes);
         model.addAttribute(this.clienteService.enviarModelo(clienteModel,model));
@@ -59,7 +50,7 @@ public class ClienteController {
     }
 
     @GetMapping(Constantes.TODOS)
-    public String listarClientes(Model model){
+    public String listarClientes(Model model) throws IOException {
         List<Cliente> clientes = clienteService.buscarTodos();
         ClienteModel clienteModel = new ClienteModel(clientes);
         model.addAttribute(this.clienteService.enviarModelo(clienteModel,model));
@@ -67,7 +58,7 @@ public class ClienteController {
     }
 
     @GetMapping(Constantes.NUEVO)
-    public String nuevo(Model model){
+    public String nuevo(Model model) throws IOException {
         Cliente cliente = new Cliente();
         cliente.setFechaAlta(LocalDateTime.now());
         ClienteModel clienteModel = new ClienteModel(cliente);
@@ -77,7 +68,7 @@ public class ClienteController {
 
     @PostMapping(Constantes.GUARDAR)
     public String guardar(@Valid Cliente cliente, BindingResult result, 
-                            RedirectAttributes flash, Model model, SessionStatus status){
+                            RedirectAttributes flash, Model model, SessionStatus status) throws IOException {
         ClienteModel clienteModel = new ClienteModel(cliente);
         if(cliente.getId() != null){ 
             Cliente clienteBuscado = clienteService.buscarPorDniCuit(cliente.getDniCuit());
@@ -112,7 +103,7 @@ public class ClienteController {
     }
 
     @GetMapping(Constantes.EDITAR_ID)
-    public String editar(@PathVariable Integer id, Model model, RedirectAttributes flash){
+    public String editar(@PathVariable Integer id, Model model, RedirectAttributes flash) throws IOException {
         if(clienteService.buscarPorId(id) == null){
             flash.addFlashAttribute(Constantes.ERROR, Constantes.MSJ_CLIENTE_NO_EXISTE);
             return Constantes.REDIRECT_CLIENTES;
@@ -138,7 +129,7 @@ public class ClienteController {
     }
 
     @GetMapping(Constantes.BUSCAR)
-    public String buscarClientes(@RequestParam String param, Model model, RedirectAttributes flash){
+    public String buscarClientes(@RequestParam String param, Model model, RedirectAttributes flash) throws IOException {
         if(StringUtils.isEmpty(param)){
             return Constantes.REDIRECT_CLIENTES;
         }
@@ -151,5 +142,15 @@ public class ClienteController {
             flash.addFlashAttribute(Constantes.WARNING, Constantes.MSJ_CLIENTE_NO_ENCONTRADO);
             return Constantes.REDIRECT_CLIENTES;
         }
-    }  
+    }
+
+    @GetMapping(Constantes.GET_CIUDADES)
+    public @ResponseBody List<Localidad> getCiudades(@PathVariable String provincia, Model model ) throws IOException {
+        return Provincias.getCiudadesDeProvincia(provincia);
+    }
+
+    @GetMapping(Constantes.EDITAR_GET_CIUDADES)
+    public @ResponseBody List<Localidad> getCiudadesEditar(@PathVariable String provincia, Model model ) throws IOException {
+        return Provincias.getCiudadesDeProvincia(provincia);
+    }
 }

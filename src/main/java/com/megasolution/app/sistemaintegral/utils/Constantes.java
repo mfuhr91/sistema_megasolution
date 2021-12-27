@@ -55,4 +55,9 @@ public interface Constantes {
 
     String WARNING = "warning";
     String EDITAR_ID = "editar/{id}";
+
+    String GET_CIUDADES = "get-ciudades/{provincia}";
+    String EDITAR_GET_CIUDADES = "editar/get-ciudades/{provincia}";
+
+    String LOCALIDADES_JSON = "localidades.json";
 }

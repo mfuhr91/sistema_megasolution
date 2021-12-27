@@ -1,13 +1,15 @@
 package com.megasolution.app.sistemaintegral.services;
 
+import java.io.IOException;
 import java.util.List;
 
 import com.megasolution.app.sistemaintegral.models.ClienteModel;
+import com.megasolution.app.sistemaintegral.models.Paises;
+import com.megasolution.app.sistemaintegral.models.Provincias;
 import com.megasolution.app.sistemaintegral.models.entities.*;
 import com.megasolution.app.sistemaintegral.models.repositories.IClienteRepository;
 
 import com.megasolution.app.sistemaintegral.utils.Constantes;
-import com.megasolution.app.sistemaintegral.utils.Estado;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,15 +23,6 @@ public class ClienteServiceImpl implements IClienteService {
 
     @Autowired
     private IClienteRepository clienteRepo;
-
-    @Autowired
-    private ILocalidadService localidadService;
-
-    @Autowired
-    private IProvinciaService provinciaService;
-
-    @Autowired
-    private IPaisService paisService;
 
     private final Logger log = LoggerFactory.getLogger(ClienteServiceImpl.class);
 
@@ -85,11 +78,15 @@ public class ClienteServiceImpl implements IClienteService {
     }
 
     @Override
-    public Model enviarModelo(ClienteModel clienteModel, Model model){
+    public Model enviarModelo(ClienteModel clienteModel, Model model) throws IOException {
 
-        clienteModel.setLocalidades(localidadService.buscarTodos());
-        clienteModel.setProvincias(provinciaService.buscarTodos());
-        clienteModel.setPaises(paisService.buscarTodos());
+        if(!ObjectUtils.isEmpty(clienteModel.getCliente()) && !ObjectUtils.isEmpty(clienteModel.getCliente().getProvincia())) {
+            clienteModel.setLocalidades(Provincias.getCiudadesDeProvincia(clienteModel.getCliente().getProvincia()));
+        } else {
+            clienteModel.setLocalidades(Provincias.getCiudadesDeProvincia(Provincias.TIERRA_DEL_FUEGO.getNombre()));
+        }
+        clienteModel.setProvincias(Provincias.getProvincias());
+        clienteModel.setPaises(Paises.ARGENTINA);
 
         model.addAttribute(Constantes.ACTIVE, Constantes.CLIENTES);
 

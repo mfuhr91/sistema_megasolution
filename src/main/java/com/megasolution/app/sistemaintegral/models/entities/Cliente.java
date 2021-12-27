@@ -1,6 +1,8 @@
 package com.megasolution.app.sistemaintegral.models.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.megasolution.app.sistemaintegral.models.respuestaJson.Localidad;
+import com.megasolution.app.sistemaintegral.models.respuestaJson.Provincia;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -49,20 +51,11 @@ public class Cliente implements Serializable{
 
     private String direccion;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "localidad_id")
-    @JsonIgnore
-    private Localidad localidad;
+    private String localidad;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "provincia_id")
-    @JsonIgnore
-    private Provincia provincia;
+    private String provincia;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "pais_id")
-    @JsonIgnore
-    private Pais pais;
+    private String pais;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "condicion_iva_id")

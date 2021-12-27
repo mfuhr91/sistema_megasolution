@@ -1,19 +1,13 @@
 package com.megasolution.app.sistemaintegral.services;
 
-import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
-import java.util.List;
-
-import javax.mail.MessagingException;
-
 import com.lowagie.text.BadElementException;
+import com.megasolution.app.sistemaintegral.models.respuestaJson.Localidad;
+import com.megasolution.app.sistemaintegral.models.Provincias;
 import com.megasolution.app.sistemaintegral.models.entities.Cliente;
-import com.megasolution.app.sistemaintegral.utils.Estado;
 import com.megasolution.app.sistemaintegral.models.entities.Sector;
 import com.megasolution.app.sistemaintegral.models.entities.Servicio;
 import com.megasolution.app.sistemaintegral.models.repositories.IServicioRepository;
-
+import com.megasolution.app.sistemaintegral.utils.Estado;
 import com.megasolution.app.sistemaintegral.utils.TipoMail;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +16,12 @@ import org.springframework.mail.MailException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+
+import javax.mail.MessagingException;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
 
 
 @Service
@@ -112,7 +112,7 @@ public class ServicioServiceImpl implements IServicioService {
     }
 
     @Transactional(readOnly = true)
-    public long promedioServicios(){
+    public long promedioServicios() {
         List<Servicio> servicios = this.buscarPorEstadoServicio(Estado.TERMINADO);
         LocalDateTime fechaActual = LocalDateTime.now();
         long tiempoTotal = 0;
@@ -248,5 +248,5 @@ public class ServicioServiceImpl implements IServicioService {
         }
         return servicios;
     }
- 
+
 }

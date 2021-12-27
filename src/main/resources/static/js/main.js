@@ -159,15 +159,23 @@ $(document).ready(() => {
     })
 })
 
-// ELIMINA EL AVISO CAMBIANDO SU ESTADO A LEIDO
-function cerrarAviso(id){
-    $.post("/aviso-leido",{id})
-    .done(function() {
-        $('#alerta_' + id).fadeOut();
-        $.get("/total-avisos", function(totalAvisos){
-            $('#totalAvisosNoLeidos span').text(totalAvisos);
-        })
+// consulta las ciudades segun la provincia
+function getCiudades(provincia){
+    console.log(provincia)
+    let select = $('#localidad');
+    select.find('option').remove();
+    $.get(`get-ciudades/${provincia}`)
+    .done( ciudades => {
+        ciudades.forEach( ciudad => {
+            console.log(ciudad.nombre)
+            agregarOptions(select, ciudad.nombre)
+        } );
     })
+
+}
+
+function agregarOptions(select, ciudad){
+    select.append(`<option value="${ciudad}">${ciudad}</option>`);
 }
 
 
