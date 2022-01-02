@@ -11,6 +11,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.Date;
 
 @Getter
@@ -60,4 +61,21 @@ public class Servicio implements Serializable{
     @ManyToOne(fetch = FetchType.LAZY)
     private Cliente cliente;
 
+    @Override
+    public String toString() {
+        return "Servicio{" +
+                "id=" + id +
+                ", equipo='" + equipo + '\'' +
+                ", cargador=" + cargador +
+                ", bateria=" + bateria +
+                ", estado=" + estado +
+                ", sector=" + sector +
+                ", problemaReportado='" + problemaReportado + '\'' +
+                ", observaciones='" + observaciones + '\'' +
+                ", solucion='" + solucion + '\'' +
+                ", fechaIngreso=" + fechaIngreso +
+                ", fechaTerminado=" + fechaTerminado +
+                ", cliente=" + cliente +
+                '}';
+    }
 }

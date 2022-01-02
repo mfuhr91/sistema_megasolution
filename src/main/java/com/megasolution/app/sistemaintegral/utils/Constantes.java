@@ -2,6 +2,9 @@ package com.megasolution.app.sistemaintegral.utils;
 
 public interface Constantes {
 
+    int SIETE_DIAS_EN_MS = 604_800_000;
+    int UNA_HORA_EN_MS = 3_600_000;
+
     String ACTIVE = "active";
     String PILL_ACTIVO = "pill_activo";
     String TITULO = "titulo";

@@ -1,6 +1,8 @@
 package com.megasolution.app.sistemaintegral.services;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.megasolution.app.sistemaintegral.models.ClienteModel;
@@ -65,11 +67,11 @@ public class ClienteServiceImpl implements IClienteService {
 
     @Override
     public List<Cliente> buscarPorParametro(String param) {
-
         param = param.toLowerCase();
-
-        List<Cliente> servicios = this.clienteRepo.findByParam(param);
-        return servicios;
+        String[] params = param.split(" ");
+        List<Cliente> clientes = new ArrayList<>();
+        Arrays.stream(params).forEach(prm -> clientes.addAll(this.clienteRepo.findByParam(prm)) );
+        return clientes;
     }
 
     @Override

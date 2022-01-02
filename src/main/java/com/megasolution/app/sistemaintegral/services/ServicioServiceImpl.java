@@ -1,12 +1,11 @@
 package com.megasolution.app.sistemaintegral.services;
 
 import com.lowagie.text.BadElementException;
-import com.megasolution.app.sistemaintegral.models.respuestaJson.Localidad;
-import com.megasolution.app.sistemaintegral.models.Provincias;
 import com.megasolution.app.sistemaintegral.models.entities.Cliente;
 import com.megasolution.app.sistemaintegral.models.entities.Sector;
 import com.megasolution.app.sistemaintegral.models.entities.Servicio;
 import com.megasolution.app.sistemaintegral.models.repositories.IServicioRepository;
+import com.megasolution.app.sistemaintegral.utils.Constantes;
 import com.megasolution.app.sistemaintegral.utils.Estado;
 import com.megasolution.app.sistemaintegral.utils.TipoMail;
 import org.slf4j.Logger;
@@ -21,6 +20,8 @@ import javax.mail.MessagingException;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -119,11 +120,10 @@ public class ServicioServiceImpl implements IServicioService {
         int nroServicios7Dias = 0;
         for (Servicio servicio : servicios) {
             long dif = ChronoUnit.MILLIS.between(servicio.getFechaIngreso(), fechaActual);
-            LOG.info(String.valueOf(dif));
-            if( dif <= 604_800_000 ){ // 7dias = 604800000 ms - 1dia = 86400000 - 1hr= 3600000
+            if( dif <= Constantes.SIETE_DIAS_EN_MS){ // 7dias = 604800000 ms - 1dia = 86400000 - 1hr= 3600000
                 nroServicios7Dias++;
                 float tiempo = ChronoUnit.MILLIS.between(servicio.getFechaIngreso(), servicio.getFechaTerminado());
-                float tiempoEnHoras = (float) Math.ceil(tiempo / 3_600_000);
+                float tiempoEnHoras = (float) Math.ceil(tiempo / Constantes.UNA_HORA_EN_MS);
                 tiempoTotal += tiempoEnHoras;
             }
         }
@@ -144,10 +144,10 @@ public class ServicioServiceImpl implements IServicioService {
     @Override
     @Transactional(readOnly = true)
     public List<Servicio> buscarPorParametro(String param, String estado) {
-
         param = param.toLowerCase();
-
-        List<Servicio> servicios = this.servicioRepo.findByParam(param, estado);
+        String[] params = param.split(" ");
+        List<Servicio> servicios = new ArrayList<>();
+        Arrays.stream(params).forEach( prm -> servicios.addAll(this.servicioRepo.findByParam(prm, estado)) );
         return servicios;
     }
 
