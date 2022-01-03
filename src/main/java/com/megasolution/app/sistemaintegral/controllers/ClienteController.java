@@ -136,12 +136,12 @@ public class ClienteController {
     }
 
     @GetMapping(Constantes.GET_CIUDADES)
-    public @ResponseBody List<Localidad> getCiudades(@PathVariable String provincia, Model model ) throws IOException {
+    public @ResponseBody List<Localidad> getCiudades(@PathVariable String provincia) throws IOException {
         return Provincias.getCiudadesDeProvincia(provincia);
     }
 
     @GetMapping(Constantes.EDITAR_GET_CIUDADES)
-    public @ResponseBody List<Localidad> getCiudadesEditar(@PathVariable String provincia, Model model ) throws IOException {
+    public @ResponseBody List<Localidad> getCiudadesEditar(@PathVariable String provincia) throws IOException {
         return Provincias.getCiudadesDeProvincia(provincia);
     }
 }

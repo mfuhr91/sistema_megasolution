@@ -1,9 +1,6 @@
 package com.megasolution.app.sistemaintegral.services;
 
 import com.lowagie.text.BadElementException;
-import com.megasolution.app.sistemaintegral.models.ClienteModel;
-import com.megasolution.app.sistemaintegral.models.Paises;
-import com.megasolution.app.sistemaintegral.models.Provincias;
 import com.megasolution.app.sistemaintegral.models.ServicioModel;
 import com.megasolution.app.sistemaintegral.models.entities.Cliente;
 import com.megasolution.app.sistemaintegral.models.entities.Sector;
@@ -173,40 +170,35 @@ public class ServicioServiceImpl implements IServicioService {
 
     @Override
     public Model validarForm(Servicio servicio, Model model){
-        model = validarSolucion(servicio, model);
-        model = validarSector(servicio, model);
-        model = validarCliente(servicio, model);
+        if( !ObjectUtils.isEmpty(servicio) ){
+            validarSolucion(servicio, model);
+            validarSector(servicio, model);
+            validarCliente(servicio, model);
+        }
         return model;
     }
 
  
-    private Model validarSolucion(Servicio servicio, Model model) {
-
-        if( !ObjectUtils.isEmpty(servicio.getSolucion()) && servicio.getSolucion().isEmpty() &&
+    private void validarSolucion(Servicio servicio, Model model) {
+        if( servicio.getSolucion() != null && servicio.getSolucion().isEmpty() &&
             (servicio.getEstado().equals(Estado.TERMINADO) || servicio.getEstado().equals(Estado.ENTREGADO))) {
-                model.addAttribute("errorSolucion", "Debe ingresar una solución antes de guardar el servicio!");
-                model.addAttribute("alertDangerSolucion", " form-control alert-danger");
-        } 
-        return model;
-        
+                model.addAttribute(Constantes.ERROR_SOLUCION, Constantes.MSJ_INGRESAR_SOLUCION);
+                model.addAttribute(Constantes.ALERT_DANGER_SOLUCION, Constantes.ESPACIO_ALERT_DANGER);
+        }
     }
 
-    private Model validarCliente(Servicio servicio, Model model){
-
+    private void validarCliente(Servicio servicio, Model model){
         if( !ObjectUtils.isEmpty(servicio.getCliente()) && servicio.getCliente().getId() == null){
-            model.addAttribute("errorCliente", "Debe seleccionar un cliente antes de guardar!");
-            model.addAttribute("alertDangerCliente", " form-control alert-danger");
+            model.addAttribute(Constantes.ERROR_CLIENTE, Constantes.MSJ_INGRESAR_CLIENTE);
+            model.addAttribute(Constantes.ALERT_DANGER_CLIENTE, Constantes.ESPACIO_ALERT_DANGER);
         }
-        return model;
-
     }
 
-    private Model validarSector(Servicio servicio, Model model){
+    private void validarSector(Servicio servicio, Model model){
         if( !ObjectUtils.isEmpty(servicio.getSector()) && servicio.getSector().getId() == null){
-            model.addAttribute("errorSector", "Debe seleccionar un sector antes de guardar!");
-            model.addAttribute("alertDangerSector", " form-control alert-danger");
+            model.addAttribute(Constantes.ERROR_SECTOR, Constantes.MSJ_INGRESAR_SECTOR);
+            model.addAttribute(Constantes.ALERT_DANGER_SECTOR, Constantes.ESPACIO_ALERT_DANGER);
         }
-        return model;
     }
 
     @Override
@@ -214,10 +206,15 @@ public class ServicioServiceImpl implements IServicioService {
         Sector sectorAnterior = this.sector;
         liberarSectorAnterior(sectorAnterior, sectorNuevo);
         if(servicio.getEstado().equals(Estado.ENTREGADO) || servicio.getEstado().equals(Estado.GUARDADO)){
-            servicio.setSector(null); 
+            servicio.setSector(null);
+            Sector sector = this.sectorService.buscarPorNombre(sectorAnterior.getNombre());
+            sector.setDisponible(true);
+            LOG.info("sector liberado!");
+            sectorService.guardar(sector);
+        } else {
+            sectorNuevo.setDisponible(false);
+            sectorService.guardar(sectorNuevo);
         }
-        sectorNuevo.setDisponible(false);
-        sectorService.guardar(sectorNuevo);
     }
 
     private void liberarSectorAnterior(Sector sectorAnterior, Sector sectorNuevo){
@@ -272,8 +269,12 @@ public class ServicioServiceImpl implements IServicioService {
                 servicioModel.getServicio().setSector( sectorService.buscarPorId(servicioModel.getServicio().getSector().getId()) );
             }
         }
-
-
+        StringBuilder cliente = new StringBuilder();
+        if ( servicioModel.getCliente() != null && !ObjectUtils.isEmpty(servicioModel.getCliente().getId()) ) {
+            cliente.append(servicioModel.getCliente().getDniCuit().toString());
+            cliente.append(" - ");
+            cliente.append(servicioModel.getCliente().getRazonSocial());
+        }
         if ( ObjectUtils.isEmpty(servicioModel.getServicio().getId())) {
             List<Estado> estados = Arrays.stream(Estado.values())
                     .filter(estado -> estado.equals(Estado.PENDIENTE) || estado.equals(Estado.EN_PROCESO))
@@ -282,17 +283,16 @@ public class ServicioServiceImpl implements IServicioService {
             servicioModel.getServicio().setBateria(true);
             servicioModel.getServicio().setFechaIngreso(LocalDateTime.now());
             servicioModel.setEstados(estados);
-            /*servicioModel.setCliente(new Cliente());*/
             model.addAttribute(Constantes.SERVICIO, servicioModel.getServicio());
             model.addAttribute(Constantes.TITULO, Constantes.TITULO_AGREGAR_SERVICIO);
             if( !ObjectUtils.isEmpty(servicioModel.getCliente()) ){
                 model.addAttribute(Constantes.ID, servicioModel.getCliente().getId());
-                model.addAttribute(Constantes.CLIENTE, servicioModel.getCliente().getDniCuit() + " - " + servicioModel.getCliente().getRazonSocial());
+                model.addAttribute(Constantes.CLIENTE,  cliente);
                 model.addAttribute(Constantes.TELEFONO, servicioModel.getCliente().getTelefono());
             }
         } else {
             servicioModel.setEstados(Estado.getEstadosServicios());
-            model.addAttribute(Constantes.CLIENTE, servicioModel.getCliente().getDniCuit() + " - " + servicioModel.getCliente().getRazonSocial());
+            model.addAttribute(Constantes.CLIENTE, cliente);
             model.addAttribute(Constantes.TELEFONO, servicioModel.getCliente().getTelefono());
             model.addAttribute(Constantes.SERVICIO,servicioModel.getServicio());
             model.addAttribute(Constantes.SERVICIO_ID, servicioModel.getServicio().getId());
@@ -312,8 +312,8 @@ public class ServicioServiceImpl implements IServicioService {
     @Override
     public List<Servicio> buscarPorParamEstado(String param, String estado){
         estado = estado.toUpperCase();
-        List<Servicio> servicios = null;
-        if(estado.equals("TODOS")){
+        List<Servicio> servicios;
+        if(estado.equals(Constantes.TODOS.toUpperCase())){
             servicios = this.buscarPorParametro(param, "");
         } else {
             servicios = this.buscarPorParametro(param, estado);
@@ -333,7 +333,7 @@ public class ServicioServiceImpl implements IServicioService {
     public Model listarSegunEstado(Cliente cliente, Estado estado, Model model) {
         String pill_activo = Constantes.TODOS;
         StringBuilder logMsj = new StringBuilder("servicios ");
-        List<Servicio> servicios = null;
+        List<Servicio> servicios;
         if( !ObjectUtils.isEmpty( estado )) {
             switch (estado) {
                 case PENDIENTE: pill_activo = Constantes.PENDIENTE;
@@ -370,20 +370,4 @@ public class ServicioServiceImpl implements IServicioService {
         model.addAttribute(Constantes.PILL_ACTIVO, pill_activo);
         return model;
     }
-
-    /*
-        Cliente cliente = clienteService.buscarPorId(id);
-        List<Servicio> servicios = servicioService.buscarPorEstadoPorCliente(Estado.PENDIENTE, cliente.getId());
-        StringBuilder msjLog = new StringBuilder("servicios pendientes del cliente:");
-        msjLog.append(cliente.getRazonSocial());
-        msjLog.append(" listados");
-        LOG.info(msjLog.toString());
-
-        ServicioModel servicioModel = new ServicioModel();
-        servicioModel.setServicios(servicios);
-        servicioModel.setCliente(cliente);
-        model.addAttribute(servicioService.enviarModelo(servicioModel, model));
-        model.addAttribute(Constantes.ID, id);
-        model.addAttribute(Constantes.PILL_ACTIVO, Constantes.PENDIENTE);*/
-
 }

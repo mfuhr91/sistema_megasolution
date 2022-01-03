@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -197,69 +198,30 @@ public class ServicioController {
         servicioModel.setServicio(new Servicio());
         model.addAttribute(servicioService.enviarModelo(servicioModel,model));
         return Constantes.TEMPLATE_FORM_SERVICIOS;
-       /* Servicio servicio = new Servicio();
-
-        List<Estado> estados = Arrays.stream(Estado.values())
-                .filter(estado -> estado.equals(Estado.PENDIENTE) || estado.equals(Estado.EN_PROCESO))
-                .collect(Collectors.toList());
-
-        servicio.setCargador(true);
-        servicio.setBateria(true);
-        servicio.setFechaIngreso(LocalDateTime.now());
-        model.addAttribute("titulo", "Agregar Servicio");
-        model.addAttribute("active", "servicios");
-        model.addAttribute("servicio", servicio);
-        List<Sector> sectores = sectorService.buscarDisponibles();
-
-        model.addAttribute("sectores", sectores);
-
-        model.addAttribute("estados", estados);
-
-        return "servicios/form-servicio";*/
     }
 
-    @GetMapping("/nuevo/cliente/{id}")
-    public String nuevoServicioCliente(@PathVariable Integer id, Model model, RedirectAttributes flash){
-        if( ObjectUtils.isEmpty(clienteService.buscarPorId(id)) ){
+    @GetMapping(Constantes.NUEVO_CLIENTE_ID)
+    public String nuevoServicioCliente(@PathVariable Integer id, Model model, RedirectAttributes flash) {
+        if (ObjectUtils.isEmpty(clienteService.buscarPorId(id))) {
             LOG.error(Constantes.MSJ_CLIENTE_NO_EXISTE);
-            flash.addFlashAttribute(Constantes.ERROR,Constantes.MSJ_CLIENTE_NO_EXISTE);
+            flash.addFlashAttribute(Constantes.ERROR, Constantes.MSJ_CLIENTE_NO_EXISTE);
             return Constantes.REDIRECT_CLIENTES;
         }
         Cliente cliente = clienteService.buscarPorId(id);
         ServicioModel servicioModel = new ServicioModel();
         servicioModel.setServicio(new Servicio());
         servicioModel.setCliente(cliente);
-        model.addAttribute(servicioService.enviarModelo(servicioModel,model));
+        model.addAttribute(servicioService.enviarModelo(servicioModel, model));
         return Constantes.TEMPLATE_FORM_SERVICIOS;
-/*
-        List<Estado> estados = Arrays.stream(Estado.values())
-                                    .filter(estado -> estado.equals(Estado.PENDIENTE) || estado.equals(Estado.EN_PROCESO))
-                                    .collect(Collectors.toList());
-        servicio.setCargador(true);
-        servicio.setBateria(true);
-        servicio.setFechaIngreso(LocalDateTime.now());
-        model.addAttribute("titulo", "Agregar Servicio");
-        model.addAttribute("active", "servicios");
-        model.addAttribute("servicio", servicio);
-
-        model.addAttribute("id", id);
-        model.addAttribute("cliente", cliente.getDniCuit() + " - " + cliente.getRazonSocial());
-        model.addAttribute("telefono", cliente.getTelefono());*/
-
-
-       /* List<Sector> sectores = sectorService.buscarDisponibles();
-        List<Cliente> clientes = clienteService.buscarTodos();
-        model.addAttribute("sectores", sectores);
-        model.addAttribute("clientes", clientes);
-
-        model.addAttribute("estados", estados);
-
-        return "servicios/form-servicio";*/
     }
 
     @PostMapping(Constantes.GUARDAR)
     public String guardarServicio(@Valid Servicio servicio, BindingResult result, Model model, SessionStatus status, RedirectAttributes flash){
-        ServicioModel servicioModel = new ServicioModel(servicio, new Cliente());
+        Cliente cliente = new Cliente();
+        if( !ObjectUtils.isEmpty(servicio.getCliente().getId()) ){
+            cliente = this.clienteService.buscarPorId(servicio.getCliente().getId());
+        }
+        ServicioModel servicioModel = new ServicioModel(servicio, cliente);
         model.addAttribute(servicioService.enviarModelo(servicioModel, model));
 
         if(   !ObjectUtils.isEmpty(model.getAttribute(Constantes.ERROR_SOLUCION))
@@ -293,7 +255,7 @@ public class ServicioController {
     }
 
     @GetMapping(Constantes.ELIMINAR_ID)
-    public String eliminarServicio(@PathVariable Integer id, Model model, RedirectAttributes flash){
+    public String eliminarServicio(@PathVariable Integer id, RedirectAttributes flash){
         if(servicioService.buscarPorId(id) == null){
             flash.addFlashAttribute(Constantes.ERROR, Constantes.MSJ_SERVICIO_NO_EXISTE);
             return Constantes.REDIRECT_SERVICIOS;
@@ -303,7 +265,6 @@ public class ServicioController {
             Sector sector = sectorService.buscarPorId(servicio.getSector().getId());
             sector.setDisponible(true);
         }
-
         servicioService.eliminar(id);
         flash.addFlashAttribute(Constantes.SUCCESS, Constantes.MSJ_SERVICIO_ELIMINADO);
         return Constantes.REDIRECT_SERVICIOS;
@@ -315,92 +276,65 @@ public class ServicioController {
         List<Servicio> serviciosPendientes = servicioService.buscarPorEstadoServicioMonitor(Estado.PENDIENTE);
         List<Servicio> serviciosEnProceso = servicioService.buscarPorEstadoServicioMonitor(Estado.EN_PROCESO);
         
-        model.addAttribute("totalPendientes", serviciosPendientes.size());
-        model.addAttribute("totalEnProceso", serviciosEnProceso.size());
+        model.addAttribute(Constantes.TOTAL_PENDIENTES, serviciosPendientes.size());
+        model.addAttribute(Constantes.TOTAL_EN_PROCESO, serviciosEnProceso.size());
         
-        model.addAttribute("serviciosPendientes", serviciosPendientes);
-        model.addAttribute("serviciosEnProceso", serviciosEnProceso);
-        model.addAttribute("titulo", "Visualizador de Servicios");
-        return "servicios/monitor";
+        model.addAttribute(Constantes.SERVICIOS_PENDIENTES, serviciosPendientes);
+        model.addAttribute(Constantes.SERVICIOS_EN_PROCESO, serviciosEnProceso);
+        model.addAttribute(Constantes.TITULO, Constantes.TITULO_VISUALIZADOR_DE_SERVICIOS);
+        return Constantes.TEMPLATE_MONITOR;
     }
 
-    @GetMapping("/mostrar-sectores")
-    public @ResponseBody List<Sector> listaSectores(){
-        List<Sector> sectores = sectorService.buscarDisponibles();
-        return  sectores;
-    }
-
-    @GetMapping("/mostrar-clientes")
-    public @ResponseBody List<Cliente> listaClientes(){
-        List<Cliente> clientes = clienteService.buscarTodos();
-        return  clientes;
-    }
-
-    @PostMapping("/buscar/{estado}")
+    @PostMapping(Constantes.BUSCAR_ESTADO)
     public String buscarServicio(@RequestParam String param,@PathVariable String estado, Model model, RedirectAttributes flash){
         
-        if(param == ""){
-            return "redirect:/servicios";
+        if(StringUtils.isEmpty(param)){
+            return Constantes.REDIRECT_SERVICIOS;
         }
         List<Servicio> servicios = this.servicioService.buscarPorParamEstado(param, estado);
-        if(servicios.size() > 0){
-            model.addAttribute("titulo", "Servicios");
-            model.addAttribute("servicios", servicios);
-            model.addAttribute("active", "servicios");
-            model.addAttribute("pill_activo", estado);
-            
-            return "servicios/lista";
+        ServicioModel servicioModel = new ServicioModel();
+        servicioModel.setServicios(servicios);
+        if(!servicios.isEmpty()){
+            model.addAttribute(this.servicioService.enviarModelo(servicioModel,model));
+            return Constantes.TEMPLATE_LISTA_SERVICIOS;
         } else {
-            flash.addFlashAttribute("warning", "No se encontró ningún servicio!");
-            
-            return "redirect:/servicios";
+            flash.addFlashAttribute(Constantes.WARNING, Constantes.MSJ_SERVICIO_NO_ENCONTRADO);
+            return Constantes.REDIRECT_SERVICIOS;
         }
     } 
 
-    @PostMapping("/buscar-clientes")
+    @PostMapping(Constantes.BUSCAR_CLIENTES)
     public String buscarClientesEnServicioNuevo(@RequestParam String param, Model model, RedirectAttributes flash){
-        
-        if(param == ""){
-            return "redirect:/servicios/nuevo";
+        if( StringUtils.isEmpty(param) ){
+            return Constantes.REDIRECT_SERVICIOS_NUEVO;
         }
         List<Cliente> clientes = this.clienteService.buscarPorParametro(param);
-        if(clientes.size() > 0){
-            model.addAttribute("titulo", "Servicios");
-            model.addAttribute("clientes", clientes);
-            model.addAttribute("active", "servicios");
-    
+        if(!clientes.isEmpty()){
+            model.addAttribute(Constantes.CLIENTES, clientes);
+            model.addAttribute(Constantes.ACTIVE, Constantes.SERVICIOS);
             this.nuevoServicio(model);
-           
-            return "servicios/form-servicio";
+            return Constantes.TEMPLATE_FORM_SERVICIOS;
         } else {
-            flash.addFlashAttribute("warning", "No se encontró ningún cliente!");
+            flash.addFlashAttribute(Constantes.WARNING, Constantes.MSJ_CLIENTE_NO_ENCONTRADO);
             
-            return "redirect:/servicios/nuevo";
+            return Constantes.REDIRECT_SERVICIOS_NUEVO;
         }
     }  
-    @PostMapping("/buscar-clientes/{id}")
+    @PostMapping(Constantes.BUSCAR_CLIENTES_ID)
     public String buscarClientesEnServicio(@RequestParam String param, @PathVariable Integer id, Model model, RedirectAttributes flash){
-        
-
-        if(param == ""){
-            return "redirect:/servicios/editar/{id}";
+        if( StringUtils.isEmpty(param)){
+            return Constantes.REDIRECT_SERVICIOS_EDITAR;
         }
         List<Cliente> clientes = this.clienteService.buscarPorParametro(param);
-        if(clientes.size() > 0){
-            model.addAttribute("titulo", "Servicios");
-            model.addAttribute("clientes", clientes);
-            model.addAttribute("active", "servicios");
-    
+        if(!clientes.isEmpty()){
+            model.addAttribute(Constantes.CLIENTES, clientes);
+            model.addAttribute(Constantes.ACTIVE, Constantes.SERVICIOS);
             this.editarServicio(id, model, flash);
-            
-            
-            return "servicios/form-servicio";
+            return Constantes.TEMPLATE_FORM_SERVICIOS;
         } else {
-            flash.addFlashAttribute("warning", "No se encontró ningún cliente!");
+            flash.addFlashAttribute(Constantes.WARNING, Constantes.MSJ_CLIENTE_NO_ENCONTRADO);
             
-            return "redirect:/servicios/editar/{id}";
+            return Constantes.REDIRECT_SERVICIOS_EDITAR;
         }
-    }  
-    
-
+    }
 }
