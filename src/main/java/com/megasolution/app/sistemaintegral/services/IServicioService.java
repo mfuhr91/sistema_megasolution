@@ -3,6 +3,7 @@ package com.megasolution.app.sistemaintegral.services;
 import java.io.IOException;
 import java.util.List;
 
+import com.megasolution.app.sistemaintegral.models.ServicioModel;
 import com.megasolution.app.sistemaintegral.models.entities.Cliente;
 import com.megasolution.app.sistemaintegral.utils.Estado;
 import com.megasolution.app.sistemaintegral.models.entities.Sector;
@@ -34,9 +35,11 @@ public interface IServicioService {
 
     public List<Servicio> buscarPorServicioConClienteId(Integer id);
 
-    public List<Servicio> buscarPorEstadoPorCliente(Estado estado, Integer clienteId);
+    public List<Servicio> buscarPorEstadoPorCliente(Estado estado, Cliente cliente);
 
     public void recuperarEstadoTerminado(Servicio servicio);
+
+    void almacenarSectorAnterior(Sector sector);
 
     public Servicio buscarServicioPorSector(Integer id);
 
@@ -50,10 +53,13 @@ public interface IServicioService {
 
     public void enviarMail(Servicio servicio);
 
-    public Model enviarModelo(Cliente cliente, List<Sector> sectores, List<Estado> estados, Sector sector, Servicio servicio, Model model);
+    public Model enviarModelo(ServicioModel servicioModel, Model model);
 
     public List<Servicio> buscarPorParamEstado(String param, String estado);
 
-    public Servicio asignarSector(Servicio servicio, Sector sector);
-    
+    public void asignarSector(Servicio servicio, Sector sector);
+
+    public Model listarSegunClienteEstado(Integer id, Estado estado, Model model);
+
+    public Model listarSegunEstado(Cliente cliente, Estado estado, Model model);
 }

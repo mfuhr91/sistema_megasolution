@@ -10,28 +10,28 @@
   <div class="container-fluid my-4 pb-3 animate__animated animate__fadeIn">
     <ul class="nav nav-pills nav-fill">
       <li class="nav-item">
-        <a th:class="${#strings.equals(pill_activo, 'todos')} ? 'nav-link active' : 'nav-link'" 
-        th:href="@{/servicios}">TODOS</a>
+        <a th:class="${#strings.equals(pill_activo, 'todos')} ? 'nav-link active' : 'nav-link'"
+           th:href="${id} ? '/servicios/cliente/' + ${id} : '/servicios'">TODOS</a>
       </li>
       <li class="nav-item">
-        <a th:class="${#strings.equals(pill_activo, 'pendiente')} ? 'nav-link active' : 'nav-link'"  
-        th:href="@{/servicios/pendiente}">PENDIENTE</a>
+        <a th:class="${#strings.equals(pill_activo, 'pendiente')} ? 'nav-link active' : 'nav-link'"
+           th:href="${id} ? '/servicios/pendiente/cliente/' + ${id} : '/servicios/pendiente'">PENDIENTE</a>
       </li>
       <li class="nav-item ">
-        <a th:class="${#strings.equals(pill_activo, 'en_proceso')} ? 'nav-link active' : 'nav-link'" 
-        th:href="@{/servicios/en-proceso}">EN PROCESO</a>
+        <a th:class="${#strings.equals(pill_activo, 'en-proceso')} ? 'nav-link active' : 'nav-link'"
+           th:href="${id} ? '/servicios/en-proceso/cliente/' + ${id} : '/servicios/en-proceso'">EN PROCESO</a>
       </li>
       <li class="nav-item ">
         <a th:class="${#strings.equals(pill_activo, 'terminado')} ? 'nav-link active' : 'nav-link'"  
-        th:href="@{/servicios/terminado}">TERMINADO</a>
+        th:href="${id} ? '/servicios/terminado/cliente/' + ${id} : '/servicios/terminado'">TERMINADO</a>
       </li>
       <li class="nav-item ">
-        <a th:class="${#strings.equals(pill_activo, 'entregado')} ? 'nav-link active' : 'nav-link'"  
-        th:href="@{/servicios/entregado}">ENTREGADO</a>
+        <a th:class="${#strings.equals(pill_activo, 'entregado')} ? 'nav-link active' : 'nav-link'"
+        th:href="${id} ? '/servicios/entregado/cliente/' + ${id} : '/servicios/entregado'">ENTREGADO</a>
       </li>
       <li class="nav-item ">
-        <a th:class="${#strings.equals(pill_activo, 'guardado')} ? 'nav-link active' : 'nav-link'"  
-        th:href="@{/servicios/guardado}">GUARDADO</a>
+        <a th:class="${#strings.equals(pill_activo, 'guardado')} ? 'nav-link active' : 'nav-link'"
+           th:href="${id} ? '/servicios/guardado/cliente/' + ${id} : '/servicios/guardado'">GUARDADO</a>
       </li>
     </ul>
 
@@ -42,7 +42,7 @@
       <form th:case="'pendiente'" id="formBuscador" th:action="@{/servicios/buscar/pendiente}" method="POST">
         <input th:name="param" type="text" class="form-control col-sm-2 my-3 float-left buscador" placeholder="Buscar pendientes">
       </form>
-      <form th:case="'en_proceso'" id="formBuscador" th:action="@{/servicios/buscar/en_proceso}" method="POST">
+      <form th:case="'en-proceso'" id="formBuscador" th:action="@{/servicios/buscar/en-proceso}" method="POST">
         <input th:name="param" type="text" class="form-control col-sm-2 my-3 float-left buscador" placeholder="Buscar en proceso">
       </form>
       <form th:case="'terminado'" id="formBuscador" th:action="@{/servicios/buscar/terminado}" method="POST">
@@ -55,8 +55,7 @@
         <input th:name="param" type="text" class="form-control col-sm-2 my-3 float-left buscador" placeholder="Buscar guardados">
       </form>
     </div>
-    <!-- <input type="text" class="form-control col-sm-2 my-3 float-left buscador" placeholder="Buscar"> -->
-    <a th:href="@{/servicios/nuevo}" class="btn btn-primary my-3 float-right mx-2"><strong>Agregar</strong></a>
+    <a th:href="${id} ? '/servicios/nuevo/cliente/' + ${id} : '/servicios/nuevo'" class="btn btn-primary my-3 float-right mx-2"><strong>Agregar</strong></a>
     <a th:href="@{/servicios/todos}" class="btn btn-success my-3 float-right mx-2"><strong>Todos</strong></a>
     <table class="table table-striped table-hover table-bordered text-center">
       <thead class="thead-dark text-light">

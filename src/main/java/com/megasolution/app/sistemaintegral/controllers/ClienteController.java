@@ -32,16 +32,7 @@ public class ClienteController {
     @Autowired
     private IClienteService clienteService;
 
- /*   @Autowired
-    private ILocalidadService localidadService;
-
-    @Autowired
-    private IProvinciaService provinciaService;
-
-    @Autowired
-    private IPaisService paisService;*/
-
-    @GetMapping(Constantes.ROOT)
+    @GetMapping()
     public String listar100(Model model) throws IOException {
         List<Cliente> clientes = clienteService.buscar100();
         ClienteModel clienteModel = new ClienteModel(clientes);

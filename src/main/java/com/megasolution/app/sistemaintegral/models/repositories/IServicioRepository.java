@@ -2,6 +2,7 @@ package com.megasolution.app.sistemaintegral.models.repositories;
 
 import java.util.List;
 
+import com.megasolution.app.sistemaintegral.models.entities.Cliente;
 import com.megasolution.app.sistemaintegral.models.entities.Servicio;
 
 import com.megasolution.app.sistemaintegral.utils.Estado;
@@ -32,8 +33,9 @@ public interface IServicioRepository extends JpaRepository<Servicio, Integer>{
     @Query(value = "SELECT * FROM servicios WHERE cliente_id = ?1 ORDER BY fecha_ingreso ASC", nativeQuery = true)
     public List<Servicio> findByServicioWithClienteId(Integer id);
 
-    @Query(value = "SELECT * FROM servicios WHERE estado = ?1 AND cliente_id = ?2 ORDER BY fecha_ingreso ASC", nativeQuery = true)
-    public List<Servicio> findByServicioWithEstadoWithClienteId(Estado estado, Integer clienteId);
+    public List<Servicio> findByEstadoAndClienteOrderByFechaIngresoAsc(Estado estado, Cliente cliente);
+
+    public List<Servicio> findByEstadoAndClienteOrderByFechaIngresoDesc(Estado estado, Cliente cliente);
 
     @Query(value = "SELECT * FROM servicios WHERE sector_id = ?1", nativeQuery = true)
     public Servicio buscarServicioPorSector(Integer id);
