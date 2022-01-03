@@ -6,12 +6,15 @@ import com.megasolution.app.sistemaintegral.models.respuestaJson.RespuestaJson;
 import com.megasolution.app.sistemaintegral.utils.Constantes;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
+import org.apache.tomcat.util.http.fileupload.FileUtils;
+import org.apache.tomcat.util.http.fileupload.IOUtils;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.io.InputStream;
+import java.lang.module.Configuration;
+import java.nio.file.StandardCopyOption;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
@@ -54,9 +57,21 @@ public enum Provincias {
     public static List<Localidad> getCiudadesDeProvincia(String provincia) throws IOException {
 
         final ObjectMapper JSON_MAPPER = new ObjectMapper();
-        Resource file = new ClassPathResource(Constantes.LOCALIDADES_JSON);
-        RespuestaJson respuestaJson = JSON_MAPPER.readValue(new File(String.valueOf(file.getFile())), RespuestaJson.class);
+       /* Resource file = new ClassPathResource(Constantes.LOCALIDADES_JSON);
 
+        RespuestaJson respuestaJson = JSON_MAPPER.readValue(new File(String.valueOf(file.getFile())), RespuestaJson.class);*/
+
+        InputStream initialStream = new FileInputStream(System.getenv("HOME").concat("/").concat(Constantes.LOCALIDADES_JSON));
+        File targetFile = new File(Constantes.LOCALIDADES_JSON);
+
+        java.nio.file.Files.copy(
+                initialStream,
+                targetFile.toPath(),
+                StandardCopyOption.REPLACE_EXISTING);
+
+        IOUtils.closeQuietly(initialStream);
+
+        RespuestaJson respuestaJson = JSON_MAPPER.readValue(new File(targetFile.getPath()), RespuestaJson.class);
         List<Localidad> localidades = Arrays.stream(respuestaJson.getLocalidades())
                 .filter(ciudad -> ciudad.getProvincia().getNombre().toLowerCase().contains(provincia.toLowerCase())).collect(Collectors.toList());
 
