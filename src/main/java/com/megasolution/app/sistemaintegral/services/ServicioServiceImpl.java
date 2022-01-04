@@ -22,9 +22,7 @@ import javax.mail.MessagingException;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -104,7 +102,7 @@ public class ServicioServiceImpl implements IServicioService {
     }
 
     public void recuperarEstadoTerminado(Servicio servicio){
-        if(servicio.getEstado().equals(Estado.ENTREGADO)){
+        if(servicio.getEstado().equals(Estado.ENTREGADO) || servicio.getEstado().equals(Estado.TERMINADO)){
             servicio.setFechaTerminado(LocalDateTime.now());
          }else{
              servicio.setFechaTerminado(null);
@@ -157,9 +155,9 @@ public class ServicioServiceImpl implements IServicioService {
     public List<Servicio> buscarPorParametro(String param, String estado) {
         param = param.toLowerCase();
         String[] params = param.split(" ");
-        List<Servicio> servicios = new ArrayList<>();
+        Set<Servicio> servicios = new LinkedHashSet<>();
         Arrays.stream(params).forEach( prm -> servicios.addAll(this.servicioRepo.findByParam(prm, estado)) );
-        return servicios;
+        return List.copyOf(servicios);
     }
 
     @Override
