@@ -44,6 +44,9 @@
 
 <body>
     <section>
+        <div style="margin-top:20px; margin: auto; width: 300px;">
+            <img style="background-color: white; width: 300px;" th:src="|cid:imagen|" width="300" alt="megasolution-logo"/>
+        </div>
         <p>
             ¡Hola <span th:text="${razonSocial}"></span>!
         </p>
@@ -57,6 +60,10 @@
                 <strong>Click para calificarnos</strong>
             </div>
         </a>
+
+        <p>
+            <em>Por favor no responder a este correo, ya que fue generado automáticamente.</em>
+        </p>
         <div class="contactos">
             <a href="https://g.page/megasolutionush" target="_blank">
                 <div style="float: left; margin-right: 5px;">
@@ -89,9 +96,7 @@
 
         </div>
         <div class="clearfix"></div>
-        <div style="margin-top:20px; width: 300;">
-            <img style="background-color: white; width: 300px;" th:src="|cid:imagen|" width="300" alt="megasolution-logo"/>
-        </div>
+
     </section>
 </body>
 

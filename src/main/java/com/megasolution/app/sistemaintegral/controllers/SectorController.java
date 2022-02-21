@@ -1,38 +1,33 @@
 package com.megasolution.app.sistemaintegral.controllers;
 
-import java.util.List;
-
-import javax.validation.Valid;
-
 import com.megasolution.app.sistemaintegral.models.entities.Sector;
 import com.megasolution.app.sistemaintegral.models.entities.Servicio;
-import com.megasolution.app.sistemaintegral.services.ISectorService;
-import com.megasolution.app.sistemaintegral.services.IServicioService;
-
-import org.springframework.beans.factory.annotation.Autowired;
+import com.megasolution.app.sistemaintegral.services.SectorService;
+import com.megasolution.app.sistemaintegral.services.ServicioService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import javax.validation.Valid;
+import java.util.List;
 
 
 @Controller
 @SessionAttributes("sector")
 @RequestMapping("/sectores")
 public class SectorController {
-    
-    @Autowired
-    private ISectorService sectorService;
 
-    @Autowired
-    private IServicioService servicioService;
+    private SectorService sectorService;
+
+    private ServicioService servicioService;
+
+    public SectorController(SectorService sectorService, ServicioService servicioService) {
+        this.sectorService = sectorService;
+        this.servicioService = servicioService;
+    }
 
     @GetMapping("")
     public String listarSectores(Model model){

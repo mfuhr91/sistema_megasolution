@@ -33,9 +33,6 @@ public class Mail implements Serializable {
     @JoinColumn(name = "servicio_id")
     private Servicio servicio;
 
-    @Enumerated(value = EnumType.STRING)
-    private Estado estado;
-
     @ManyToOne
     @JoinColumn(name = "cliente_id")
     private Cliente cliente;

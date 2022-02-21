@@ -48,8 +48,8 @@ public class ImprimirServicio extends AbstractPdfView {
         + servicio.getCliente().getRazonSocial() 
         + ".pdf");
         
-        URL urlFont = this.getClass().getResource("/static/css/fonts/titilium.ttf");
-        String FONT = urlFont.toString();
+       /* URL urlFont = this.getClass().getResource("/static/css/fonts/titilium.ttf");*/
+        String FONT = "Verdana";
 
         URL url = this.getClass().getResource("/static/img/header_mega.jpg");
         Image imagen = Image.getInstance(url);
@@ -84,8 +84,8 @@ public class ImprimirServicio extends AbstractPdfView {
         
 
         // 1ra FILA
-        Phrase tituloCliente = new Phrase("Cliente:", FontFactory.getFont(FONT,12, Font.BOLD));
-        Phrase cliente = new Phrase(servicio.getCliente().getDniCuit() + " - " + servicio.getCliente().getRazonSocial(),FontFactory.getFont(FONT));
+        Phrase tituloCliente = new Phrase("Cliente:", FontFactory.getFont(FONT,11, Font.BOLD));
+        Phrase cliente = new Phrase(servicio.getCliente().getDniCuit() + " - " + servicio.getCliente().getRazonSocial(),FontFactory.getFont(FONT, 11));
         cel = new PdfPCell();
         cel.addElement(tituloCliente);
         cel.addElement(cliente);
@@ -98,8 +98,8 @@ public class ImprimirServicio extends AbstractPdfView {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm dd/MM/yyyy");
         
-        Phrase tituloFecha = new Phrase("Fecha:", FontFactory.getFont(FONT,12, Font.BOLD));
-        Phrase fecha = new Phrase(servicio.getFechaIngreso().format(formatter),FontFactory.getFont(FONT));
+        Phrase tituloFecha = new Phrase("Fecha:", FontFactory.getFont(FONT,11, Font.BOLD));
+        Phrase fecha = new Phrase(servicio.getFechaIngreso().format(formatter), FontFactory.getFont(FONT, 11));
         cel = new PdfPCell();
         cel.addElement(tituloFecha);
         cel.addElement(fecha);
@@ -118,8 +118,8 @@ public class ImprimirServicio extends AbstractPdfView {
         PdfPTable tabla2 = new PdfPTable(5);
         tabla2.setSpacingBefore(5);
         
-        Phrase tituloEquipo = new Phrase("Equipo:", FontFactory.getFont(FONT,12, Font.BOLD));
-        Phrase equipo = new Phrase("    " + servicio.getEquipo(),FontFactory.getFont(FONT));
+        Phrase tituloEquipo = new Phrase("Equipo:", FontFactory.getFont(FONT,11, Font.BOLD));
+        Phrase equipo = new Phrase("    " + servicio.getEquipo(), FontFactory.getFont(FONT, 11));
         cel = new PdfPCell();
         cel.addElement(tituloEquipo);
         cel.addElement(equipo);
@@ -130,8 +130,8 @@ public class ImprimirServicio extends AbstractPdfView {
         cel.setLeading(5, 1);
         tabla2.addCell(cel);
 
-        Phrase tituloTelefono = new Phrase("Teléfono:", FontFactory.getFont(FONT,12, Font.BOLD));
-        Phrase telefono = new Phrase("    " + servicio.getCliente().getTelefono(),FontFactory.getFont(FONT));
+        Phrase tituloTelefono = new Phrase("Teléfono:", FontFactory.getFont(FONT,11, Font.BOLD));
+        Phrase telefono = new Phrase("    " + servicio.getCliente().getTelefono(),FontFactory.getFont(FONT, 11));
         cel = new PdfPCell();
         cel.addElement(tituloTelefono);
         cel.addElement(telefono);
@@ -148,11 +148,11 @@ public class ImprimirServicio extends AbstractPdfView {
         tabla3.setSpacingBefore(5);
         if(servicio.getBateria()){
             cel = new PdfPCell(new Phrase("Bateria: SI",
-                                    FontFactory.getFont(FONT,12,Font.BOLD)));
+                                    FontFactory.getFont(FONT,11,Font.BOLD)));
             
         }else{
             cel = new PdfPCell(new Phrase("Bateria: NO",
-                                    FontFactory.getFont(FONT,12,Font.BOLD))); 
+                                    FontFactory.getFont(FONT,11,Font.BOLD)));
         }
         cel.setColspan(2);
        
@@ -161,10 +161,10 @@ public class ImprimirServicio extends AbstractPdfView {
         
         if(servicio.getCargador()){
             cel = new PdfPCell(new Phrase("Cargador: SI",
-                                    FontFactory.getFont(FONT,12,Font.BOLD)));
+                                    FontFactory.getFont(FONT,11,Font.BOLD)));
         }else{
             cel = new PdfPCell(new Phrase("Cargador: NO",
-                                    FontFactory.getFont(FONT,12,Font.BOLD)));    
+                                    FontFactory.getFont(FONT,11,Font.BOLD)));
         }
         cel.setColspan(2);
         cel.setPadding(5f);
@@ -178,7 +178,7 @@ public class ImprimirServicio extends AbstractPdfView {
             nombreSector = "Entregado";
         }
         cel = new PdfPCell(new Phrase("Sector: " + nombreSector,
-                                    FontFactory.getFont(FONT,12,Font.BOLD))); 
+                                    FontFactory.getFont(FONT,11,Font.BOLD)));
         cel.setColspan(1);
         cel.setPadding(5f);
         tabla3.addCell(cel);
@@ -187,8 +187,8 @@ public class ImprimirServicio extends AbstractPdfView {
         PdfPTable tabla4 = new PdfPTable(5);
         tabla4.setSpacingBefore(5);
 
-        Phrase tituloProblema = new Phrase("Problema Reportado:", FontFactory.getFont(FONT,12, Font.BOLD));
-        Phrase problema = new Phrase("  " + servicio.getProblemaReportado(),FontFactory.getFont(FONT));
+        Phrase tituloProblema = new Phrase("Problema Reportado:", FontFactory.getFont(FONT,11, Font.BOLD));
+        Phrase problema = new Phrase("  " + servicio.getProblemaReportado(), FontFactory.getFont(FONT,10));
         cel = new PdfPCell();
         cel.addElement(tituloProblema);
         cel.addElement(problema);
@@ -205,8 +205,8 @@ public class ImprimirServicio extends AbstractPdfView {
         PdfPTable tabla5 = new PdfPTable(5);
         tabla5.setSpacingBefore(5);
         
-        Phrase tituloObservaciones = new Phrase("Observaciones:", FontFactory.getFont(FONT,12, Font.BOLD));
-        Phrase observaciones = new Phrase("  " + servicio.getObservaciones(),FontFactory.getFont(FONT));
+        Phrase tituloObservaciones = new Phrase("Observaciones:", FontFactory.getFont(FONT,11, Font.BOLD));
+        Phrase observaciones = new Phrase("  " + servicio.getObservaciones(),FontFactory.getFont(FONT, 10));
         cel = new PdfPCell();
         cel.addElement(tituloObservaciones);
         cel.addElement(observaciones);
@@ -234,7 +234,7 @@ public class ImprimirServicio extends AbstractPdfView {
         cel.setBorder(Rectangle.NO_BORDER);
         tabla6.addCell(cel);
         
-        cel = new PdfPCell(new Phrase("Firma:",FontFactory.getFont(FONT,12, Font.BOLD)));
+        cel = new PdfPCell(new Phrase("Firma:", FontFactory.getFont(FONT,11, Font.BOLD)));
         cel.setColspan(2);
         cel.setPadding(8f);
         cel.setLeading(2, 1);

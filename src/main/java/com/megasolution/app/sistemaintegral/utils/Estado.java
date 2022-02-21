@@ -19,16 +19,14 @@ public enum Estado {
     EN_PROCESO("En Proceso","EN_PROCESO"),
     TERMINADO("Terminado","TERMINADO"),
     ENTREGADO("Entregado","ENTREGADO"),
-    GUARDADO("Guardado","GUARDADO"),
-    ENVIADO("Enviado","ENVIADO"),
-    NO_ENVIADO("No Enviado","NO_ENVIADO");
+    GUARDADO("Guardado","GUARDADO");
 
     private String nombre;
     private String valor;
 
     public static List<Estado> getEstadosServicios(){
         return Arrays.stream(Estado.values())
-                .filter(estado -> !estado.equals(Estado.ENVIADO) && !estado.equals(Estado.NO_ENVIADO))
+                /*.filter(estado -> !estado.equals(Estado.ENVIADO) && !estado.equals(Estado.NO_ENVIADO))*/
                 .collect(Collectors.toList());
     }
 }

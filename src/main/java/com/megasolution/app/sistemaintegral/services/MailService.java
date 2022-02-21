@@ -1,71 +1,66 @@
 package com.megasolution.app.sistemaintegral.services;
 
-import java.io.IOException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.temporal.TemporalAmount;
-import java.util.List;
-
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
-
 import com.lowagie.text.BadElementException;
 import com.megasolution.app.sistemaintegral.models.entities.Cliente;
 import com.megasolution.app.sistemaintegral.models.entities.Mail;
 import com.megasolution.app.sistemaintegral.models.entities.Servicio;
 import com.megasolution.app.sistemaintegral.models.repositories.IMailRepository;
-
 import com.megasolution.app.sistemaintegral.utils.Estado;
 import com.megasolution.app.sistemaintegral.utils.TipoMail;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
-@Service
-public class MailServiceImpl implements IMailService {
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
 
-    @Autowired
+@Service
+@EnableScheduling
+public class MailService {
+
+    private final Logger LOG = LoggerFactory.getLogger(MailService.class);
+
     private IMailRepository mailRepo;
-    
-    private final Logger LOG = LoggerFactory.getLogger(MailServiceImpl.class);
 
     //Importante hacer la inyección de dependencia de JavaMailSender:
-    @Autowired
     private JavaMailSender emailSender;
 
     private TemplateEngine templateEngine;
 
     private String asunto;
 
+    @Value("${spring.mail.username}")
     private String remitente;
 
     private Mail mail;
 
-    @Autowired
-    public MailServiceImpl(TemplateEngine templateEngine) {
+    public MailService(IMailRepository mailRepo, JavaMailSender emailSender, TemplateEngine templateEngine) {
+        this.mailRepo = mailRepo;
+        this.emailSender = emailSender;
         this.templateEngine = templateEngine;
     }
 
-
-    @Override
     public void enviarMail(String destinatario, String contenido) throws MessagingException {
-        
-       
+
         MimeMessage message = emailSender.createMimeMessage();
         MimeMessageHelper helper = null;
         try {
             helper = new MimeMessageHelper(message, true);
-
             
             helper.setFrom(remitente);
             helper.setTo(destinatario);
@@ -91,7 +86,6 @@ public class MailServiceImpl implements IMailService {
 
     public String crearContenidoServicioTerminado( Cliente cliente, Servicio servicio ) throws MessagingException, BadElementException, IOException {
 
-        this.remitente = "serviciotecnico@megasolution.com.ar";
         this.asunto = "¡Equipo terminado y listo para ser retirado! - Equipo de MegaSolution";
 
         Context context = new Context();
@@ -111,12 +105,11 @@ public class MailServiceImpl implements IMailService {
 
         // Envío informacion del cliente al html del correo determinado
         String contenido = crearContenidoServicioTerminado(cliente, servicio);
-
+        LOG.info("enviando mail del cliente: {} , del tipo: {}", mail.getCliente().getRazonSocial(), mail.getTipoMail().getTipo());
         enviarMail(cliente.getEmail(), contenido);
     }
 
     public String crearContenidoValoracion(Cliente cliente) {
-        this.remitente = "serviciotecnico@megasolution.com.ar";
         this.asunto = "¡Valoramos tu opinión! - Equipo de MegaSolution";
 
         Context context = new Context();
@@ -132,7 +125,7 @@ public class MailServiceImpl implements IMailService {
 
         // Envío informacion del cliente al html del correo determinado
         String contenido = crearContenidoValoracion(cliente);
-
+        LOG.info("enviando mail del cliente: {} , del tipo: {}", mail.getCliente().getRazonSocial(), mail.getTipoMail().getTipo());
         enviarMail(cliente.getEmail(), contenido);
     }
 
@@ -140,10 +133,8 @@ public class MailServiceImpl implements IMailService {
     private void crearMail( Cliente cliente, TipoMail tipoMail ){
         this.mail.setTipoMail(tipoMail);
         this.mail.setCliente(cliente);
-        this.mail.setEstado(Estado.NO_ENVIADO);
     }
 
-    @Override
     public void crearMail(Cliente cliente, Servicio servicio, TipoMail tipoMail ){
         List<Mail> list;
         if( tipoMail.equals(TipoMail.SERVICIO_TERMINADO)) {
@@ -164,43 +155,55 @@ public class MailServiceImpl implements IMailService {
         }
         this.guardar(this.mail);
     }
-    @Override
+
     public void guardar(Mail mail) {
+        LOG.info("guardando mail del cliente: {} , del tipo: {}", mail.getCliente().getRazonSocial(), mail.getTipoMail().getTipo());
         this.mailRepo.save(mail);
+        LOG.info("mail guardado!");
     }
 
-    @Override
     public void eliminar(Mail mail) {
+        LOG.info("eliminando mail del cliente: {} , del tipo: {}", mail.getCliente().getRazonSocial(), mail.getTipoMail().getTipo());
         this.mailRepo.delete(mail);
+        LOG.info("mail eliminado!");
     }
-    @Override
-    @Scheduled(fixedDelay = 1_800_000)
-    public void enviarMailsNoEnviados(){
 
-        List<Mail> mails = this.mailRepo.findAllByEstado(Estado.NO_ENVIADO);
-        LOG.info("comprobando mails no enviados...");
+    @Scheduled(fixedDelay = 900_000 )
+    public void enviarMailsNoEnviados(){
         LocalDateTime hoy = LocalDateTime.now();
-        mails.forEach(mail -> {
-            this.mail = mail;
-            if ( mail.getTipoMail().equals(TipoMail.SERVICIO_TERMINADO) ) {
-                try {
-                    this.enviarMailServicioTerminado(mail.getServicio());
-                } catch (MessagingException | IOException e) {
-                    LOG.error(e.getMessage());
-                }
-            } else {
-                if( hoy.isAfter(mail.getFecha().plusDays(7)) ){
+        LocalDateTime horaApertura = LocalDateTime.MIN.plusHours(10)
+                .withYear(hoy.getYear())
+                .withMonth(hoy.getMonthValue())
+                .withDayOfMonth(hoy.getDayOfMonth());
+        LocalDateTime horaCierre = LocalDateTime.MIN.plusHours(20)
+                .withYear(hoy.getYear())
+                .withMonth(hoy.getMonthValue())
+                .withDayOfMonth(hoy.getDayOfMonth());
+
+        if ( hoy.isAfter(horaApertura) && hoy.isBefore(horaCierre) ) {
+            List<Mail> mails = this.mailRepo.findAll();
+            LOG.info("comprobando mails no enviados...");
+            for (Mail mail : mails) {
+                this.mail = mail;
+                if ( mail.getTipoMail().equals(TipoMail.SERVICIO_TERMINADO) ) {
                     try {
-                        this.enviarMailValoracion(mail.getCliente());
+                        this.enviarMailServicioTerminado(mail.getServicio());
+                        break;
                     } catch (MessagingException | IOException e) {
                         LOG.error(e.getMessage());
                     }
+                } else {
+                    if( hoy.isAfter(mail.getFecha().plusDays(7)) ){
+                        try {
+                            this.enviarMailValoracion(mail.getCliente());
+                            break;
+                        } catch (MessagingException | IOException e) {
+                            LOG.error(e.getMessage());
+                        }
+                    }
                 }
+
             }
-        });
-
+        }
     }
-
-
-
 }

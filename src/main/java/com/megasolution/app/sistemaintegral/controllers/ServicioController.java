@@ -1,37 +1,29 @@
 package com.megasolution.app.sistemaintegral.controllers;
 
-import java.util.List;
-
-import javax.validation.Valid;
-
 import com.megasolution.app.sistemaintegral.models.ServicioModel;
 import com.megasolution.app.sistemaintegral.models.entities.Cliente;
-import com.megasolution.app.sistemaintegral.utils.Constantes;
-import com.megasolution.app.sistemaintegral.utils.Estado;
 import com.megasolution.app.sistemaintegral.models.entities.Sector;
 import com.megasolution.app.sistemaintegral.models.entities.Servicio;
-import com.megasolution.app.sistemaintegral.services.IClienteService;
-import com.megasolution.app.sistemaintegral.services.ISectorService;
-import com.megasolution.app.sistemaintegral.services.IServicioService;
-
+import com.megasolution.app.sistemaintegral.services.ClienteService;
+import com.megasolution.app.sistemaintegral.services.SectorService;
+import com.megasolution.app.sistemaintegral.services.ServicioService;
+import com.megasolution.app.sistemaintegral.utils.Constantes;
+import com.megasolution.app.sistemaintegral.utils.Estado;
 import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Controller
@@ -39,14 +31,17 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @SessionAttributes(Constantes.SERVICIO)
 public class ServicioController {
 
-    @Autowired
-    private IServicioService servicioService;
+    private ServicioService servicioService;
 
-    @Autowired
-    private IClienteService clienteService;
+    private ClienteService clienteService;
 
-    @Autowired
-    private ISectorService sectorService;
+    private SectorService sectorService;
+
+    public ServicioController(ServicioService servicioService, ClienteService clienteService, SectorService sectorService) {
+        this.servicioService = servicioService;
+        this.clienteService = clienteService;
+        this.sectorService = sectorService;
+    }
 
     private final Logger LOG = LoggerFactory.getLogger(ServicioController.class);
 
@@ -287,13 +282,15 @@ public class ServicioController {
 
     @PostMapping(Constantes.BUSCAR_ESTADO)
     public String buscarServicio(@RequestParam String param,@PathVariable String estado, Model model, RedirectAttributes flash){
-        
+
         if(StringUtils.isEmpty(param)){
             return Constantes.REDIRECT_SERVICIOS;
         }
+        param = param.toLowerCase().trim();
         List<Servicio> servicios = this.servicioService.buscarPorParamEstado(param, estado);
         ServicioModel servicioModel = new ServicioModel();
         servicioModel.setServicios(servicios);
+        servicioModel.setEstado(estado);
         if(!servicios.isEmpty()){
             model.addAttribute(this.servicioService.enviarModelo(servicioModel,model));
             return Constantes.TEMPLATE_LISTA_SERVICIOS;

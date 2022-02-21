@@ -1,46 +1,41 @@
 package com.megasolution.app.sistemaintegral.services;
 
-import java.util.List;
-
 import com.megasolution.app.sistemaintegral.models.entities.Usuario;
 import com.megasolution.app.sistemaintegral.models.repositories.IUsuarioRepository;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
-public class UsuarioServiceImpl implements IUsuarioService {
-    
-    @Autowired
+public class UsuarioService {
+
     private IUsuarioRepository usuarioRepo;
-    
-    @Override
+
+    public UsuarioService(IUsuarioRepository usuarioRepo) {
+        this.usuarioRepo = usuarioRepo;
+    }
+
     @Transactional(readOnly = true)
     public List<Usuario> buscarTodos() {
         return usuarioRepo.findAll();
     }
 
-    @Override
     @Transactional(readOnly = true)
     public Usuario buscarPorId(Integer id) {
         return usuarioRepo.findById(id).orElse(null);
     }
-    
-    @Override
+
     @Transactional(readOnly = true)
     public Usuario buscarPorNombreUsuario(String nombreUsuario) {
         return usuarioRepo.findByNombreUsuario(nombreUsuario);
     }
 
-    @Override
     @Transactional
     public void guardar(Usuario usuario) {
         usuarioRepo.save(usuario);
-
     }
 
-    @Override
     @Transactional
     public void eliminar(Integer id) {
         usuarioRepo.deleteById(id);

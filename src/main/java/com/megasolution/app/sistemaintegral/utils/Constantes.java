@@ -99,7 +99,7 @@ public interface Constantes {
 
     String LOCALIDADES_JSON = "localidades.json";
     String PENDIENTE = "pendiente";
-    String EN_PROCESO = "en-proceso";
+    String EN_PROCESO = "en_proceso";
     String TERMINADO = "terminado";
     String ENTREGADO = "entregado";
     String GUARDADO = "guardado";

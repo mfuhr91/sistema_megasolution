@@ -20,9 +20,8 @@ public interface IClienteRepository extends JpaRepository<Cliente, Integer>{
     public List<Cliente> find100();
 
     public Cliente findByDniCuit(Long dniCuit);
-    
-    @Query(value = "SELECT COUNT(*) FROM clientes;", nativeQuery = true)
-    public Integer contarClientes();
+
+    public Integer countAllBy();
 
     @Query(value =  "SELECT * FROM clientes AS c WHERE c.contacto LIKE %:param% " +
                     "OR c.direccion LIKE %:param% OR c.email LIKE %:param% " +

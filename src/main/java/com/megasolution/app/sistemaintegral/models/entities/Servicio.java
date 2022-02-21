@@ -51,11 +51,11 @@ public class Servicio implements Serializable{
     @Column(columnDefinition="text")
     private String solucion;
 
-    @DateTimeFormat(pattern = "HH:mm dd/MM/yyyy")
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     @NotNull
     private LocalDateTime fechaIngreso;
 
-    @DateTimeFormat(pattern = "HH:mm dd/MM/yyyy")
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     private LocalDateTime fechaTerminado;
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -14,8 +14,6 @@ import java.util.List;
 @Repository
 public interface IMailRepository extends JpaRepository<Mail, Long>{
 
-    public List<Mail> findAllByEstado(Estado estado);
-
     public List<Mail> findByTipoMailAndClienteAndServicio(TipoMail tipoMail, Cliente cliente, Servicio servicio );
 
     public List<Mail> findByTipoMailAndCliente(TipoMail tipoMail, Cliente cliente);

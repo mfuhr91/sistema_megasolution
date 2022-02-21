@@ -14,19 +14,19 @@
                 <form id="formBuscador" th:action="@{/clientes/buscar}" method="GET">
                   <input th:name="param" type="text" class="form-control col-sm-2 my-3 float-left buscador" placeholder="Buscar">
                 </form>
-                <a th:href="@{/clientes/nuevo}" class="btn btn-primary my-3 float-right mx-2"><strong>Agregar</strong></a>
-                <a th:href="@{/clientes/todos}" class="btn btn-success my-3 float-right mx-2"><strong>Todos</strong></a>
+                <a th:href="@{/clientes/nuevo}" class="btn btn-primary my-3 float-right mx-2">Agregar</a>
+                <a th:href="@{/clientes/todos}" class="btn btn-success my-3 float-right mx-2">Todos</a>
                 <table class="table table-sm table-striped table-hover table-bordered text-center">
-                    <thead class="thead-dark text-light">
-                        <tr>
-                            <th>DNI - CUIT</th>
-                            <th>RAZON SOCIAL</th>
-                            <th>CONTACTO</th>
-                            <th>TELEFONO</th>
-                            <th>EMAIL</th>
-                            <th>DIRECCION</th>
-                            <th>FECHA DE ALTA</th>
-                            <th class="opciones">OPCIONES</th>
+                    <thead class="text-light">
+                        <tr class="bg-dark">
+                            <td>DNI - CUIT</td>
+                            <td>RAZON SOCIAL</td>
+                            <td>CONTACTO</td>
+                            <td>TELEFONO</td>
+                            <td>EMAIL</td>
+                            <td>DIRECCION</td>
+                            <td>ALTA</td>
+                            <td class="opciones">OPCIONES</td>
                         </tr>
                     </thead>
                     <tbody class="tabla">
