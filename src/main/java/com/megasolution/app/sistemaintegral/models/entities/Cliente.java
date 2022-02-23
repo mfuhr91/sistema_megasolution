@@ -11,6 +11,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -45,9 +46,9 @@ public class Cliente implements Serializable{
 
     private String web;
 
-    @DateTimeFormat(pattern = "HH:mm dd/MM/yyyy")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @NotNull
-    private LocalDateTime fechaAlta;
+    private LocalDate fechaAlta;
 
     private String direccion;
 

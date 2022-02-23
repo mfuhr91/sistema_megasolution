@@ -148,7 +148,7 @@
                             </div>
                             <div class="lista-sectores mb-3 px-2 mx-3 animate__animated animate__fadeIn" style="height: 300px; overflow-y: scroll;">
                                 <a th:href="@{/sectores/nuevo}"
-                                    class="btn btn-primary my-3 float-right"><strong>Agregar</strong></a>
+                                    class="btn btn-primary my-3 float-right">Agregar</a>
                                 <table class="table table-sm text-center">
                                     <thead class="bg-secondary text-light">
                                         <tr>
@@ -228,8 +228,10 @@
                         <div class="form-group">
                             <label for="fechaIngreso" class="col-sm col-form-label">FECHA DE INGRESO</label>
                             <div class="col-sm  mb-3">
-                                <input id="fechaIngreso" type="text" th:field="*{fechaIngreso}" class="form-control"
-                                    placeholder="HH:MM DD/MM/AAAA" th:errorclass="'form-control alert-danger'">
+                                <input id="fechaIngreso" type="datetime-local"
+                                       th:min="${unMesAntes}" th:max="${hoy}"
+                                       th:field="*{fechaIngreso}" class="form-control"
+                                       th:errorclass="'form-control alert-danger'">
                                 <small class="form-text text-danger" th:if="${#fields.hasErrors('fechaIngreso')}"
                                     th:errors="*{fechaIngreso}"></small>
                             </div>
@@ -237,8 +239,9 @@
                         <div class="form-group">
                             <label for="fechaTerminado" class="col-sm col-form-label">FECHA DE FINALIZACIÓN</label>
                             <div class="col-sm  mb-3">
-                                <input id="fechaTerminado" type="text" th:field="*{fechaTerminado}" class="form-control"
-                                    placeholder="HH:MM DD/MM/AAAA">
+                                <input id="fechaTerminado" type="datetime-local"
+                                       min="1900-01-01T00:00" max="2050-12-31T23:59"
+                                       th:field="*{fechaTerminado}" class="form-control">
                                 <small class="form-text text-danger" th:if="${#fields.hasErrors('fechaTerminado')}"
                                     th:errors="*{fechaTerminado}"></small>
                             </div>

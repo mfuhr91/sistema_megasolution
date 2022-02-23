@@ -100,7 +100,9 @@
                         <div class="form-group">
                             <label for="fechaAlta" class="col-sm col-form-label">FECHA DE ALTA</label>
                             <div class="col-sm  mb-3">
-                                <input id="fechaAlta" type="text" th:field="*{fechaAlta}" class="form-control"  placeholder="HH:MM DD/MM/AAAA" th:errorclass="'form-control alert-danger'">
+                                <input id="fechaAlta" type="date" th:field="*{fechaAlta}"
+                                       th:min="${unMesAntes}" th:max="${hoy}"
+                                       class="form-control" th:errorclass="'form-control alert-danger'">
                                 <small class="form-text text-danger" th:if="${#fields.hasErrors('fechaAlta')}" th:errors="*{fechaAlta}"></small>
                             </div>
                         </div>

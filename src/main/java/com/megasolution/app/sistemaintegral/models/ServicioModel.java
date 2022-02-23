@@ -18,6 +18,7 @@ public class ServicioModel {
     private Cliente cliente;
     private List<Estado> estados;
     private Servicio servicio;
+    private String estado;
 
     public ServicioModel(Servicio servicio, Cliente cliente) {
         this.servicio = servicio;

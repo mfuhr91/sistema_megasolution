@@ -22,4 +22,6 @@ public interface ISectorRepository extends JpaRepository<Sector, Integer>{
 
     @Query(value = "SELECT * FROM sectores AS s WHERE s.nombre LIKE %:param%", nativeQuery = true)
     public List<Sector> findByParam(@Param("param") String param);
+
+    public Integer countAllBy();
 }

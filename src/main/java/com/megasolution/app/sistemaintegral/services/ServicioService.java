@@ -11,7 +11,6 @@ import com.megasolution.app.sistemaintegral.utils.Estado;
 import com.megasolution.app.sistemaintegral.utils.TipoMail;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,48 +21,50 @@ import javax.mail.MessagingException;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.*;
+import java.util.Arrays;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 
 @Service
-public class ServicioServiceImpl implements IServicioService {
+public class ServicioService {
 
-    @Autowired
-    private IServicioRepository servicioRepo;
-
-    @Autowired
-    private IClienteService clienteService;
-
-    @Autowired
-    private IMailService mailService;
-
-    @Autowired
-    private ISectorService sectorService;
+    private final Logger LOG = LoggerFactory.getLogger(ServicioService.class);
 
     Sector sector = null;
 
-    private final Logger LOG = LoggerFactory.getLogger(ServicioServiceImpl.class);
+    private IServicioRepository servicioRepo;
 
-    @Override
+    private ClienteService clienteService;
+
+    private MailService mailService;
+
+    private SectorService sectorService;
+
+    public ServicioService(IServicioRepository servicioRepo, ClienteService clienteService, MailService mailService, SectorService sectorService) {
+        this.servicioRepo = servicioRepo;
+        this.clienteService = clienteService;
+        this.mailService = mailService;
+        this.sectorService = sectorService;
+    }
+
     @Transactional(readOnly = true)
     public List<Servicio> buscarTodos() {
         return servicioRepo.findByOrderByFechaIngresoDesc();
     }
 
-    @Override
     @Transactional(readOnly = true)
     public Servicio buscarPorId(Integer id) {
         return servicioRepo.findById(id).orElse(null);
     }
 
-    @Override
     @Transactional(readOnly = true)
     public Integer contarServicios() {
-        return servicioRepo.contarServicios();
+        return servicioRepo.countAllBy();
     }
 
-    @Override
     @Transactional(readOnly = true)
     public List<Servicio> buscarPorEstadoServicio(Estado estado) {
         if( estado.equals(Estado.PENDIENTE) || estado.equals(Estado.EN_PROCESO)) {
@@ -72,27 +73,23 @@ public class ServicioServiceImpl implements IServicioService {
         return servicioRepo.findByEstadoOrderByFechaIngresoDesc(estado);
     }
 
-    @Override
     @Transactional
     public void guardar(Servicio servicio) {
         LOG.info("servicio guardado!");
         servicioRepo.save(servicio);
     }
 
-    @Override
     @Transactional
     public void eliminar(Integer id) {
         LOG.info("servicio eliminado!");
         servicioRepo.deleteById(id);
     }
 
-    @Override
     @Transactional(readOnly = true)
     public List<Servicio> buscarPorServicioConClienteId(Integer id) {
       return servicioRepo.findByServicioWithClienteId(id);
     }
 
-    @Override
     @Transactional(readOnly = true)
     public List<Servicio> buscarPorEstadoPorCliente(Estado estado, Cliente cliente) {
         if( estado.equals(Estado.PENDIENTE) || estado.equals(Estado.EN_PROCESO)) {
@@ -109,13 +106,11 @@ public class ServicioServiceImpl implements IServicioService {
          }
     }
 
-    @Override
     @Transactional(readOnly = true)
     public Servicio buscarServicioPorSector(Integer id) {
         return servicioRepo.buscarServicioPorSector(id);
     }
 
-    @Override
     @Transactional(readOnly = true)
     public Integer buscarServiciosDeHoy(String fechaHoy) {
         return servicioRepo.buscarServiciosDeHoy(fechaHoy);
@@ -144,29 +139,33 @@ public class ServicioServiceImpl implements IServicioService {
 
     }
 
-    @Override
     @Transactional(readOnly = true)
     public List<Servicio> buscarPorEstadoServicioMonitor(Estado estado) {
         return servicioRepo.findByEstadoServicioMonitor(estado.getValor());
     }
 
-    @Override
     @Transactional(readOnly = true)
     public List<Servicio> buscarPorParametro(String param, String estado) {
         param = param.toLowerCase();
         String[] params = param.split(" ");
         Set<Servicio> servicios = new LinkedHashSet<>();
         Arrays.stream(params).forEach( prm -> servicios.addAll(this.servicioRepo.findByParam(prm, estado)) );
-        return List.copyOf(servicios);
+        Set<Servicio> resultados = new LinkedHashSet<>();
+
+        for (Servicio servicio: servicios) {
+            if ( servicio.getCliente().getRazonSocial().toLowerCase().contains(param) ) {
+                resultados.add(servicio);
+            }
+        }
+        resultados.addAll(servicios);
+        return List.copyOf(resultados);
     }
 
-    @Override
     @Transactional(readOnly = true)
     public List<Servicio> buscar50Ultimos() {
        return this.servicioRepo.findLast50();
     }
 
-    @Override
     public Model validarForm(Servicio servicio, Model model){
         if( !ObjectUtils.isEmpty(servicio) ){
             validarSolucion(servicio, model);
@@ -199,7 +198,6 @@ public class ServicioServiceImpl implements IServicioService {
         }
     }
 
-    @Override
     public void asignarSector(Servicio servicio, Sector sectorNuevo){
         Sector sectorAnterior = this.sector;
         liberarSectorAnterior(sectorAnterior, sectorNuevo);
@@ -225,12 +223,10 @@ public class ServicioServiceImpl implements IServicioService {
         this.sector = null;
     }
 
-    @Override
     public void almacenarSectorAnterior(Sector sector) {
         this.sector = sector;
     }
 
-    @Override
     public void enviarMail(Servicio servicio){
         if (servicio.getEstado().equals(Estado.TERMINADO)) {
             try {
@@ -243,14 +239,17 @@ public class ServicioServiceImpl implements IServicioService {
         }
     }
 
-    @Override
     public Model enviarModelo(ServicioModel servicioModel, Model model ){
 
         model.addAttribute(Constantes.ACTIVE, Constantes.SERVICIOS);
         if( servicioModel.getServicios() != null ) {
             model.addAttribute(Constantes.TITULO, Constantes.TITULO_SERVICIOS);
             model.addAttribute(Constantes.SERVICIOS, servicioModel.getServicios());
-            model.addAttribute(Constantes.PILL_ACTIVO, Constantes.TODOS);
+            String pillActivo = Constantes.TODOS;
+            if ( servicioModel.getEstado() != null ) {
+                pillActivo = servicioModel.getEstado();
+            }
+            model.addAttribute(Constantes.PILL_ACTIVO, pillActivo);
             return model;
         }
 
@@ -301,13 +300,18 @@ public class ServicioServiceImpl implements IServicioService {
             }
             recuperarEstadoTerminado(servicioModel.getServicio());
         }
+        LocalDateTime unMesAntes = LocalDateTime.now().minusMonths(1);
+        LocalDateTime hoy = LocalDateTime.now();
+        hoy = hoy.truncatedTo(ChronoUnit.MINUTES);
+        unMesAntes = unMesAntes.truncatedTo(ChronoUnit.MINUTES);
+        model.addAttribute("unMesAntes", unMesAntes);
+        model.addAttribute("hoy", hoy);
         model.addAttribute(Constantes.ESTADOS, servicioModel.getEstados());
         model.addAttribute(Constantes.SECTORES, sectorService.buscarDisponibles());
 
         return model;
     }
 
-    @Override
     public List<Servicio> buscarPorParamEstado(String param, String estado){
         estado = estado.toUpperCase();
         List<Servicio> servicios;
@@ -319,7 +323,6 @@ public class ServicioServiceImpl implements IServicioService {
         return servicios;
     }
 
-    @Override
     public Model listarSegunClienteEstado(Integer id, Estado estado, Model model){
         Cliente cliente = clienteService.buscarPorId(id);
         model.addAttribute(listarSegunEstado(cliente,estado,model));
@@ -327,7 +330,6 @@ public class ServicioServiceImpl implements IServicioService {
     }
 
 
-    @Override
     public Model listarSegunEstado(Cliente cliente, Estado estado, Model model) {
         String pill_activo = Constantes.TODOS;
         StringBuilder logMsj = new StringBuilder("servicios ");

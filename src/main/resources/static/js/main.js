@@ -139,18 +139,22 @@ $(document).ready(() => {
     $('#estado').change(function() {
         let estadoSeleccionado = $(this).children('option:selected').val();
         moment.locale('es');
+        let date = moment().format();
+        let arr = date.toString().split(':',2);
+        let now = arr.join(':')
         if(estadoSeleccionado == "TERMINADO"){
-            $('#fechaTerminado').val(moment().format('HH:mm DD/MM/YYYY'));
+            $('#fechaTerminado').val(now);
             
         }else if(estadoSeleccionado == "ENTREGADO"){
             if(!$('#fechaTerminado').val()){
-                $('#fechaTerminado').val(moment().format('HH:mm DD/MM/YYYY'));
+                $('#fechaTerminado').val(now);
             }else{
                 $('#fechaTerminado').val();
             }
             $('#sector_ver').val('');
 
         } else if (estadoSeleccionado == "GUARDADO"){
+            $('#fechaTerminado').val('');
             $('#sector_ver').val('');
         }else{
             $('#fechaTerminado').val('');

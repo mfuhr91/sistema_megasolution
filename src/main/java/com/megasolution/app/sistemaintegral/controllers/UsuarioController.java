@@ -1,43 +1,37 @@
 package com.megasolution.app.sistemaintegral.controllers;
 
-import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.List;
-
-import javax.validation.Valid;
-
 import com.megasolution.app.sistemaintegral.models.entities.Rol;
 import com.megasolution.app.sistemaintegral.models.entities.Usuario;
-import com.megasolution.app.sistemaintegral.services.IRolService;
-import com.megasolution.app.sistemaintegral.services.IUsuarioService;
-
-import org.springframework.beans.factory.annotation.Autowired;
+import com.megasolution.app.sistemaintegral.services.RolService;
+import com.megasolution.app.sistemaintegral.services.UsuarioService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import javax.validation.Valid;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Controller
 @RequestMapping("/usuarios")
 @SessionAttributes("usuario")
 public class UsuarioController {
-    
-    @Autowired
-    private IUsuarioService usuarioService;
 
-    @Autowired
-    private IRolService rolService;
+    private UsuarioService usuarioService;
 
-    @Autowired
+    private RolService rolService;
+
     private BCryptPasswordEncoder passwordEncoder;
-    
+
+    public UsuarioController(UsuarioService usuarioService, RolService rolService, BCryptPasswordEncoder passwordEncoder) {
+        this.usuarioService = usuarioService;
+        this.rolService = rolService;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     @GetMapping("")
     public String listarUsuarios(Model model){

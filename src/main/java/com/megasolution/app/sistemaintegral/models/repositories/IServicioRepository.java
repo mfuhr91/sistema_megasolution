@@ -27,8 +27,7 @@ public interface IServicioRepository extends JpaRepository<Servicio, Integer>{
     @Query(value = "SELECT * FROM servicios WHERE estado = ?1 ORDER BY observaciones LIKE '%URGENTE%' DESC, fecha_ingreso ASC", nativeQuery = true)
     public List<Servicio> findByEstadoServicioMonitor(String estado);
 
-    @Query(value = "SELECT COUNT(*) FROM servicios", nativeQuery = true)
-    public Integer contarServicios();
+    public Integer countAllBy();
 
     @Query(value = "SELECT * FROM servicios WHERE cliente_id = ?1 ORDER BY fecha_ingreso ASC", nativeQuery = true)
     public List<Servicio> findByServicioWithClienteId(Integer id);
