@@ -276,8 +276,10 @@ public class ServicioService {
             List<Estado> estados = Arrays.stream(Estado.values())
                     .filter(estado -> estado.equals(Estado.PENDIENTE) || estado.equals(Estado.EN_PROCESO))
                     .collect(Collectors.toList());
-            servicioModel.getServicio().setCargador(true);
-            servicioModel.getServicio().setBateria(true);
+            if ( ObjectUtils.isEmpty(servicioModel.getServicio().getBateria() ) ) {
+                servicioModel.getServicio().setCargador(true);
+                servicioModel.getServicio().setBateria(true);
+            }
             servicioModel.getServicio().setFechaIngreso(LocalDateTime.now());
             servicioModel.setEstados(estados);
             model.addAttribute(Constantes.SERVICIO, servicioModel.getServicio());
