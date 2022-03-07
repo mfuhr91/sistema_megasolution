@@ -103,8 +103,6 @@ public class ClienteService {
             model.addAttribute(Constantes.TITULO, Constantes.TITULO_EDITAR_CLIENTE);
         }
 
-        LocalDate unMesAntes = LocalDate.now().minusMonths(1);
-        model.addAttribute("unMesAntes", unMesAntes);
         model.addAttribute("hoy", LocalDate.now());
         model.addAttribute(Constantes.CLIENTE, clienteModel.getCliente());
         model.addAttribute(Constantes.LOCALIDADES, clienteModel.getLocalidades());

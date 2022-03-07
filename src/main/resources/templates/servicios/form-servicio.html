@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es" xmlns="http://www.thymeleaf.org">
 
 <head th:replace="plantillas/principal :: head">
@@ -229,7 +230,7 @@
                             <label for="fechaIngreso" class="col-sm col-form-label">FECHA DE INGRESO</label>
                             <div class="col-sm  mb-3">
                                 <input id="fechaIngreso" type="datetime-local"
-                                       th:min="${unMesAntes}" th:max="${hoy}"
+                                       min="1900-01-01T00:00" th:max="${hoy}"
                                        th:field="*{fechaIngreso}" class="form-control"
                                        th:errorclass="'form-control alert-danger'">
                                 <small class="form-text text-danger" th:if="${#fields.hasErrors('fechaIngreso')}"

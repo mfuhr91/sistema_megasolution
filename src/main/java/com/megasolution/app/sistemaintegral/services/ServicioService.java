@@ -302,11 +302,8 @@ public class ServicioService {
             }
             recuperarEstadoTerminado(servicioModel.getServicio());
         }
-        LocalDateTime unMesAntes = LocalDateTime.now().minusMonths(1);
         LocalDateTime hoy = LocalDateTime.now();
         hoy = hoy.truncatedTo(ChronoUnit.MINUTES);
-        unMesAntes = unMesAntes.truncatedTo(ChronoUnit.MINUTES);
-        model.addAttribute("unMesAntes", unMesAntes);
         model.addAttribute("hoy", hoy);
         model.addAttribute(Constantes.ESTADOS, servicioModel.getEstados());
         model.addAttribute(Constantes.SECTORES, sectorService.buscarDisponibles());
