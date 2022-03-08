@@ -101,7 +101,7 @@
                             <label for="fechaAlta" class="col-sm col-form-label">FECHA DE ALTA</label>
                             <div class="col-sm  mb-3">
                                 <input id="fechaAlta" type="date" th:field="*{fechaAlta}"
-                                       min="1900-01-01T00:00" th:max="${hoy}"
+                                       min="1900-01-01" th:max="${hoy}"
                                        class="form-control" th:errorclass="'form-control alert-danger'">
                                 <small class="form-text text-danger" th:if="${#fields.hasErrors('fechaAlta')}" th:errors="*{fechaAlta}"></small>
                             </div>
