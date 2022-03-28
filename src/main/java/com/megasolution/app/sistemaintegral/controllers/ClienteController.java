@@ -37,27 +37,27 @@ public class ClienteController {
         List<Cliente> clientes = clienteService.buscar100();
         ClienteModel clienteModel = new ClienteModel(clientes);
         model.addAttribute(this.clienteService.enviarModelo(clienteModel,model));
-        return Constantes.TEMPLATE_LISTA_CLIENTES;
+        return "clientes/lista";
     }
 
-    @GetMapping(Constantes.TODOS)
+    @GetMapping("todos")
     public String listarClientes(Model model) throws IOException {
         List<Cliente> clientes = clienteService.buscarTodos();
         ClienteModel clienteModel = new ClienteModel(clientes);
         model.addAttribute(this.clienteService.enviarModelo(clienteModel,model));
-        return Constantes.TEMPLATE_LISTA_CLIENTES;
+        return "clientes/lista";
     }
 
-    @GetMapping(Constantes.NUEVO)
+    @GetMapping("nuevo")
     public String nuevo(Model model) throws IOException {
         Cliente cliente = new Cliente();
         cliente.setFechaAlta(LocalDate.now());
         ClienteModel clienteModel = new ClienteModel(cliente);
         model.addAttribute(this.clienteService.enviarModelo(clienteModel,model));
-        return Constantes.TEMPLATE_FORM_CLIENTES;
+        return "clientes/form-cliente";
     }
 
-    @PostMapping(Constantes.GUARDAR)
+    @PostMapping("guardar")
     public String guardar(@Valid Cliente cliente, BindingResult result, 
                             RedirectAttributes flash, Model model, SessionStatus status) throws IOException {
         ClienteModel clienteModel = new ClienteModel(cliente);
@@ -68,17 +68,17 @@ public class ClienteController {
                                             && !clienteBuscado.getId().equals(cliente.getId())){
                     model.addAttribute(clienteService.enviarModelo(clienteModel, model));
                     model.addAttribute(clienteService.enviarModeloErrorDniCuit(clienteModel, model));
-                    return Constantes.TEMPLATE_FORM_CLIENTES;
+                    return "clientes/form-cliente";
                 }
             }
         }
         if(cliente.getId() == null && clienteService.buscarPorDniCuit(cliente.getDniCuit()) != null){
             model.addAttribute(clienteService.enviarModelo(clienteModel, model));
             model.addAttribute(clienteService.enviarModeloErrorDniCuit(clienteModel, model));
-            return Constantes.TEMPLATE_FORM_CLIENTES;
+            return "clientes/form-cliente";
         }
         if(result.hasErrors()){
-            return Constantes.TEMPLATE_FORM_CLIENTES;
+            return "clientes/form-cliente";
         }
         if(cliente.getId() == null){
             clienteService.guardar(cliente);
@@ -93,7 +93,7 @@ public class ClienteController {
         return Constantes.REDIRECT_CLIENTES;
     }
 
-    @GetMapping(Constantes.EDITAR_ID)
+    @GetMapping("editar/{id}")
     public String editar(@PathVariable Integer id, Model model, RedirectAttributes flash) throws IOException {
         if(clienteService.buscarPorId(id) == null){
             flash.addFlashAttribute(Constantes.ERROR, Constantes.MSJ_CLIENTE_NO_EXISTE);
@@ -105,10 +105,10 @@ public class ClienteController {
         }
         ClienteModel clienteModel = new ClienteModel(cliente);
         model.addAttribute(this.clienteService.enviarModelo(clienteModel,model));
-        return Constantes.TEMPLATE_FORM_CLIENTES;
+        return "clientes/form-cliente";
     }
 
-    @GetMapping(Constantes.ELIMINAR_ID)
+    @GetMapping("eliminar/{id}")
     public String eliminar(@PathVariable Integer id, RedirectAttributes flash){
         if(clienteService.buscarPorId(id) == null){
             flash.addFlashAttribute(Constantes.ERROR, Constantes.MSJ_CLIENTE_NO_EXISTE);
@@ -119,7 +119,7 @@ public class ClienteController {
         return Constantes.REDIRECT_CLIENTES;
     }
 
-    @GetMapping(Constantes.BUSCAR)
+    @GetMapping("buscar")
     public String buscarClientes(@RequestParam String param, Model model, RedirectAttributes flash) throws IOException {
         if(StringUtils.isEmpty(param)){
             return Constantes.REDIRECT_CLIENTES;
@@ -128,19 +128,19 @@ public class ClienteController {
         if(!clientes.isEmpty()){
             ClienteModel clienteModel = new ClienteModel(clientes);
             model.addAttribute(this.clienteService.enviarModelo(clienteModel,model));
-            return Constantes.TEMPLATE_LISTA_CLIENTES;
+            return "clientes/lista";
         } else {
             flash.addFlashAttribute(Constantes.WARNING, Constantes.MSJ_CLIENTE_NO_ENCONTRADO);
             return Constantes.REDIRECT_CLIENTES;
         }
     }
 
-    @GetMapping(Constantes.GET_CIUDADES)
+    @GetMapping("get-ciudades/{provincia}")
     public @ResponseBody List<Localidad> getCiudades(@PathVariable String provincia) throws IOException {
         return Provincias.getCiudadesDeProvincia(provincia);
     }
 
-    @GetMapping(Constantes.EDITAR_GET_CIUDADES)
+    @GetMapping("editar/get-ciudades/{provincia}")
     public @ResponseBody List<Localidad> getCiudadesEditar(@PathVariable String provincia) throws IOException {
         return Provincias.getCiudadesDeProvincia(provincia);
     }

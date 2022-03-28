@@ -52,44 +52,44 @@ public class ServicioController {
         servicioModel.setServicios(servicios);
         LOG.info("ultimos 50 servicios listados");
         model.addAttribute(servicioService.enviarModelo(servicioModel, model));
-        return Constantes.TEMPLATE_LISTA_SERVICIOS;
+        return "servicios/lista";
     }
-    @GetMapping(Constantes.TODOS)
+    @GetMapping("todos")
     public String listarServicios(Model model){
         List<Servicio> servicios = servicioService.buscarTodos();
         ServicioModel servicioModel = new ServicioModel();
         servicioModel.setServicios(servicios);
         LOG.info("todos los servicios listados");
         model.addAttribute(servicioService.enviarModelo(servicioModel, model));
-        return Constantes.TEMPLATE_LISTA_SERVICIOS;
+        return "servicios/lista";
     }
 
     @GetMapping(Constantes.PENDIENTE)
     public String listarPendientes(Model model){
         model.addAttribute(this.servicioService.listarSegunEstado(null,Estado.PENDIENTE, model));
-        return Constantes.TEMPLATE_LISTA_SERVICIOS;
+        return "servicios/lista";
     }
     @GetMapping(Constantes.EN_PROCESO)
     public String listarEnProceso(Model model){
         model.addAttribute(this.servicioService.listarSegunEstado(null,Estado.EN_PROCESO, model));
-        return Constantes.TEMPLATE_LISTA_SERVICIOS;
+        return "servicios/lista";
     }
     @GetMapping(Constantes.TERMINADO)
     public String listarTerminado(Model model){
         model.addAttribute(this.servicioService.listarSegunEstado(null,Estado.TERMINADO, model));
-        return Constantes.TEMPLATE_LISTA_SERVICIOS;
+        return "servicios/lista";
     }
     @GetMapping(Constantes.ENTREGADO)
     public String listarEntregado(Model model){
         model.addAttribute(this.servicioService.listarSegunEstado(null,Estado.ENTREGADO, model));
-        return Constantes.TEMPLATE_LISTA_SERVICIOS;
+        return "servicios/lista";
     }
     @GetMapping(Constantes.GUARDADO)
     public String listarGuardado(Model model){
         model.addAttribute(this.servicioService.listarSegunEstado(null,Estado.GUARDADO, model));
-        return Constantes.TEMPLATE_LISTA_SERVICIOS;
+        return "servicios/lista";
     }
-    @GetMapping(Constantes.CLIENTE_ID)
+    @GetMapping("cliente/{id}")
     public String serviciosPorCliente(@PathVariable Integer id,Model model,RedirectAttributes flash) {
         if( ObjectUtils.isEmpty(clienteService.buscarPorId(id)) ){
             LOG.error(Constantes.MSJ_CLIENTE_NO_EXISTE);
@@ -97,30 +97,30 @@ public class ServicioController {
             return Constantes.REDIRECT_CLIENTES;
         }
         model.addAttribute(this.servicioService.listarSegunClienteEstado(id,null, model));
-        return Constantes.TEMPLATE_LISTA_SERVICIOS;
+        return "servicios/lista";
     }
 
-    @GetMapping(Constantes.PENDIENTE_CLIENTE_ID)
-    public String listarPendientesCliente(@PathVariable Integer id,Model model, RedirectAttributes flash){
+    @GetMapping("pendiente/cliente/{id}")
+    public String listarPendientesCliente(@PathVariable Integer id, Model model, RedirectAttributes flash){
         if( ObjectUtils.isEmpty(clienteService.buscarPorId(id)) ){
             LOG.error(Constantes.MSJ_CLIENTE_NO_EXISTE);
             flash.addFlashAttribute(Constantes.ERROR,Constantes.MSJ_CLIENTE_NO_EXISTE);
             return Constantes.REDIRECT_CLIENTES;
         }
         model.addAttribute(this.servicioService.listarSegunClienteEstado(id,Estado.PENDIENTE, model));
-        return Constantes.TEMPLATE_LISTA_SERVICIOS;
+        return "servicios/lista";
     }
-    @GetMapping(Constantes.EN_PROCESO_CLIENTE_ID)
-    public String listarEnProcesoCliente(@PathVariable Integer id,Model model, RedirectAttributes flash){
+    @GetMapping("en-proceso/cliente/{id}")
+    public String listarEnProcesoCliente(@PathVariable Integer id, Model model, RedirectAttributes flash){
         if( ObjectUtils.isEmpty(clienteService.buscarPorId(id)) ){
             LOG.error(Constantes.MSJ_CLIENTE_NO_EXISTE);
             flash.addFlashAttribute(Constantes.ERROR,Constantes.MSJ_CLIENTE_NO_EXISTE);
             return Constantes.REDIRECT_CLIENTES;
         }
         model.addAttribute(this.servicioService.listarSegunClienteEstado(id,Estado.EN_PROCESO, model));
-        return Constantes.TEMPLATE_LISTA_SERVICIOS;
+        return "servicios/lista";
     }
-    @GetMapping(Constantes.TERMINADO_CLIENTE_ID)
+    @GetMapping( "terminado/cliente/{id}")
     public String listarTerminadoCliente(@PathVariable Integer id, Model model, RedirectAttributes flash){
         if( ObjectUtils.isEmpty(clienteService.buscarPorId(id)) ){
             LOG.error(Constantes.MSJ_CLIENTE_NO_EXISTE);
@@ -128,10 +128,10 @@ public class ServicioController {
             return Constantes.REDIRECT_CLIENTES;
         }
         model.addAttribute(this.servicioService.listarSegunClienteEstado(id,Estado.TERMINADO, model));
-        return Constantes.TEMPLATE_LISTA_SERVICIOS;
+        return "servicios/lista";
     }
 
-    @GetMapping(Constantes.ENTREGADO_CLIENTE_ID)
+    @GetMapping("entregado/cliente/{id}")
     public String listarEntregadoCliente(@PathVariable Integer id, Model model, RedirectAttributes flash){
         if( ObjectUtils.isEmpty(clienteService.buscarPorId(id)) ){
             LOG.error(Constantes.MSJ_CLIENTE_NO_EXISTE);
@@ -139,10 +139,10 @@ public class ServicioController {
             return Constantes.REDIRECT_CLIENTES;
         }
         model.addAttribute(this.servicioService.listarSegunClienteEstado(id,Estado.ENTREGADO, model));
-        return Constantes.TEMPLATE_LISTA_SERVICIOS;
+        return "servicios/lista";
     }
 
-    @GetMapping(Constantes.GUARDADO_CLIENTE_ID)
+    @GetMapping("guardado/cliente/{id}")
     public String listarGuardadoCliente(@PathVariable Integer id, Model model, RedirectAttributes flash){
         if( ObjectUtils.isEmpty(clienteService.buscarPorId(id)) ){
             LOG.error(Constantes.MSJ_CLIENTE_NO_EXISTE);
@@ -150,10 +150,10 @@ public class ServicioController {
             return Constantes.REDIRECT_CLIENTES;
         }
         model.addAttribute(this.servicioService.listarSegunClienteEstado(id,Estado.GUARDADO, model));
-        return Constantes.TEMPLATE_LISTA_SERVICIOS;
+        return "servicios/lista";
     }
 
-    @GetMapping(Constantes.EDITAR_ID)
+    @GetMapping("editar/{id}")
     public String editarServicio(@PathVariable Integer id, Model model, RedirectAttributes flash){
         if( ObjectUtils.isEmpty(servicioService.buscarPorId(id)) ){
             LOG.error(Constantes.MSJ_SERVICIO_NO_EXISTE);
@@ -163,17 +163,19 @@ public class ServicioController {
         ServicioModel servicioModel = new ServicioModel();
         if(id > 0){
             Servicio servicio = servicioService.buscarPorId(id);
+            LOG.info("editando {}", servicio);
             Sector sector = (Sector) Hibernate.unproxy(servicio.getSector());
+            LOG.info("sector: {} - del servicio_id: {}", sector != null ? sector.getNombre() : "NA", servicio.getId());
             servicioModel.setServicio(servicio);
             servicioModel.setCliente(servicio.getCliente());
             this.servicioService.almacenarSectorAnterior(sector);
         }
         model.addAttribute(servicioService.enviarModelo(servicioModel, model));
-        return Constantes.TEMPLATE_FORM_SERVICIOS;
+        return "servicios/form-servicio";
     }
     
     // MAPEA A LA CLASE ImprimirServicio.java PARA GENERAR EL PDF
-    @GetMapping(Constantes.IMPRIMIR_SERVICIO_ID)
+    @GetMapping("imprimir/{id}")
     public String imprimirServicio(@PathVariable Integer id, Model model, RedirectAttributes flash){
         if( ObjectUtils.isEmpty(servicioService.buscarPorId(id)) ){
             LOG.error(Constantes.MSJ_SERVICIO_NO_EXISTE);
@@ -184,18 +186,19 @@ public class ServicioController {
             model.addAttribute( Constantes.SERVICIO, servicioService.buscarPorId(id) );
         }
         // debe quedar con el "/servicios/form-servicios" ya que no es una vista html, sino la ruta de un componente clase
-        return Constantes.PATH_CLASE_JAVA_PDF;
+        return "/servicios/form-servicio";
     }
 
-    @GetMapping(Constantes.NUEVO)
+    @GetMapping("nuevo")
     public String nuevoServicio(Model model){
         ServicioModel servicioModel = new ServicioModel();
         servicioModel.setServicio(new Servicio());
+        LOG.info("creando nuevo servicio");
         model.addAttribute(servicioService.enviarModelo(servicioModel,model));
-        return Constantes.TEMPLATE_FORM_SERVICIOS;
+        return "servicios/form-servicio";
     }
 
-    @GetMapping(Constantes.NUEVO_CLIENTE_ID)
+    @GetMapping("nuevo/cliente/{id}")
     public String nuevoServicioCliente(@PathVariable Integer id, Model model, RedirectAttributes flash) {
         if (ObjectUtils.isEmpty(clienteService.buscarPorId(id))) {
             LOG.error(Constantes.MSJ_CLIENTE_NO_EXISTE);
@@ -207,10 +210,10 @@ public class ServicioController {
         servicioModel.setServicio(new Servicio());
         servicioModel.setCliente(cliente);
         model.addAttribute(servicioService.enviarModelo(servicioModel, model));
-        return Constantes.TEMPLATE_FORM_SERVICIOS;
+        return "servicios/form-servicio";
     }
 
-    @PostMapping(Constantes.GUARDAR)
+    @PostMapping("guardar")
     public String guardarServicio(@Valid Servicio servicio, BindingResult result, Model model, SessionStatus status, RedirectAttributes flash){
         Cliente cliente = new Cliente();
         if( !ObjectUtils.isEmpty(servicio.getCliente().getId()) ){
@@ -222,43 +225,40 @@ public class ServicioController {
         if(   !ObjectUtils.isEmpty(model.getAttribute(Constantes.ERROR_SOLUCION))
                 || !ObjectUtils.isEmpty(model.getAttribute(Constantes.ERROR_CLIENTE))
                 || !ObjectUtils.isEmpty(model.getAttribute(Constantes.ERROR_SECTOR))) {
-            return Constantes.TEMPLATE_FORM_SERVICIOS;
+            return "servicios/form-servicio";
         }
         if(result.hasErrors()){
-            return Constantes.TEMPLATE_FORM_SERVICIOS;
+            return "servicios/form-servicio";
         }
-        Sector sectorNuevo =  sectorService.buscarPorId(servicio.getSector().getId());
-        this.servicioService.asignarSector(servicio, sectorNuevo);
+
+        this.servicioService.asignarSector(servicio);
+        servicioService.guardar(servicio);
+        status.setComplete();
+
         if (servicio.getId() != null){
-            sectorService.guardar(sectorNuevo);
-            servicioService.guardar(servicio);
             this.servicioService.enviarMail(servicio);
-            status.setComplete();
             flash.addFlashAttribute(Constantes.SUCCESS, Constantes.MSJ_SERVICIO_ACTUALIZADO);
         }else{
-            try{
-                sectorService.guardar(sectorNuevo);
-                servicioService.guardar(servicio);
-            }catch(Exception e){
-                return Constantes.REDIRECT_SERVICIOS;
-            }
-            status.setComplete();
             flash.addFlashAttribute(Constantes.SUCCESS_IMPRIMIR, Constantes.MSJ_SERVICIO_GUARDADO);
             flash.addFlashAttribute(Constantes.SERVICIO_ID, servicio.getId());
         }
         return Constantes.REDIRECT_SERVICIOS;
     }
 
-    @GetMapping(Constantes.ELIMINAR_ID)
+    @GetMapping("eliminar/{id}")
     public String eliminarServicio(@PathVariable Integer id, RedirectAttributes flash){
         if(servicioService.buscarPorId(id) == null){
             flash.addFlashAttribute(Constantes.ERROR, Constantes.MSJ_SERVICIO_NO_EXISTE);
             return Constantes.REDIRECT_SERVICIOS;
         }
         Servicio servicio = servicioService.buscarPorId(id);
-        if(servicio.getSector() != null){
+
+        if( !ObjectUtils.isEmpty(servicio.getSector())){
             Sector sector = sectorService.buscarPorId(servicio.getSector().getId());
             sector.setDisponible(true);
+            sectorService.guardar(sector);
+            LOG.info("sector {} liberado!", sector.getNombre());
+
         }
         servicioService.eliminar(id);
         flash.addFlashAttribute(Constantes.SUCCESS, Constantes.MSJ_SERVICIO_ELIMINADO);
@@ -266,7 +266,7 @@ public class ServicioController {
 
     }  
 
-    @GetMapping(Constantes.MONITOR)
+    @GetMapping("monitor")
     public String monitor(Model model){
         List<Servicio> serviciosPendientes = servicioService.buscarPorEstadoServicioMonitor(Estado.PENDIENTE);
         List<Servicio> serviciosEnProceso = servicioService.buscarPorEstadoServicioMonitor(Estado.EN_PROCESO);
@@ -277,10 +277,10 @@ public class ServicioController {
         model.addAttribute(Constantes.SERVICIOS_PENDIENTES, serviciosPendientes);
         model.addAttribute(Constantes.SERVICIOS_EN_PROCESO, serviciosEnProceso);
         model.addAttribute(Constantes.TITULO, Constantes.TITULO_VISUALIZADOR_DE_SERVICIOS);
-        return Constantes.TEMPLATE_MONITOR;
+        return "servicios/monitor";
     }
 
-    @PostMapping(Constantes.BUSCAR_ESTADO)
+    @PostMapping("buscar/{estado}")
     public String buscarServicio(@RequestParam String param,@PathVariable String estado, Model model, RedirectAttributes flash){
 
         if(StringUtils.isEmpty(param)){
@@ -293,14 +293,14 @@ public class ServicioController {
         servicioModel.setEstado(estado);
         if(!servicios.isEmpty()){
             model.addAttribute(this.servicioService.enviarModelo(servicioModel,model));
-            return Constantes.TEMPLATE_LISTA_SERVICIOS;
+            return "servicios/lista";
         } else {
             flash.addFlashAttribute(Constantes.WARNING, Constantes.MSJ_SERVICIO_NO_ENCONTRADO);
             return Constantes.REDIRECT_SERVICIOS;
         }
     } 
 
-    @PostMapping(Constantes.BUSCAR_CLIENTES)
+    @PostMapping("/buscar-clientes")
     public String buscarClientesEnServicioNuevo(@RequestParam String param, Model model, RedirectAttributes flash){
         if( StringUtils.isEmpty(param) ){
             return Constantes.REDIRECT_SERVICIOS_NUEVO;
@@ -310,14 +310,14 @@ public class ServicioController {
             model.addAttribute(Constantes.CLIENTES, clientes);
             model.addAttribute(Constantes.ACTIVE, Constantes.SERVICIOS);
             this.nuevoServicio(model);
-            return Constantes.TEMPLATE_FORM_SERVICIOS;
+            return "servicios/form-servicio";
         } else {
             flash.addFlashAttribute(Constantes.WARNING, Constantes.MSJ_CLIENTE_NO_ENCONTRADO);
             
             return Constantes.REDIRECT_SERVICIOS_NUEVO;
         }
     }  
-    @PostMapping(Constantes.BUSCAR_CLIENTES_ID)
+    @PostMapping("buscar-clientes/{id}")
     public String buscarClientesEnServicio(@RequestParam String param, @PathVariable Integer id, Model model, RedirectAttributes flash){
         if( StringUtils.isEmpty(param)){
             return Constantes.REDIRECT_SERVICIOS_EDITAR;
@@ -327,7 +327,7 @@ public class ServicioController {
             model.addAttribute(Constantes.CLIENTES, clientes);
             model.addAttribute(Constantes.ACTIVE, Constantes.SERVICIOS);
             this.editarServicio(id, model, flash);
-            return Constantes.TEMPLATE_FORM_SERVICIOS;
+            return "servicios/form-servicio";
         } else {
             flash.addFlashAttribute(Constantes.WARNING, Constantes.MSJ_CLIENTE_NO_ENCONTRADO);
             

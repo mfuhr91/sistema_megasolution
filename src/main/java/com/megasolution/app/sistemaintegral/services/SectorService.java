@@ -31,14 +31,15 @@ public class SectorService {
     }
 
     public void guardar(Sector sector) {
-        log.info("sector guardado!");
         sectorRepo.save(sector);
+        log.info("sector {} guardado!", sector.getNombre());
 
     }
 
     public void eliminar(Integer id) {
-        log.info("sector eliminado!");
+        Sector sector = buscarPorId(id);
         sectorRepo.deleteById(id);
+        log.info("sector {} eliminado!", sector.getNombre());
     }
 
     public Sector buscarPorNombre(String nombre) {

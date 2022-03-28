@@ -14,10 +14,6 @@ public interface Constantes {
     String TITULO_CLIENTES = "Clientes";
     String TITULO_AGREGAR_CLIENTE = "Agregar cliente";
     String TITULO_EDITAR_CLIENTE = "Editar cliente";
-    String TITULO_SECTORES = "Sectores";
-    String TITULO_AGREGAR_SECTOR = "Agregar sector";
-    String TITULO_EDITAR_SECTOR = "Editar sector";
-    String TITULO_USUARIOS = "Usuarios";
     String TITULO_VISUALIZADOR_DE_SERVICIOS = "Visualizador de Servicios";
 
     String SERVICIO = "servicio";
@@ -62,9 +58,6 @@ public interface Constantes {
     String MSJ_INGRESAR_CLIENTE = "Debe seleccionar un cliente antes de guardar el servicio!";
     String MSJ_INGRESAR_SECTOR = "Debe seleccionar un sector antes de guardar el servicio!";
 
-
-
-
     String LOCALIDADES = "localidades";
     String PROVINCIAS = "provincias";
     String PAISES = "paises";
@@ -74,28 +67,9 @@ public interface Constantes {
     String REDIRECT_SERVICIOS_NUEVO = "redirect:/servicios/nuevo";
     String REDIRECT_SERVICIOS_EDITAR = "redirect:/servicios/editar/{id}";
 
-    String BUSCAR = "buscar";
     String TODOS = "todos";
-    String NUEVO = "nuevo";
-    String GUARDAR = "guardar";
-    String ELIMINAR_ID = "eliminar/{id}";
-    String MONITOR = "monitor";
-
-    String TEMPLATE_LISTA_CLIENTES = "clientes/lista";
-    String TEMPLATE_FORM_CLIENTES = "clientes/form-cliente";
-
-    String TEMPLATE_LISTA_SERVICIOS = "servicios/lista";
-    String TEMPLATE_FORM_SERVICIOS = "servicios/form-servicio";
-    String TEMPLATE_MONITOR = "servicios/monitor";
-    
-    // debe quedar con el "/servicios/form-servicios" ya que no es una vista html, sino la ruta de un componente clase
-    String PATH_CLASE_JAVA_PDF = "/servicios/form-servicio";
 
     String WARNING = "warning";
-    String EDITAR_ID = "editar/{id}";
-
-    String GET_CIUDADES = "get-ciudades/{provincia}";
-    String EDITAR_GET_CIUDADES = "editar/get-ciudades/{provincia}";
 
     String LOCALIDADES_JSON = "localidades.json";
     String PENDIENTE = "pendiente";
@@ -103,26 +77,11 @@ public interface Constantes {
     String TERMINADO = "terminado";
     String ENTREGADO = "entregado";
     String GUARDADO = "guardado";
-    String CLIENTE_ID = "cliente/{id}";
-    String PENDIENTE_CLIENTE_ID = "pendiente/cliente/{id}";
-    String EN_PROCESO_CLIENTE_ID = "en-proceso/cliente/{id}";
-    String TERMINADO_CLIENTE_ID = "terminado/cliente/{id}";
-    String ENTREGADO_CLIENTE_ID = "entregado/cliente/{id}";
-    String GUARDADO_CLIENTE_ID = "guardado/cliente/{id}";
-    String IMPRIMIR_SERVICIO_ID = "imprimir/{id}";
+
     String SUCCESS_IMPRIMIR = "successImprimir";
     String TOTAL_PENDIENTES = "totalPendientes";
     String TOTAL_EN_PROCESO = "totalEnProceso";
     String SERVICIOS_PENDIENTES = "serviciosPendientes";
     String SERVICIOS_EN_PROCESO = "serviciosEnProceso";
-
-
-    String NUEVO_CLIENTE_ID = "nuevo/cliente/{id}";
-    String MOSTRAR_SECTORES = "mostrar-sectores";
-    String MOSTRAR_CLIENTES = "mostrar-clientes";
-    String BUSCAR_ESTADO = "buscar/{estado}";
-    String BUSCAR_CLIENTES = "/buscar-clientes";
-    String BUSCAR_CLIENTES_ID = "buscar-clientes/{id}";
-
 
 }

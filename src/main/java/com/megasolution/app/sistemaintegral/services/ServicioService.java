@@ -75,14 +75,20 @@ public class ServicioService {
 
     @Transactional
     public void guardar(Servicio servicio) {
-        LOG.info("servicio guardado!");
         servicioRepo.save(servicio);
+        String sectorNombre = "NA";
+        if ( !ObjectUtils.isEmpty(servicio.getSector()) ) {
+            Sector sector = sectorService.buscarPorId(servicio.getSector().getId());
+            sectorNombre = sector.getNombre();
+        }
+        LOG.info("{} guardado! - Sector: {}", servicio, sectorNombre);
     }
 
     @Transactional
     public void eliminar(Integer id) {
-        LOG.info("servicio eliminado!");
+        Servicio servicio = buscarPorId(id);
         servicioRepo.deleteById(id);
+        LOG.info("{} eliminado!", servicio);
     }
 
     @Transactional(readOnly = true)
@@ -96,14 +102,6 @@ public class ServicioService {
             return servicioRepo.findByEstadoAndClienteOrderByFechaIngresoAsc(estado, cliente);
         }
         return servicioRepo.findByEstadoAndClienteOrderByFechaIngresoDesc(estado, cliente);
-    }
-
-    public void recuperarEstadoTerminado(Servicio servicio){
-        if(servicio.getEstado().equals(Estado.ENTREGADO) || servicio.getEstado().equals(Estado.TERMINADO)){
-            servicio.setFechaTerminado(LocalDateTime.now());
-         }else{
-             servicio.setFechaTerminado(null);
-         }
     }
 
     @Transactional(readOnly = true)
@@ -198,28 +196,31 @@ public class ServicioService {
         }
     }
 
-    public void asignarSector(Servicio servicio, Sector sectorNuevo){
+    public void asignarSector(Servicio servicio){
         Sector sectorAnterior = this.sector;
-        liberarSectorAnterior(sectorAnterior, sectorNuevo);
+        Sector sectorNuevo = null;
+
         if(servicio.getEstado().equals(Estado.ENTREGADO) || servicio.getEstado().equals(Estado.GUARDADO)){
             servicio.setSector(null);
-            Sector sector = this.sectorService.buscarPorNombre(sectorAnterior.getNombre());
-            sector.setDisponible(true);
-            LOG.info("sector liberado!");
-            sectorService.guardar(sector);
         } else {
+            sectorNuevo = sectorService.buscarPorId(servicio.getSector().getId());
             sectorNuevo.setDisponible(false);
             sectorService.guardar(sectorNuevo);
         }
+
+        liberarSectorAnterior(sectorAnterior, sectorNuevo);
     }
 
     private void liberarSectorAnterior(Sector sectorAnterior, Sector sectorNuevo){
-        if ( !ObjectUtils.isEmpty(sectorAnterior) && !sectorAnterior.getNombre().equals(sectorNuevo.getNombre()) ) {
+        if ( (!ObjectUtils.isEmpty(sectorAnterior) && ObjectUtils.isEmpty(sectorNuevo)) ||
+                !ObjectUtils.isEmpty(sectorAnterior) && !sectorAnterior.getNombre().equalsIgnoreCase(sectorNuevo.getNombre()) ) {
+
             Sector sector = this.sectorService.buscarPorNombre(sectorAnterior.getNombre());
             sector.setDisponible(true);
-            LOG.info("sector liberado!");
+            LOG.info("sector {} liberado!", sector.getNombre());
             sectorService.guardar(sector);
         }
+
         this.sector = null;
     }
 
@@ -241,6 +242,7 @@ public class ServicioService {
 
     public Model enviarModelo(ServicioModel servicioModel, Model model ){
 
+        // PILL ACTIVO EN MENU = SERVICIOS
         model.addAttribute(Constantes.ACTIVE, Constantes.SERVICIOS);
         if( servicioModel.getServicios() != null ) {
             model.addAttribute(Constantes.TITULO, Constantes.TITULO_SERVICIOS);
@@ -250,10 +252,12 @@ public class ServicioService {
                 pillActivo = servicioModel.getEstado();
             }
             model.addAttribute(Constantes.PILL_ACTIVO, pillActivo);
+            // DEVUELVO LA LISTA DE SERVICIOS CON EL PILL ACTIVO SEGUN EL ESTADO SELECCIONADO
             return model;
         }
-
-        model.addAttribute(validarForm(servicioModel.getServicio(), model));
+        Servicio servicio = servicioModel.getServicio();
+        Model modeloResultado = validarForm(servicio, model);
+        model.addAttribute(modeloResultado);
 
         if(   !ObjectUtils.isEmpty(model.getAttribute(Constantes.ERROR_SOLUCION))
                 || !ObjectUtils.isEmpty(model.getAttribute(Constantes.ERROR_CLIENTE))
@@ -262,8 +266,8 @@ public class ServicioService {
             if( !ObjectUtils.isEmpty(servicioModel.getCliente().getId()) ){
                 servicioModel.setCliente( clienteService.buscarPorId(servicioModel.getCliente().getId()) );
             }
-            if( !ObjectUtils.isEmpty(servicioModel.getServicio().getSector().getId()) ) {
-                servicioModel.getServicio().setSector( sectorService.buscarPorId(servicioModel.getServicio().getSector().getId()) );
+            if( !ObjectUtils.isEmpty(servicio.getSector().getId()) ) {
+                servicio.setSector( sectorService.buscarPorId(servicio.getSector().getId()) );
             }
         }
         StringBuilder cliente = new StringBuilder();
@@ -272,35 +276,42 @@ public class ServicioService {
             cliente.append(" - ");
             cliente.append(servicioModel.getCliente().getRazonSocial());
         }
-        if ( ObjectUtils.isEmpty(servicioModel.getServicio().getId())) {
+        if ( ObjectUtils.isEmpty(servicio.getId())) {
+            // SERVICIOO NUEVO
             List<Estado> estados = Arrays.stream(Estado.values())
                     .filter(estado -> estado.equals(Estado.PENDIENTE) || estado.equals(Estado.EN_PROCESO))
                     .collect(Collectors.toList());
-            if ( ObjectUtils.isEmpty(servicioModel.getServicio().getBateria() ) ) {
-                servicioModel.getServicio().setCargador(true);
-                servicioModel.getServicio().setBateria(true);
+            if ( ObjectUtils.isEmpty(servicio.getBateria() ) ) {
+                servicio.setCargador(true);
+                servicio.setBateria(true);
             }
-            servicioModel.getServicio().setFechaIngreso(LocalDateTime.now());
+            servicio.setFechaIngreso(LocalDateTime.now());
             servicioModel.setEstados(estados);
-            model.addAttribute(Constantes.SERVICIO, servicioModel.getServicio());
+            model.addAttribute(Constantes.SERVICIO, servicio);
             model.addAttribute(Constantes.TITULO, Constantes.TITULO_AGREGAR_SERVICIO);
             if( !ObjectUtils.isEmpty(servicioModel.getCliente()) ){
                 model.addAttribute(Constantes.ID, servicioModel.getCliente().getId());
-                model.addAttribute(Constantes.CLIENTE,  cliente);
+                model.addAttribute(Constantes.CLIENTE, cliente);
                 model.addAttribute(Constantes.TELEFONO, servicioModel.getCliente().getTelefono());
             }
         } else {
+            // SERVICIO A EDITAR
             servicioModel.setEstados(Estado.getEstadosServicios());
             model.addAttribute(Constantes.CLIENTE, cliente);
             model.addAttribute(Constantes.TELEFONO, servicioModel.getCliente().getTelefono());
-            model.addAttribute(Constantes.SERVICIO,servicioModel.getServicio());
-            model.addAttribute(Constantes.SERVICIO_ID, servicioModel.getServicio().getId());
+            model.addAttribute(Constantes.SERVICIO, servicio);
+            model.addAttribute(Constantes.SERVICIO_ID, servicio.getId());
             model.addAttribute(Constantes.TITULO, Constantes.TITULO_EDITAR_SERVICIO);
 
-            if( !ObjectUtils.isEmpty(servicioModel.getServicio().getSector()) ) {
-                model.addAttribute(Constantes.SECTOR,servicioModel.getServicio().getSector().getNombre());
+            if( !ObjectUtils.isEmpty(servicio.getSector()) ) {
+                model.addAttribute(Constantes.SECTOR, servicio.getSector().getNombre());
             }
-            recuperarEstadoTerminado(servicioModel.getServicio());
+
+            if(servicio.getEstado().equals(Estado.ENTREGADO) || servicio.getEstado().equals(Estado.TERMINADO)){
+                servicio.setFechaTerminado(LocalDateTime.now());
+            }else{
+                servicio.setFechaTerminado(null);
+            }
         }
         LocalDateTime hoy = LocalDateTime.now();
         hoy = hoy.truncatedTo(ChronoUnit.MINUTES);
