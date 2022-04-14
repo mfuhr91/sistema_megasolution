@@ -5,7 +5,6 @@ import com.megasolution.app.sistemaintegral.models.entities.Cliente;
 import com.megasolution.app.sistemaintegral.models.entities.Mail;
 import com.megasolution.app.sistemaintegral.models.entities.Servicio;
 import com.megasolution.app.sistemaintegral.models.repositories.IMailRepository;
-import com.megasolution.app.sistemaintegral.utils.Estado;
 import com.megasolution.app.sistemaintegral.utils.TipoMail;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +25,6 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @Service
@@ -166,6 +164,10 @@ public class MailService {
         LOG.info("eliminando mail del cliente: {} , del tipo: {}", mail.getCliente().getRazonSocial(), mail.getTipoMail().getTipo());
         this.mailRepo.delete(mail);
         LOG.info("mail eliminado!");
+    }
+
+    public List<Mail> findByServicio(Servicio servicio) {
+        return this.mailRepo.findByServicio(servicio);
     }
 
     @Scheduled(fixedDelay = 900_000 )

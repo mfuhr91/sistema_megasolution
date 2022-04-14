@@ -3,6 +3,7 @@ package com.megasolution.app.sistemaintegral.services;
 import com.lowagie.text.BadElementException;
 import com.megasolution.app.sistemaintegral.models.ServicioModel;
 import com.megasolution.app.sistemaintegral.models.entities.Cliente;
+import com.megasolution.app.sistemaintegral.models.entities.Mail;
 import com.megasolution.app.sistemaintegral.models.entities.Sector;
 import com.megasolution.app.sistemaintegral.models.entities.Servicio;
 import com.megasolution.app.sistemaintegral.models.repositories.IServicioRepository;
@@ -87,6 +88,12 @@ public class ServicioService {
     @Transactional
     public void eliminar(Integer id) {
         Servicio servicio = buscarPorId(id);
+        List<Mail> mails = mailService.findByServicio(servicio);
+
+        mails.forEach( mail -> {
+            mailService.eliminar(mail);
+        } );
+
         servicioRepo.deleteById(id);
         LOG.info("{} eliminado!", servicio);
     }
@@ -164,38 +171,6 @@ public class ServicioService {
        return this.servicioRepo.findLast50();
     }
 
-    public Model validarForm(Servicio servicio, Model model){
-        if( !ObjectUtils.isEmpty(servicio) ){
-            validarSolucion(servicio, model);
-            validarSector(servicio, model);
-            validarCliente(servicio, model);
-        }
-        return model;
-    }
-
- 
-    private void validarSolucion(Servicio servicio, Model model) {
-        if( servicio.getSolucion() != null && servicio.getSolucion().isEmpty() &&
-            (servicio.getEstado().equals(Estado.TERMINADO) || servicio.getEstado().equals(Estado.ENTREGADO))) {
-                model.addAttribute(Constantes.ERROR_SOLUCION, Constantes.MSJ_INGRESAR_SOLUCION);
-                model.addAttribute(Constantes.ALERT_DANGER_SOLUCION, Constantes.ESPACIO_ALERT_DANGER);
-        }
-    }
-
-    private void validarCliente(Servicio servicio, Model model){
-        if( !ObjectUtils.isEmpty(servicio.getCliente()) && servicio.getCliente().getId() == null){
-            model.addAttribute(Constantes.ERROR_CLIENTE, Constantes.MSJ_INGRESAR_CLIENTE);
-            model.addAttribute(Constantes.ALERT_DANGER_CLIENTE, Constantes.ESPACIO_ALERT_DANGER);
-        }
-    }
-
-    private void validarSector(Servicio servicio, Model model){
-        if( !ObjectUtils.isEmpty(servicio.getSector()) && servicio.getSector().getId() == null){
-            model.addAttribute(Constantes.ERROR_SECTOR, Constantes.MSJ_INGRESAR_SECTOR);
-            model.addAttribute(Constantes.ALERT_DANGER_SECTOR, Constantes.ESPACIO_ALERT_DANGER);
-        }
-    }
-
     public void asignarSector(Servicio servicio){
         Sector sectorAnterior = this.sector;
         Sector sectorNuevo = null;
@@ -240,44 +215,93 @@ public class ServicioService {
         }
     }
 
-    public Model enviarModelo(ServicioModel servicioModel, Model model ){
+    public Model validarForm(Servicio servicio, Model model){
+        if( !ObjectUtils.isEmpty(servicio) ){
+            model.addAttribute(validarSolucion(servicio, model));
+            model.addAttribute(validarSector(servicio, model));
+            model.addAttribute(validarCliente(servicio, model));
+            model.addAttribute(validarEstado(servicio, model));
 
+        }
+        return model;
+    }
+
+    private Model validarSolucion(Servicio servicio, Model model) {
+        if( servicio.getSolucion() != null && servicio.getSolucion().isEmpty() &&
+                (servicio.getEstado().equals(Estado.TERMINADO) || servicio.getEstado().equals(Estado.ENTREGADO))) {
+            model.addAttribute(Constantes.ERROR_SOLUCION, Constantes.MSJ_INGRESAR_SOLUCION);
+            model.addAttribute(Constantes.ALERT_DANGER_SOLUCION, Constantes.ESPACIO_ALERT_DANGER);
+        }
+
+        return model;
+    }
+
+    private Model validarCliente(Servicio servicio, Model model){
+        // CLIENTE NO ES NULL Y EL ID SI - FORMULARIO EN BLANCO
+        if( !ObjectUtils.isEmpty(servicio.getCliente()) && ObjectUtils.isEmpty(servicio.getCliente().getId())){
+            model.addAttribute(Constantes.ERROR_CLIENTE, Constantes.MSJ_INGRESAR_CLIENTE);
+            model.addAttribute(Constantes.ALERT_DANGER_CLIENTE, Constantes.ESPACIO_ALERT_DANGER);
+
+        } else if ( !ObjectUtils.isEmpty(servicio.getCliente()) ){
+            StringBuilder cliente = new StringBuilder();
+            cliente.append(servicio.getCliente().getDniCuit().toString());
+            cliente.append(" - ");
+            cliente.append(servicio.getCliente().getRazonSocial());
+            model.addAttribute(Constantes.ID, servicio.getCliente().getId());
+            model.addAttribute(Constantes.CLIENTE, cliente);
+            model.addAttribute(Constantes.TELEFONO, servicio.getCliente().getTelefono());
+        }
+
+        return model;
+    }
+
+    private Model validarSector(Servicio servicio, Model model){
+        // SECTOR NO ES NULL PERO EL ID SI - FORMULARIO EN BLANCO
+        if( !ObjectUtils.isEmpty(servicio.getSector()) && ObjectUtils.isEmpty(servicio.getSector().getId())){
+            if ( !servicio.getEstado().equals(Estado.ENTREGADO) && !servicio.getEstado().equals(Estado.GUARDADO) ) {
+                model.addAttribute(Constantes.ERROR_SECTOR, Constantes.MSJ_INGRESAR_SECTOR);
+                model.addAttribute(Constantes.ALERT_DANGER_SECTOR, Constantes.ESPACIO_ALERT_DANGER);
+            }
+
+        } else if ( !ObjectUtils.isEmpty(servicio.getSector()) ) {
+            servicio.setSector(sectorService.buscarPorId(servicio.getSector().getId()));
+            model.addAttribute(Constantes.SECTOR, servicio.getSector().getNombre());
+        }
+
+        return model;
+    }
+
+    private Model validarEstado(Servicio servicio, Model model) {
+        // ESTADO NO ES NULL Y ES ENTREGADO O TERMINADO
+        if( !ObjectUtils.isEmpty(servicio.getEstado()) &&
+                (servicio.getEstado().equals(Estado.ENTREGADO) || servicio.getEstado().equals(Estado.TERMINADO)) ){
+            servicio.setFechaTerminado(LocalDateTime.now());
+        }else{
+            servicio.setFechaTerminado(null);
+        }
+        model.addAttribute(Constantes.SERVICIO, servicio);
+        return model;
+    }
+
+    public Model getModelList(ServicioModel servicioModel, Model model ){
         // PILL ACTIVO EN MENU = SERVICIOS
         model.addAttribute(Constantes.ACTIVE, Constantes.SERVICIOS);
-        if( servicioModel.getServicios() != null ) {
-            model.addAttribute(Constantes.TITULO, Constantes.TITULO_SERVICIOS);
-            model.addAttribute(Constantes.SERVICIOS, servicioModel.getServicios());
-            String pillActivo = Constantes.TODOS;
-            if ( servicioModel.getEstado() != null ) {
-                pillActivo = servicioModel.getEstado();
-            }
-            model.addAttribute(Constantes.PILL_ACTIVO, pillActivo);
-            // DEVUELVO LA LISTA DE SERVICIOS CON EL PILL ACTIVO SEGUN EL ESTADO SELECCIONADO
-            return model;
-        }
+        model.addAttribute(Constantes.TITULO, Constantes.TITULO_SERVICIOS);
+        model.addAttribute(Constantes.SERVICIOS, servicioModel.getServicios());
+        model.addAttribute(Constantes.PILL_ACTIVO, Constantes.TODOS);
+
+        return model;
+    }
+
+    public Model getModel(ServicioModel servicioModel, Model model ){
+
         Servicio servicio = servicioModel.getServicio();
+        servicio.setCliente(servicioModel.getCliente());
         Model modeloResultado = validarForm(servicio, model);
         model.addAttribute(modeloResultado);
 
-        if(   !ObjectUtils.isEmpty(model.getAttribute(Constantes.ERROR_SOLUCION))
-                || !ObjectUtils.isEmpty(model.getAttribute(Constantes.ERROR_CLIENTE))
-                || !ObjectUtils.isEmpty(model.getAttribute(Constantes.ERROR_SECTOR))) {
-
-            if( !ObjectUtils.isEmpty(servicioModel.getCliente().getId()) ){
-                servicioModel.setCliente( clienteService.buscarPorId(servicioModel.getCliente().getId()) );
-            }
-            if( !ObjectUtils.isEmpty(servicio.getSector().getId()) ) {
-                servicio.setSector( sectorService.buscarPorId(servicio.getSector().getId()) );
-            }
-        }
-        StringBuilder cliente = new StringBuilder();
-        if ( servicioModel.getCliente() != null && !ObjectUtils.isEmpty(servicioModel.getCliente().getId()) ) {
-            cliente.append(servicioModel.getCliente().getDniCuit().toString());
-            cliente.append(" - ");
-            cliente.append(servicioModel.getCliente().getRazonSocial());
-        }
         if ( ObjectUtils.isEmpty(servicio.getId())) {
-            // SERVICIOO NUEVO
+            // SERVICIO NUEVO
             List<Estado> estados = Arrays.stream(Estado.values())
                     .filter(estado -> estado.equals(Estado.PENDIENTE) || estado.equals(Estado.EN_PROCESO))
                     .collect(Collectors.toList());
@@ -289,29 +313,13 @@ public class ServicioService {
             servicioModel.setEstados(estados);
             model.addAttribute(Constantes.SERVICIO, servicio);
             model.addAttribute(Constantes.TITULO, Constantes.TITULO_AGREGAR_SERVICIO);
-            if( !ObjectUtils.isEmpty(servicioModel.getCliente()) ){
-                model.addAttribute(Constantes.ID, servicioModel.getCliente().getId());
-                model.addAttribute(Constantes.CLIENTE, cliente);
-                model.addAttribute(Constantes.TELEFONO, servicioModel.getCliente().getTelefono());
-            }
         } else {
             // SERVICIO A EDITAR
             servicioModel.setEstados(Estado.getEstadosServicios());
-            model.addAttribute(Constantes.CLIENTE, cliente);
-            model.addAttribute(Constantes.TELEFONO, servicioModel.getCliente().getTelefono());
             model.addAttribute(Constantes.SERVICIO, servicio);
             model.addAttribute(Constantes.SERVICIO_ID, servicio.getId());
             model.addAttribute(Constantes.TITULO, Constantes.TITULO_EDITAR_SERVICIO);
 
-            if( !ObjectUtils.isEmpty(servicio.getSector()) ) {
-                model.addAttribute(Constantes.SECTOR, servicio.getSector().getNombre());
-            }
-
-            if(servicio.getEstado().equals(Estado.ENTREGADO) || servicio.getEstado().equals(Estado.TERMINADO)){
-                servicio.setFechaTerminado(LocalDateTime.now());
-            }else{
-                servicio.setFechaTerminado(null);
-            }
         }
         LocalDateTime hoy = LocalDateTime.now();
         hoy = hoy.truncatedTo(ChronoUnit.MINUTES);
@@ -339,10 +347,9 @@ public class ServicioService {
         return model;
     }
 
-
     public Model listarSegunEstado(Cliente cliente, Estado estado, Model model) {
         String pill_activo = Constantes.TODOS;
-        StringBuilder logMsj = new StringBuilder("servicios ");
+        StringBuilder logMsj = new StringBuilder("servicios");
         List<Servicio> servicios;
         if( !ObjectUtils.isEmpty( estado )) {
             switch (estado) {
@@ -357,13 +364,14 @@ public class ServicioService {
                 case GUARDADO: pill_activo = Constantes.GUARDADO;
             }
 
+            logMsj.append(" con estado: ");
             logMsj.append(estado.getNombre());
 
             if ( ObjectUtils.isEmpty(cliente) ){
                 servicios = this.buscarPorEstadoServicio(estado);
             } else {
                 servicios = this.buscarPorEstadoPorCliente(estado, cliente);
-                logMsj.append(" del cliente ");
+                logMsj.append(" - del cliente: ");
                 logMsj.append(cliente.getRazonSocial());
                 model.addAttribute(Constantes.ID, cliente.getId());
             }
@@ -373,10 +381,11 @@ public class ServicioService {
 
         ServicioModel servicioModel = new ServicioModel();
         servicioModel.setServicios(servicios);
-        logMsj.append("listados");
+        logMsj.append(" - listados");
         LOG.info(logMsj.toString());
 
-        model.addAttribute(this.enviarModelo(servicioModel, model));
+        Model resModel = this.getModelList(servicioModel, model);
+        model.addAttribute(resModel);
         model.addAttribute(Constantes.PILL_ACTIVO, pill_activo);
         return model;
     }

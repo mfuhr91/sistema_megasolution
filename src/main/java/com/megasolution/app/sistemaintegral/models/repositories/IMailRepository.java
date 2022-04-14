@@ -17,4 +17,6 @@ public interface IMailRepository extends JpaRepository<Mail, Long>{
     public List<Mail> findByTipoMailAndClienteAndServicio(TipoMail tipoMail, Cliente cliente, Servicio servicio );
 
     public List<Mail> findByTipoMailAndCliente(TipoMail tipoMail, Cliente cliente);
+
+    public List<Mail> findByServicio(Servicio servicio);
 }

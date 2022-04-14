@@ -22,13 +22,12 @@ import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.List;
 
 
 @Controller
-@RequestMapping(Constantes.SERVICIOS)
-@SessionAttributes(Constantes.SERVICIO)
+@RequestMapping("servicios")
+@SessionAttributes("servicio")
 public class ServicioController {
 
     private ServicioService servicioService;
@@ -51,7 +50,8 @@ public class ServicioController {
         ServicioModel servicioModel = new ServicioModel();
         servicioModel.setServicios(servicios);
         LOG.info("ultimos 50 servicios listados");
-        model.addAttribute(servicioService.enviarModelo(servicioModel, model));
+        Model resModel = servicioService.getModelList(servicioModel, model);
+        model.addAttribute(resModel);
         return "servicios/lista";
     }
     @GetMapping("todos")
@@ -60,7 +60,8 @@ public class ServicioController {
         ServicioModel servicioModel = new ServicioModel();
         servicioModel.setServicios(servicios);
         LOG.info("todos los servicios listados");
-        model.addAttribute(servicioService.enviarModelo(servicioModel, model));
+        Model resModel = servicioService.getModelList(servicioModel, model);
+        model.addAttribute(resModel);
         return "servicios/lista";
     }
 
@@ -170,7 +171,7 @@ public class ServicioController {
             servicioModel.setCliente(servicio.getCliente());
             this.servicioService.almacenarSectorAnterior(sector);
         }
-        model.addAttribute(servicioService.enviarModelo(servicioModel, model));
+        model.addAttribute(servicioService.getModel(servicioModel, model));
         return "servicios/form-servicio";
     }
     
@@ -194,7 +195,7 @@ public class ServicioController {
         ServicioModel servicioModel = new ServicioModel();
         servicioModel.setServicio(new Servicio());
         LOG.info("creando nuevo servicio");
-        model.addAttribute(servicioService.enviarModelo(servicioModel,model));
+        model.addAttribute(servicioService.getModel(servicioModel,model));
         return "servicios/form-servicio";
     }
 
@@ -209,39 +210,45 @@ public class ServicioController {
         ServicioModel servicioModel = new ServicioModel();
         servicioModel.setServicio(new Servicio());
         servicioModel.setCliente(cliente);
-        model.addAttribute(servicioService.enviarModelo(servicioModel, model));
+        model.addAttribute(servicioService.getModel(servicioModel, model));
         return "servicios/form-servicio";
     }
 
     @PostMapping("guardar")
     public String guardarServicio(@Valid Servicio servicio, BindingResult result, Model model, SessionStatus status, RedirectAttributes flash){
         Cliente cliente = new Cliente();
+
         if( !ObjectUtils.isEmpty(servicio.getCliente().getId()) ){
             cliente = this.clienteService.buscarPorId(servicio.getCliente().getId());
         }
+
         ServicioModel servicioModel = new ServicioModel(servicio, cliente);
-        model.addAttribute(servicioService.enviarModelo(servicioModel, model));
+        model.addAttribute(servicioService.getModel(servicioModel, model));
 
         if(   !ObjectUtils.isEmpty(model.getAttribute(Constantes.ERROR_SOLUCION))
                 || !ObjectUtils.isEmpty(model.getAttribute(Constantes.ERROR_CLIENTE))
                 || !ObjectUtils.isEmpty(model.getAttribute(Constantes.ERROR_SECTOR))) {
             return "servicios/form-servicio";
         }
+
         if(result.hasErrors()){
             return "servicios/form-servicio";
         }
 
         this.servicioService.asignarSector(servicio);
-        servicioService.guardar(servicio);
-        status.setComplete();
 
-        if (servicio.getId() != null){
+        if ( !ObjectUtils.isEmpty(servicio.getId()) ){
+            servicioService.guardar(servicio);
             this.servicioService.enviarMail(servicio);
             flash.addFlashAttribute(Constantes.SUCCESS, Constantes.MSJ_SERVICIO_ACTUALIZADO);
+
         }else{
+            servicioService.guardar(servicio);
             flash.addFlashAttribute(Constantes.SUCCESS_IMPRIMIR, Constantes.MSJ_SERVICIO_GUARDADO);
             flash.addFlashAttribute(Constantes.SERVICIO_ID, servicio.getId());
         }
+
+        status.setComplete();
         return Constantes.REDIRECT_SERVICIOS;
     }
 
@@ -292,7 +299,7 @@ public class ServicioController {
         servicioModel.setServicios(servicios);
         servicioModel.setEstado(estado);
         if(!servicios.isEmpty()){
-            model.addAttribute(this.servicioService.enviarModelo(servicioModel,model));
+            model.addAttribute(this.servicioService.getModel(servicioModel,model));
             return "servicios/lista";
         } else {
             flash.addFlashAttribute(Constantes.WARNING, Constantes.MSJ_SERVICIO_NO_ENCONTRADO);
