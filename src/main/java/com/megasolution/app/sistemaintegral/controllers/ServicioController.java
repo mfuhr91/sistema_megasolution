@@ -299,7 +299,8 @@ public class ServicioController {
         servicioModel.setServicios(servicios);
         servicioModel.setEstado(estado);
         if(!servicios.isEmpty()){
-            model.addAttribute(this.servicioService.getModel(servicioModel,model));
+
+            model.addAttribute(this.servicioService.getModelList(servicioModel,model));
             return "servicios/lista";
         } else {
             flash.addFlashAttribute(Constantes.WARNING, Constantes.MSJ_SERVICIO_NO_ENCONTRADO);
