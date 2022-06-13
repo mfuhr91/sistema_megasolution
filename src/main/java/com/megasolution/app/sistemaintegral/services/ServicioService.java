@@ -143,13 +143,16 @@ public class ServicioService {
             }
         }
         LOG.info("nroServicios7Dias {}", nroServicios7Dias);
-        LOG.info("tiempoTotal / nroServicios7Dias =  {}", tiempoTotal / nroServicios7Dias);
+        double res = Math.ceil((tiempoTotal / nroServicios7Dias) * 100 ) / 100;
+        LOG.info("tiempoTotal / nroServicios7Dias =  {}", res);
+
         if(tiempoTotal != 0){
-            return tiempoTotal / nroServicios7Dias;
-        }else{
+            tiempoTotal = Math.ceil((tiempoTotal / nroServicios7Dias) * 100 ) / 100;
+
             return tiempoTotal;
         }
 
+        return tiempoTotal;
     }
 
     @Transactional(readOnly = true)
