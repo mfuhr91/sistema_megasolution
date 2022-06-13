@@ -181,11 +181,15 @@ public class ServicioService {
 
     public void asignarSector(Servicio servicio){
         // NO SE CONSULTA POR ID, XQ POR ALGUNA RAZON SPRING CAMBIA EL ID DEL SECTOR ALMACENADO EN CACHE POR EL SELECCIONADO
-        Sector sectorAnterior = sectorService.buscarPorNombre(this.sector.getNombre());
+        Sector sectorAnterior = null;
+        if (this.sector != null) {
+            sectorAnterior = sectorService.buscarPorNombre(this.sector.getNombre());
+        }
         Sector sectorNuevo = sectorService.buscarPorId(servicio.getSector().getId());
 
         if ( !servicio.getEstado().equals(Estado.ENTREGADO) && !servicio.getEstado().equals(Estado.GUARDADO) ) {
             sectorNuevo.setServicio(servicio);
+            guardar(servicio);
             sectorService.guardar(sectorNuevo);
         }
 
