@@ -36,10 +36,11 @@ public class SectorService {
 
     }
 
+    @Transactional()
     public void eliminar(Integer id) {
         Sector sector = buscarPorId(id);
-        sectorRepo.deleteById(id);
-        log.info("sector {} eliminado!", sector.getNombre());
+        sectorRepo.disableSector(id);
+        log.info("sector {} deshabilitado!", sector.getNombre());
     }
 
     public Sector buscarPorNombre(String nombre) {

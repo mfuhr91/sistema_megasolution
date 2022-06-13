@@ -170,6 +170,7 @@ public class ServicioController {
             servicioModel.setServicio(servicio);
             servicioModel.setCliente(servicio.getCliente());
             this.servicioService.almacenarSectorAnterior(sector);
+
         }
         model.addAttribute(servicioService.getModel(servicioModel, model));
         return "servicios/form-servicio";
@@ -224,6 +225,8 @@ public class ServicioController {
 
         ServicioModel servicioModel = new ServicioModel(servicio, cliente);
         model.addAttribute(servicioService.getModel(servicioModel, model));
+        Model modeloResultado = servicioService.validarForm(servicio, model);
+        model.addAttribute(modeloResultado);
 
         if(   !ObjectUtils.isEmpty(model.getAttribute(Constantes.ERROR_SOLUCION))
                 || !ObjectUtils.isEmpty(model.getAttribute(Constantes.ERROR_CLIENTE))
@@ -262,7 +265,7 @@ public class ServicioController {
 
         if( !ObjectUtils.isEmpty(servicio.getSector())){
             Sector sector = sectorService.buscarPorId(servicio.getSector().getId());
-            sector.setDisponible(true);
+            sector.setServicio(null);
             sectorService.guardar(sector);
             LOG.info("sector {} liberado!", sector.getNombre());
 

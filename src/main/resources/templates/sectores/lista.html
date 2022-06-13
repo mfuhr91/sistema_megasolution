@@ -25,7 +25,7 @@
           <tbody class="tabla">
             <tr th:each="sector : ${sectores}">
               <td class="align-middle" th:text="${sector.nombre}"></td>
-              <td class="align-middle" th:text="${#strings.equals(sector.disponible, 'true')} ? 'SI' : 'NO'"></td>
+              <td class="align-middle" th:text="${#strings.isEmpty(sector.servicio)} ? 'SI' : 'NO'"></td>
               <td class="align-middle">
                   <a th:href="@{/sectores/editar/} + ${sector.id}" class="btn btn-warning mx-1"
                   data-toggle="tooltip" data-placement="bottom" title="Editar"><i class="far fa-edit"></i></a>

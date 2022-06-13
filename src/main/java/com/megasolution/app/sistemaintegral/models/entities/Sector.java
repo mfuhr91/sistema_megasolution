@@ -23,11 +23,7 @@ public class Sector implements Serializable{
     @Column(unique = true)
     private String nombre;
 
-
-    private Boolean disponible;
-
-    public Sector(){
-        this.disponible = true;
-    }
+    @OneToOne(fetch = FetchType.LAZY)
+    private Servicio servicio;
 
 }

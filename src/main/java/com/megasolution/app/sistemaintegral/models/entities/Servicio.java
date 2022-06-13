@@ -58,6 +58,9 @@ public class Servicio implements Serializable{
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     private LocalDateTime fechaTerminado;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
+    private LocalDateTime fechaEntregado;
+
     @ManyToOne(fetch = FetchType.LAZY)
     private Cliente cliente;
 

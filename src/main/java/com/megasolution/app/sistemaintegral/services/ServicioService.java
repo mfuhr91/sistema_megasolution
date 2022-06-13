@@ -77,10 +77,14 @@ public class ServicioService {
     @Transactional
     public void guardar(Servicio servicio) {
         servicioRepo.save(servicio);
+
         String sectorNombre = "NA";
         if ( !ObjectUtils.isEmpty(servicio.getSector()) ) {
-            Sector sector = sectorService.buscarPorId(servicio.getSector().getId());
-            sectorNombre = sector.getNombre();
+            sectorNombre = servicio.getSector().getNombre();
+            if (!ObjectUtils.isEmpty(servicio.getSector().getId())) {
+                Sector sector = sectorService.buscarPorId(servicio.getSector().getId());
+                sectorNombre = sector.getNombre();
+            }
         }
         LOG.info("{} guardado! - Sector: {}", servicio, sectorNombre);
     }
@@ -122,10 +126,10 @@ public class ServicioService {
     }
 
     @Transactional(readOnly = true)
-    public long promedioServicios() {
+    public Double promedioServicios() {
         List<Servicio> servicios = this.buscarPorEstadoServicio(Estado.TERMINADO);
         LocalDateTime fechaActual = LocalDateTime.now();
-        long tiempoTotal = 0;
+        double tiempoTotal = 0.0;
         int nroServicios7Dias = 0;
         for (Servicio servicio : servicios) {
             long dif = ChronoUnit.MILLIS.between(servicio.getFechaIngreso(), fechaActual);
@@ -133,7 +137,7 @@ public class ServicioService {
                 nroServicios7Dias++;
                 float tiempo = ChronoUnit.MILLIS.between(servicio.getFechaIngreso(), servicio.getFechaTerminado());
                 float tiempoEnHoras = (float) Math.ceil(tiempo / Constantes.UNA_HORA_EN_MS);
-                tiempoTotal += tiempoEnHoras;
+                tiempoTotal += tiempoEnHoras / 10; // 10 horas por dia
             }
         }
         if(tiempoTotal != 0){
@@ -172,31 +176,31 @@ public class ServicioService {
     }
 
     public void asignarSector(Servicio servicio){
-        Sector sectorAnterior = this.sector;
-        Sector sectorNuevo = null;
+        // NO SE CONSULTA POR ID, XQ POR ALGUNA RAZON SPRING CAMBIA EL ID DEL SECTOR ALMACENADO EN CACHE POR EL SELECCIONADO
+        Sector sectorAnterior = sectorService.buscarPorNombre(this.sector.getNombre());
+        Sector sectorNuevo = sectorService.buscarPorId(servicio.getSector().getId());
 
-        if(servicio.getEstado().equals(Estado.ENTREGADO) || servicio.getEstado().equals(Estado.GUARDADO)){
-            servicio.setSector(null);
-        } else {
-            sectorNuevo = sectorService.buscarPorId(servicio.getSector().getId());
-            sectorNuevo.setDisponible(false);
+        if ( !servicio.getEstado().equals(Estado.ENTREGADO) && !servicio.getEstado().equals(Estado.GUARDADO) ) {
+            sectorNuevo.setServicio(servicio);
             sectorService.guardar(sectorNuevo);
         }
 
-        liberarSectorAnterior(sectorAnterior, sectorNuevo);
-    }
+        if ( sectorAnterior != null ) {
+            if ( ( servicio.getEstado().equals(Estado.ENTREGADO) || servicio.getEstado().equals(Estado.GUARDADO) ) &&
+                    servicio.getId().equals(sectorNuevo.getServicio().getId()) ) {
+                sectorAnterior.setServicio(null);
+                LOG.info("sector {} liberado!", sectorAnterior.getNombre());
+                sectorService.guardar(sectorAnterior);
+            } else {
+                if ( !sectorAnterior.getNombre().equalsIgnoreCase(sectorNuevo.getNombre()) ) {
 
-    private void liberarSectorAnterior(Sector sectorAnterior, Sector sectorNuevo){
-        if ( (!ObjectUtils.isEmpty(sectorAnterior) && ObjectUtils.isEmpty(sectorNuevo)) ||
-                !ObjectUtils.isEmpty(sectorAnterior) && !sectorAnterior.getNombre().equalsIgnoreCase(sectorNuevo.getNombre()) ) {
-
-            Sector sector = this.sectorService.buscarPorNombre(sectorAnterior.getNombre());
-            sector.setDisponible(true);
-            LOG.info("sector {} liberado!", sector.getNombre());
-            sectorService.guardar(sector);
+                    sectorAnterior.setServicio(null);
+                    LOG.info("sector {} liberado!", sectorAnterior.getNombre());
+                    sectorService.guardar(sectorAnterior);
+                }
+            }
         }
 
-        this.sector = null;
     }
 
     public void almacenarSectorAnterior(Sector sector) {
@@ -219,8 +223,23 @@ public class ServicioService {
         if( !ObjectUtils.isEmpty(servicio) ){
             model.addAttribute(validarSolucion(servicio, model));
             model.addAttribute(validarSector(servicio, model));
-            model.addAttribute(validarCliente(servicio, model));
-            model.addAttribute(validarEstado(servicio, model));
+
+            if( !ObjectUtils.isEmpty(servicio.getCliente()) && ObjectUtils.isEmpty(servicio.getCliente().getId())){
+                model.addAttribute(Constantes.ERROR_CLIENTE, Constantes.MSJ_INGRESAR_CLIENTE);
+                model.addAttribute(Constantes.ALERT_DANGER_CLIENTE, Constantes.ESPACIO_ALERT_DANGER);
+            }
+
+        }
+        return model;
+    }
+
+    public Model getForm(Servicio servicio, Model model){
+        if( !ObjectUtils.isEmpty(servicio) ){
+            if ( !ObjectUtils.isEmpty(servicio.getSector()) ) {
+                model.addAttribute(Constantes.SECTOR, servicio.getSector().getNombre());
+            }
+
+            model.addAttribute(getCliente(servicio, model));
 
         }
         return model;
@@ -236,13 +255,49 @@ public class ServicioService {
         return model;
     }
 
-    private Model validarCliente(Servicio servicio, Model model){
-        // CLIENTE NO ES NULL Y EL ID SI - FORMULARIO EN BLANCO
-        if( !ObjectUtils.isEmpty(servicio.getCliente()) && ObjectUtils.isEmpty(servicio.getCliente().getId())){
-            model.addAttribute(Constantes.ERROR_CLIENTE, Constantes.MSJ_INGRESAR_CLIENTE);
-            model.addAttribute(Constantes.ALERT_DANGER_CLIENTE, Constantes.ESPACIO_ALERT_DANGER);
+    private Model validarSector(Servicio servicio, Model model){
+        // SECTOR NO ES NULL PERO EL ID SI - FORMULARIO EN BLANCO
+        if( !ObjectUtils.isEmpty(servicio.getSector()) && ObjectUtils.isEmpty(servicio.getSector().getId())){
+            if ( !servicio.getEstado().equals(Estado.ENTREGADO) && !servicio.getEstado().equals(Estado.GUARDADO) ) {
+                model.addAttribute(Constantes.ERROR_SECTOR, Constantes.MSJ_INGRESAR_SECTOR);
+                model.addAttribute(Constantes.ALERT_DANGER_SECTOR, Constantes.ESPACIO_ALERT_DANGER);
+            }
+        } else if ( !ObjectUtils.isEmpty(servicio.getSector()) && !ObjectUtils.isEmpty(servicio.getSector().getId())) {
+            Sector sector = sectorService.buscarPorId(servicio.getSector().getId());
 
-        } else if ( !ObjectUtils.isEmpty(servicio.getCliente()) ){
+            if ( (sector.getServicio() != null && !sector.getServicio().getId().equals(servicio.getId()) ) &&
+                    !servicio.getEstado().equals(Estado.ENTREGADO) && !servicio.getEstado().equals(Estado.GUARDADO) ) {
+                model.addAttribute(Constantes.ERROR_SECTOR, Constantes.MSJ_SECTOR_NO_DISPONIBLE);
+                model.addAttribute(Constantes.ALERT_DANGER_SECTOR, Constantes.ESPACIO_ALERT_DANGER);
+            } else {
+                model.addAttribute(Constantes.SECTOR, sector.getNombre());
+            }
+
+        }
+
+        return model;
+    }
+
+    private Model validarEstado(Servicio servicio, Model model) {
+        // ESTADO NO ES NULL Y ES ENTREGADO O TERMINADO
+        if( !ObjectUtils.isEmpty(servicio.getEstado()) &&
+                servicio.getEstado().equals(Estado.TERMINADO) ){
+            servicio.setFechaTerminado(LocalDateTime.now());
+        } else if ( !ObjectUtils.isEmpty(servicio.getEstado()) &&
+                servicio.getEstado().equals(Estado.ENTREGADO) ) {
+            servicio.setFechaEntregado(LocalDateTime.now());
+        } else{
+            servicio.setFechaTerminado(null);
+            servicio.setFechaEntregado(null);
+        }
+        model.addAttribute(Constantes.SERVICIO, servicio);
+        return model;
+    }
+
+    private Model getCliente(Servicio servicio, Model model){
+        // CLIENTE NO ES NULL Y EL ID NO ES NULL - FORMULARIO EN BLANCO
+        if ( !ObjectUtils.isEmpty(servicio.getCliente()) &&
+                !ObjectUtils.isEmpty(servicio.getCliente().getId()) ){
             StringBuilder cliente = new StringBuilder();
             cliente.append(servicio.getCliente().getDniCuit().toString());
             cliente.append(" - ");
@@ -252,34 +307,6 @@ public class ServicioService {
             model.addAttribute(Constantes.TELEFONO, servicio.getCliente().getTelefono());
         }
 
-        return model;
-    }
-
-    private Model validarSector(Servicio servicio, Model model){
-        // SECTOR NO ES NULL PERO EL ID SI - FORMULARIO EN BLANCO
-        if( !ObjectUtils.isEmpty(servicio.getSector()) && ObjectUtils.isEmpty(servicio.getSector().getId())){
-            if ( !servicio.getEstado().equals(Estado.ENTREGADO) && !servicio.getEstado().equals(Estado.GUARDADO) ) {
-                model.addAttribute(Constantes.ERROR_SECTOR, Constantes.MSJ_INGRESAR_SECTOR);
-                model.addAttribute(Constantes.ALERT_DANGER_SECTOR, Constantes.ESPACIO_ALERT_DANGER);
-            }
-
-        } else if ( !ObjectUtils.isEmpty(servicio.getSector()) ) {
-            servicio.setSector(sectorService.buscarPorId(servicio.getSector().getId()));
-            model.addAttribute(Constantes.SECTOR, servicio.getSector().getNombre());
-        }
-
-        return model;
-    }
-
-    private Model validarEstado(Servicio servicio, Model model) {
-        // ESTADO NO ES NULL Y ES ENTREGADO O TERMINADO
-        if( !ObjectUtils.isEmpty(servicio.getEstado()) &&
-                (servicio.getEstado().equals(Estado.ENTREGADO) || servicio.getEstado().equals(Estado.TERMINADO)) ){
-            servicio.setFechaTerminado(LocalDateTime.now());
-        }else{
-            servicio.setFechaTerminado(null);
-        }
-        model.addAttribute(Constantes.SERVICIO, servicio);
         return model;
     }
 
@@ -297,7 +324,7 @@ public class ServicioService {
 
         Servicio servicio = servicioModel.getServicio();
         servicio.setCliente(servicioModel.getCliente());
-        Model modeloResultado = validarForm(servicio, model);
+        Model modeloResultado = getForm(servicio, model);
         model.addAttribute(modeloResultado);
 
         if ( ObjectUtils.isEmpty(servicio.getId())) {

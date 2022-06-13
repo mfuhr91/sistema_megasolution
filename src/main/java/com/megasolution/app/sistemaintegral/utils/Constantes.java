@@ -57,6 +57,7 @@ public interface Constantes {
     String MSJ_INGRESAR_SOLUCION = "Debe ingresar una solución antes de guardar el servicio!";
     String MSJ_INGRESAR_CLIENTE = "Debe seleccionar un cliente antes de guardar el servicio!";
     String MSJ_INGRESAR_SECTOR = "Debe seleccionar un sector antes de guardar el servicio!";
+    String MSJ_SECTOR_NO_DISPONIBLE = "Debe seleccionar un sector disponible";
 
     String LOCALIDADES = "localidades";
     String PROVINCIAS = "provincias";

@@ -11,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -38,13 +39,13 @@ public class HomeController {
         Integer totalSectores = sectorService.contarTodos();
         List<Sector> sectoresDisponibles = sectorService.buscarDisponibles();
         Integer sectoresOcupados = totalSectores - sectoresDisponibles.size();
-        long tiempo = servicioService.promedioServicios();
+        Double tiempo = servicioService.promedioServicios();
         List<Servicio> serviciosPendientes = servicioService.buscarPorEstadoServicioMonitor(Estado.PENDIENTE);
         List<Servicio> serviciosEnProceso = servicioService.buscarPorEstadoServicioMonitor(Estado.EN_PROCESO);
         List<Servicio> serviciosTerminados = servicioService.buscarPorEstadoServicioMonitor(Estado.TERMINADO);
         List<Servicio> serviciosEntregados = servicioService.buscarPorEstadoServicioMonitor(Estado.ENTREGADO);
-        
-        
+
+        DecimalFormat df = new DecimalFormat("#0.0");
 
         Date fechaHoy = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -58,7 +59,7 @@ public class HomeController {
         model.addAttribute("totalSectores", totalSectores);
         model.addAttribute("sectoresOcupados", sectoresOcupados);
         model.addAttribute("serviciosDeHoy", serviciosDeHoy);
-        model.addAttribute("tiempoPromedio", tiempo);
+        model.addAttribute("tiempoPromedio", df.format(tiempo));
         model.addAttribute("totalPendientes", serviciosPendientes.size());
         model.addAttribute("totalEnProceso", serviciosEnProceso.size());
         model.addAttribute("totalTerminados", serviciosTerminados.size());

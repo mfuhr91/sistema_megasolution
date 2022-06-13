@@ -37,24 +37,24 @@ body {
 
 
 .nav-pills .nav-link{
-  color: #083a93 !important;
+  color: #033796 !important;
   background-color: lightgray;
   margin-right: 5px;
   margin-left: 5px;
-  border-radius: 15px;
+  border-radius: 10px;
 }
 
 
 .nav-item .active {
   color: #fff !important;
-  background-color: #083a93 !important;
+  background-color: #033796 !important;
   margin-right: 5px;
   margin-left: 5px;
   
 }
 
 .btn,.form-control,select{
-  border-radius: 12px;
+  border-radius: 10px;
   font-size: small;
 }
 
@@ -65,12 +65,12 @@ select {
 }
 
 .btn-primary{
-  background-color: #083a93 !important;
-  border-color: #083a93 !important;
+  background-color: #033796 !important;
+  border-color: #033796 !important;
   font-size: small;
 }
 .active{
-  background-color: rgba(255, 255, 255, 0.1); /*#083a93;*/
+  background-color: rgba(255, 255, 255, 0.1); /*#033796;*/
   border-radius: 10px;
 }
 td{
@@ -83,8 +83,8 @@ td{
 
 #datosCliente, #datosEquipo{
   color: white;
-  background-color: #083a93a6;
-  border-radius: 15px;
+  background-color: #033796a6;
+  border-radius: 10px;
   margin: 10px;
   padding-top: 10px;
   padding-bottom: 5px;
@@ -141,7 +141,7 @@ td{
 
 .monitor .card-header-monitor{
   font-size: 35px !important;
-  background-color: #083a93;
+  background-color: #033796;
   color: #fff;
   border-top-left-radius: 20px !important;
   border-top-right-radius: 20px !important;
@@ -267,10 +267,6 @@ td{
     width: 40px !important;
   }
 }
-/*
-.tabla tr:nth-child(2n+2) {
-  background: pink;
-}*/
 
 .tabla tbody tr:nth-child(4n+2) {
   background: #aaa;

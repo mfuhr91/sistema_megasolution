@@ -6,6 +6,7 @@ import com.megasolution.app.sistemaintegral.services.SectorService;
 import com.megasolution.app.sistemaintegral.services.ServicioService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.ObjectUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
@@ -112,8 +113,7 @@ public class SectorController {
         }
         Sector sector = sectorService.buscarPorId(id);
 
-        if(!sector.getDisponible()){
-
+        if( !ObjectUtils.isEmpty(sector.getServicio()) ){
             flash.addFlashAttribute("error", "No puede eliminar un sector en uso!");
             return "redirect:/sectores";
         }
