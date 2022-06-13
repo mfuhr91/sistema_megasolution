@@ -138,8 +138,12 @@ public class ServicioService {
                 float tiempo = ChronoUnit.MILLIS.between(servicio.getFechaIngreso(), servicio.getFechaTerminado());
                 float tiempoEnHoras = (float) Math.ceil(tiempo / Constantes.UNA_HORA_EN_MS);
                 tiempoTotal += tiempoEnHoras / 10; // 10 horas por dia
+
+                LOG.info("tiempoTotal {}", tiempoTotal);
             }
         }
+        LOG.info("nroServicios7Dias {}", nroServicios7Dias);
+        LOG.info("tiempoTotal / nroServicios7Dias =  {}", tiempoTotal / nroServicios7Dias);
         if(tiempoTotal != 0){
             return tiempoTotal / nroServicios7Dias;
         }else{
