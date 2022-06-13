@@ -257,8 +257,6 @@ $(document).ready(() => {
             easing: 'swing',
             step: function () {
                 let value = this.Counter
-                console.log("value: ", value)
-                console.log("( value * 100 ) / 100 = ", Math.ceil(value * 100 ) / 100)
                 $this.text(Math.round(value * 100 ) / 100  );
             }
         });

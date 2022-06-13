@@ -129,8 +129,10 @@ public class ServicioService {
     public Double promedioServicios() {
         List<Servicio> servicios = this.buscarPorEstadoServicio(Estado.TERMINADO);
         LocalDateTime fechaActual = LocalDateTime.now();
+
         double tiempoTotal = 0.0;
         int nroServicios7Dias = 0;
+
         for (Servicio servicio : servicios) {
             long dif = ChronoUnit.MILLIS.between(servicio.getFechaIngreso(), fechaActual);
             if( dif <= Constantes.SIETE_DIAS_EN_MS){ // 7dias = 604800000 ms - 1dia = 86400000 - 1hr= 3600000
@@ -138,13 +140,8 @@ public class ServicioService {
                 float tiempo = ChronoUnit.MILLIS.between(servicio.getFechaIngreso(), servicio.getFechaTerminado());
                 float tiempoEnHoras = (float) Math.ceil(tiempo / Constantes.UNA_HORA_EN_MS);
                 tiempoTotal += tiempoEnHoras / 10; // 10 horas por dia
-
-                LOG.info("tiempoTotal {}", tiempoTotal);
             }
         }
-        LOG.info("nroServicios7Dias {}", nroServicios7Dias);
-        double res = Math.ceil((tiempoTotal / nroServicios7Dias) * 100 ) / 100;
-        LOG.info("tiempoTotal / nroServicios7Dias =  {}", res);
 
         if(tiempoTotal != 0){
             tiempoTotal = Math.ceil((tiempoTotal / nroServicios7Dias) * 100 ) / 100;
