@@ -12,9 +12,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 @Controller
 @RequestMapping("")
@@ -45,7 +47,7 @@ public class HomeController {
         List<Servicio> serviciosTerminados = servicioService.buscarPorEstadoServicioMonitor(Estado.TERMINADO);
         List<Servicio> serviciosEntregados = servicioService.buscarPorEstadoServicioMonitor(Estado.ENTREGADO);
 
-        DecimalFormat df = new DecimalFormat("#0.0");
+        DecimalFormat df = new DecimalFormat("#0.0", new DecimalFormatSymbols(Locale.US));
 
         Date fechaHoy = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
