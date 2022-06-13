@@ -252,6 +252,8 @@ $(document).ready(() => {
 
     $('.contarDias').each(function () {
         let $this = $(this);
+        console.log($this)
+        debugger;
         $({ Counter: 0 }).animate({ Counter: $this.text() }, {
             duration: 1000,
             easing: 'swing',

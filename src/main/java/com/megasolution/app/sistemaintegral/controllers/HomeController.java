@@ -59,7 +59,7 @@ public class HomeController {
         model.addAttribute("totalSectores", totalSectores);
         model.addAttribute("sectoresOcupados", sectoresOcupados);
         model.addAttribute("serviciosDeHoy", serviciosDeHoy);
-        model.addAttribute("tiempoPromedio", df.format(tiempo));
+        model.addAttribute("tiempoPromedio", Double.parseDouble(df.format(tiempo)));
         model.addAttribute("totalPendientes", serviciosPendientes.size());
         model.addAttribute("totalEnProceso", serviciosEnProceso.size());
         model.addAttribute("totalTerminados", serviciosTerminados.size());
