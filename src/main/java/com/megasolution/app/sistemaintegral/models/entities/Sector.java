@@ -2,6 +2,7 @@ package com.megasolution.app.sistemaintegral.models.entities;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -26,4 +27,12 @@ public class Sector implements Serializable{
     @OneToOne(fetch = FetchType.LAZY)
     private Servicio servicio;
 
+    @Override
+    public String toString() {
+        return "Sector{" +
+                "id=" + id +
+                ", nombre='" + nombre + '\'' +
+                ", servicio=" + (servicio != null ? servicio.getId() : "NA") +
+                '}';
+    }
 }

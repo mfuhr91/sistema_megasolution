@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -22,7 +23,26 @@ public class SectorService {
 
     @Transactional(readOnly = true)
     public List<Sector> buscarTodos() {
-        return sectorRepo.findAll();
+        List<Sector> sectores = sectorRepo.findAll();
+        List<Sector> newList = new ArrayList<>();
+
+        for (int i = 0; i < sectores.size(); i++) {
+            if ( sectores.get(i).getNombre().trim().length() <= 2 ) {
+                newList.add(sectores.get(i));
+                sectores.remove(sectores.get(i));
+                i--;
+            }
+        }
+        for (int i = 0; i < sectores.size(); i++) {
+            if ( sectores.get(i).getNombre().length() == 3 ) {
+                newList.add(sectores.get(i));
+                sectores.remove(sectores.get(i));
+                i--;
+            }
+        }
+        newList.addAll(sectores);
+
+        return newList;
     }
 
     @Transactional(readOnly = true)
@@ -48,7 +68,27 @@ public class SectorService {
     }
 
     public List<Sector> buscarDisponibles() {
-        return sectorRepo.findByDisponible();
+        List<Sector> sectores = sectorRepo.findByDisponible();
+        List<Sector> newList = new ArrayList<>();
+
+        for (int i = 0; i < sectores.size(); i++) {
+            if ( sectores.get(i).getNombre().trim().length() <= 2 ) {
+                newList.add(sectores.get(i));
+                System.out.println(sectores.get(i));
+                sectores.remove(sectores.get(i));
+                i--;
+            }
+        }
+        for (int i = 0; i < sectores.size(); i++) {
+            if ( sectores.get(i).getNombre().length() == 3 ) {
+                newList.add(sectores.get(i));
+                System.out.println(sectores.get(i));
+                sectores.remove(sectores.get(i));
+                i--;
+            }
+        }
+        newList.addAll(sectores);
+        return newList;
     }
 
     public List<Sector> buscarPorParametro(String param) {

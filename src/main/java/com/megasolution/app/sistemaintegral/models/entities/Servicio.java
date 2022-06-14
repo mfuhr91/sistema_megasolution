@@ -4,6 +4,7 @@ import com.megasolution.app.sistemaintegral.utils.Estado;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
