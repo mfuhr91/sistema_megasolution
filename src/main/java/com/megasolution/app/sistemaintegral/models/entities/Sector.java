@@ -32,7 +32,7 @@ public class Sector implements Serializable{
         return "Sector{" +
                 "id=" + id +
                 ", nombre='" + nombre + '\'' +
-                ", servicio=" + (servicio != null ? servicio.getId() : "NA") +
+                ", servicio='" + (servicio != null ? servicio.getId() : "NA") + '\'' +
                 '}';
     }
 }

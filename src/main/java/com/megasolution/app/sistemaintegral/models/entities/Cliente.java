@@ -65,8 +65,17 @@ public class Cliente implements Serializable{
     
     @OneToMany(mappedBy = "cliente", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonIgnore
-    private List<Servicio> servicios; 
+    private List<Servicio> servicios;
 
-
+    @Override
+    public String toString() {
+        return "Cliente{" +
+                "id=" + id +
+                ", dniCuit='" + dniCuit + '\'' +
+                ", razonSocial='" + razonSocial + '\'' +
+                ", telefono=" + telefono +
+                ", email='" + email + '\'' +
+                '}';
+    }
 
 }

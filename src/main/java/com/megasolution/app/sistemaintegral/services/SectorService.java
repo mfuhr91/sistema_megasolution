@@ -74,7 +74,6 @@ public class SectorService {
         for (int i = 0; i < sectores.size(); i++) {
             if ( sectores.get(i).getNombre().trim().length() <= 2 ) {
                 newList.add(sectores.get(i));
-                System.out.println(sectores.get(i));
                 sectores.remove(sectores.get(i));
                 i--;
             }
@@ -82,7 +81,6 @@ public class SectorService {
         for (int i = 0; i < sectores.size(); i++) {
             if ( sectores.get(i).getNombre().length() == 3 ) {
                 newList.add(sectores.get(i));
-                System.out.println(sectores.get(i));
                 sectores.remove(sectores.get(i));
                 i--;
             }

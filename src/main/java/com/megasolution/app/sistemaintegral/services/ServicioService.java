@@ -195,7 +195,7 @@ public class ServicioService {
 
         if ( sectorAnterior != null ) {
             if ( ( servicio.getEstado().equals(Estado.ENTREGADO) || servicio.getEstado().equals(Estado.GUARDADO) ) &&
-                    servicio.getId().equals(sectorNuevo.getServicio().getId()) ) {
+                   sectorNuevo.getServicio() != null && servicio.getId().equals(sectorNuevo.getServicio().getId()) ) {
                 sectorAnterior.setServicio(null);
                 LOG.info("sector {} liberado!", sectorAnterior.getNombre());
                 sectorService.guardar(sectorAnterior);
