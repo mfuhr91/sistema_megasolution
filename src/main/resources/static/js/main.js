@@ -95,8 +95,6 @@ $(document).ready(() => {
         estadoActual = estadoElement.value
     }
 
-    console.log(estadoActual)
-
     if($('#cliente_id').val()){
         $('#cliente').val($('#cliente_id').val());
     }
@@ -211,13 +209,11 @@ $(document).ready(() => {
 
 // consulta las ciudades segun la provincia
 function getCiudades(provincia){
-    console.log(provincia)
     let select = $('#localidad');
     select.find('option').remove();
     $.get(`get-ciudades/${provincia}`)
     .done( ciudades => {
         ciudades.forEach( ciudad => {
-            console.log(ciudad.nombre)
             agregarOptions(select, ciudad.nombre)
         } );
     })

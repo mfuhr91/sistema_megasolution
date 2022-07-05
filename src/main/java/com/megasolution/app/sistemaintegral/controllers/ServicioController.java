@@ -9,7 +9,6 @@ import com.megasolution.app.sistemaintegral.services.SectorService;
 import com.megasolution.app.sistemaintegral.services.ServicioService;
 import com.megasolution.app.sistemaintegral.utils.Constantes;
 import com.megasolution.app.sistemaintegral.utils.Estado;
-import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -22,6 +21,8 @@ import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.List;
 
 
@@ -36,10 +37,18 @@ public class ServicioController {
 
     private SectorService sectorService;
 
+    String hostName = "";
+
     public ServicioController(ServicioService servicioService, ClienteService clienteService, SectorService sectorService) {
         this.servicioService = servicioService;
         this.clienteService = clienteService;
         this.sectorService = sectorService;
+
+        try {
+            this.hostName = InetAddress.getLocalHost().getHostName();
+        } catch (UnknownHostException e) {
+            LOG.error("No se pudo obtener el hostName");
+        }
     }
 
     private final Logger LOG = LoggerFactory.getLogger(ServicioController.class);
@@ -49,7 +58,7 @@ public class ServicioController {
         List<Servicio> servicios = servicioService.buscar50Ultimos(); 
         ServicioModel servicioModel = new ServicioModel();
         servicioModel.setServicios(servicios);
-        LOG.info("ultimos 50 servicios listados");
+        LOG.info("{}-> ultimos 50 servicios listados", this.hostName);
         Model resModel = servicioService.getModelList(servicioModel, model);
         model.addAttribute(resModel);
         return "servicios/lista";
@@ -59,7 +68,7 @@ public class ServicioController {
         List<Servicio> servicios = servicioService.buscarTodos();
         ServicioModel servicioModel = new ServicioModel();
         servicioModel.setServicios(servicios);
-        LOG.info("todos los servicios listados");
+        LOG.info("{} -> todos los servicios listados", this.hostName);
         Model resModel = servicioService.getModelList(servicioModel, model);
         model.addAttribute(resModel);
         return "servicios/lista";
@@ -164,14 +173,16 @@ public class ServicioController {
         ServicioModel servicioModel = new ServicioModel();
         if(id > 0){
             Servicio servicio = servicioService.buscarPorId(id);
-            LOG.info("editando {}", servicio);
-            Sector sector = (Sector) Hibernate.unproxy(servicio.getSector());
-            LOG.info("sector: {} - del servicio_id: {}", sector != null ? sector.getNombre() : "NA", servicio.getId());
+            Sector sector = this.sectorService.buscarPorId(servicio.getSector().getId());
+            servicio.setSector(sector);
+
+            LOG.info("{} -> editando {}", this.hostName, servicio);
+
             servicioModel.setServicio(servicio);
             servicioModel.setCliente(servicio.getCliente());
             this.servicioService.almacenarSectorAnterior(sector);
-
         }
+
         model.addAttribute(servicioService.getModel(servicioModel, model));
         return "servicios/form-servicio";
     }

@@ -20,6 +20,8 @@ import org.springframework.util.ObjectUtils;
 
 import javax.mail.MessagingException;
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
@@ -35,6 +37,7 @@ public class ServicioService {
     private final Logger LOG = LoggerFactory.getLogger(ServicioService.class);
 
     Sector sector = null;
+    String hostName = "";
 
     private IServicioRepository servicioRepo;
 
@@ -49,6 +52,12 @@ public class ServicioService {
         this.clienteService = clienteService;
         this.mailService = mailService;
         this.sectorService = sectorService;
+
+        try {
+            this.hostName = InetAddress.getLocalHost().getHostName();
+        } catch (UnknownHostException e) {
+            LOG.error("No se pudo obtener el hostName");
+        }
     }
 
     @Transactional(readOnly = true)
@@ -78,15 +87,7 @@ public class ServicioService {
     public void guardar(Servicio servicio) {
         servicioRepo.save(servicio);
 
-        String sectorNombre = "NA";
-        if ( !ObjectUtils.isEmpty(servicio.getSector()) ) {
-            sectorNombre = servicio.getSector().getNombre();
-            if (!ObjectUtils.isEmpty(servicio.getSector().getId())) {
-                Sector sector = sectorService.buscarPorId(servicio.getSector().getId());
-                sectorNombre = sector.getNombre();
-            }
-        }
-        LOG.info("{} guardado! - Sector: {}", servicio, sectorNombre);
+        LOG.info("{} -> guardando {}", this.hostName, servicio);
     }
 
     @Transactional
@@ -99,7 +100,7 @@ public class ServicioService {
         } );
 
         servicioRepo.deleteById(id);
-        LOG.info("{} eliminado!", servicio);
+        LOG.info("{} -> eliminando {}", this.hostName, servicio);
     }
 
     @Transactional(readOnly = true)
@@ -162,7 +163,7 @@ public class ServicioService {
         param = param.toLowerCase();
         String[] params = param.split(" ");
         Set<Servicio> servicios = new LinkedHashSet<>();
-        Arrays.stream(params).forEach( prm -> servicios.addAll(this.servicioRepo.findByParam(prm, estado)) );
+        Arrays.stream(params).forEach(prm -> servicios.addAll(this.servicioRepo.findByParam(prm, estado)) );
         Set<Servicio> resultados = new LinkedHashSet<>();
 
         for (Servicio servicio: servicios) {
@@ -187,28 +188,38 @@ public class ServicioService {
         }
         Sector sectorNuevo = sectorService.buscarPorId(servicio.getSector().getId());
 
-        if ( !servicio.getEstado().equals(Estado.ENTREGADO) && !servicio.getEstado().equals(Estado.GUARDADO) ) {
+        if ( !isEstadoEntregadoGuardado(servicio) ) {
             sectorNuevo.setServicio(servicio);
             guardar(servicio);
             sectorService.guardar(sectorNuevo);
         }
 
         if ( sectorAnterior != null ) {
-            if ( ( servicio.getEstado().equals(Estado.ENTREGADO) || servicio.getEstado().equals(Estado.GUARDADO) ) &&
-                   sectorNuevo.getServicio() != null && servicio.getId().equals(sectorNuevo.getServicio().getId()) ) {
+            if ( isEstadoEntregadoGuardado(servicio) &&
+                    sectorHasServicio(sectorNuevo, servicio) ||
+                    !isSameSector(sectorAnterior, sectorNuevo) ) {
                 sectorAnterior.setServicio(null);
-                LOG.info("sector {} liberado!", sectorAnterior.getNombre());
+                LOG.info("{} -> liberando {}", this.hostName, sectorAnterior);
                 sectorService.guardar(sectorAnterior);
-            } else {
-                if ( !sectorAnterior.getNombre().equalsIgnoreCase(sectorNuevo.getNombre()) ) {
-
-                    sectorAnterior.setServicio(null);
-                    LOG.info("sector {} liberado!", sectorAnterior.getNombre());
-                    sectorService.guardar(sectorAnterior);
-                }
             }
         }
 
+    }
+
+    private Boolean isEstadoEntregadoGuardado(Servicio servicio) {
+        return servicio.getEstado().equals(Estado.ENTREGADO) || servicio.getEstado().equals(Estado.GUARDADO);
+    }
+
+    private Boolean sectorHasServicio(Sector sector, Servicio servicio) {
+        return !ObjectUtils.isEmpty(sector.getServicio())  && servicio.getId().equals(sector.getServicio().getId());
+    }
+
+    private Boolean isSameSector(Sector sectorAnterior, Sector sectorNuevo) {
+        return sectorAnterior.getNombre().equalsIgnoreCase(sectorNuevo.getNombre());
+    }
+
+    private Boolean servicioHasSector(Servicio servicio) {
+        return !ObjectUtils.isEmpty(servicio.getSector()) && !ObjectUtils.isEmpty(servicio.getSector().getId());
     }
 
     public void almacenarSectorAnterior(Sector sector) {
@@ -266,15 +277,16 @@ public class ServicioService {
     private Model validarSector(Servicio servicio, Model model){
         // SECTOR NO ES NULL PERO EL ID SI - FORMULARIO EN BLANCO
         if( !ObjectUtils.isEmpty(servicio.getSector()) && ObjectUtils.isEmpty(servicio.getSector().getId())){
-            if ( !servicio.getEstado().equals(Estado.ENTREGADO) && !servicio.getEstado().equals(Estado.GUARDADO) ) {
+            if ( !isEstadoEntregadoGuardado(servicio) ) {
                 model.addAttribute(Constantes.ERROR_SECTOR, Constantes.MSJ_INGRESAR_SECTOR);
                 model.addAttribute(Constantes.ALERT_DANGER_SECTOR, Constantes.ESPACIO_ALERT_DANGER);
             }
-        } else if ( !ObjectUtils.isEmpty(servicio.getSector()) && !ObjectUtils.isEmpty(servicio.getSector().getId())) {
+        } else if ( servicioHasSector(servicio) ) {
             Sector sector = sectorService.buscarPorId(servicio.getSector().getId());
 
             if ( (sector.getServicio() != null && !sector.getServicio().getId().equals(servicio.getId()) ) &&
-                    !servicio.getEstado().equals(Estado.ENTREGADO) && !servicio.getEstado().equals(Estado.GUARDADO) ) {
+                    !isEstadoEntregadoGuardado(servicio) ) {
+                LOG.warn("{} -> {} NO DISPONIBLE - {}", this.hostName, sector, servicio);
                 model.addAttribute(Constantes.ERROR_SECTOR, Constantes.MSJ_SECTOR_NO_DISPONIBLE);
                 model.addAttribute(Constantes.ALERT_DANGER_SECTOR, Constantes.ESPACIO_ALERT_DANGER);
             } else {
