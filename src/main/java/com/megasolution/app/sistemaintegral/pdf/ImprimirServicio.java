@@ -59,8 +59,8 @@ public class ImprimirServicio extends AbstractPdfView {
         PdfPCell cel = null;
             
         // CELDA CONTACTO
-        cel = new PdfPCell(new Phrase("GOBERNADOR PAZ 2098\n" +
-                                        "Celular | WhatsApp: 2901 550863", FontFactory.getFont(FONT, 10)));
+        cel = new PdfPCell(new Phrase("RIVADAVIA 152\n" +
+                                        "Celular | WhatsApp: 2901 550863", FontFactory.getFont(FONT, 10)));
 
         cel.setBorder(Rectangle.NO_BORDER);
         cel.setPaddingTop(15f);
